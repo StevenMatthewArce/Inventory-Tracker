@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { 
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-class App extends Component {
+class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Inventory Tracker</h2>
+      <Router>
+        <div>
+          
         </div>
-      </div>
+      </Router>
     )
   }
 }
+
+export default App;
