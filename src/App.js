@@ -5,17 +5,14 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import { Sidenav } from './components';
 
-class App extends React.Component {
-  render() {
-    return (
-      <Router>
-        <div>
-          
-        </div>
-      </Router>
-    )
-  }
+export default function App() {
+  return (
+    <Router>
+      <div>
+        <h1>Inventory Tracker</h1>
+      </div>
+    </Router>
+  )
 }
-
-export default App;
