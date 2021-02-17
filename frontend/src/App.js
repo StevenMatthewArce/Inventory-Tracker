@@ -16,32 +16,33 @@ import {
 
 class App extends React.Component {
   render() {
-    return (
+    return(
       <Router>
-        <Sidebar />
         <div>
-        <Switch>
-          <Route path='/budget'>
-            <Budget />
-          </Route>
-          <Route path='/inventory'>
-            <Inventory />
-          </Route>
-          <Route path='/reports'>
-            <Reports />
-          </Route>
-          <Route path='/Recipes'>
-            <Recipes />
-          </Route>
-          <Route path='/orders'>
-            <Orders />
-          </Route>
-          <Route path='/tasks'>
-            <Tasks />
-          </Route>
-        </Switch>
+          <Sidebar />
+          <Switch>
+            <Route path='/budget'>
+              <Budget />
+            </Route>
+            <Route path='/inventory'>
+              <Inventory />
+            </Route>
+            <Route path='/reports'>
+              <Reports />
+            </Route>
+            <Route path='/Recipes'>
+              <Recipes />
+            </Route>
+            <Route path='/orders'>
+              <Orders />
+            </Route>
+            <Route path='/tasks'>
+              <Tasks />
+            </Route>
+          </Switch>
         </div>
       </Router>
+      
     )
   }
 }
