@@ -5,7 +5,14 @@ import {
   Route
 } from "react-router-dom";
 import { Sidebar } from './components';
-import { Budget, Inventory, Reports, Recipes, Orders } from './pages';
+import { 
+  Budget, 
+  Inventory, 
+  Reports, 
+  Recipes, 
+  Orders, 
+  Tasks 
+} from './pages';
 
 class App extends React.Component {
   render() {
@@ -28,6 +35,9 @@ class App extends React.Component {
           </Route>
           <Route path='/orders'>
             <Orders />
+          </Route>
+          <Route path='/tasks'>
+            <Tasks />
           </Route>
         </Switch>
         </div>
