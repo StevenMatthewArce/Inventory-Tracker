@@ -3,48 +3,47 @@ import {
   BrowserRouter as Router,
   Switch,
   Route
-} from "react-router-dom";
-import { Sidebar } from './components';
+} from 'react-router-dom';
 import { 
   Budget, 
   Inventory, 
   Reports, 
   Recipes, 
   Orders, 
-  Tasks 
+  Goals,
+  Dashboard
 } from './pages';
 
-class App extends React.Component {
-  render() {
-    return(
+const App = () => {
+  return (
+    <div>
       <Router>
-        <div>
-          <Sidebar />
-          <Switch>
-            <Route path='/budget'>
-              <Budget />
-            </Route>
-            <Route path='/inventory'>
-              <Inventory />
-            </Route>
-            <Route path='/reports'>
-              <Reports />
-            </Route>
-            <Route path='/Recipes'>
-              <Recipes />
-            </Route>
-            <Route path='/orders'>
-              <Orders />
-            </Route>
-            <Route path='/tasks'>
-              <Tasks />
-            </Route>
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path='/'>
+            <Dashboard />
+          </Route>
+          <Route path='/inventory'>
+            <Inventory />
+          </Route>
+          <Route path='/budget'>
+            <Budget />
+          </Route>
+          <Route path='/reports'>
+            <Reports />
+          </Route>
+          <Route path='/recipes'>
+            <Recipes />
+          </Route>
+          <Route path='/orders'>
+            <Orders />
+          </Route>
+          <Route path='/goals'>
+            <Goals />
+          </Route>
+        </Switch>
       </Router>
-      
-    )
-  }
+    </div>
+  )
 }
 
 export default App;
