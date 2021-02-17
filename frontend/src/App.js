@@ -13,6 +13,7 @@ import {
   Goals,
   Dashboard
 } from './pages';
+import 'rsuite/dist/styles/rsuite-default.css';
 
 const App = () => {
   return (
