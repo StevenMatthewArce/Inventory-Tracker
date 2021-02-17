@@ -5,14 +5,30 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import { Sidenav } from './components';
+import { Sidebar } from './components';
+import { Budget, Inventory, Reports } from './pages';
 
-export default function App() {
-  return (
-    <Router>
-      <div>
-        
-      </div>
-    </Router>
-  )
+class App extends React.Component {
+  render() {
+    return (
+      <Router>
+        <Sidebar />
+        <div>
+        <Switch>
+          <Route path='/budget'>
+            <Budget />
+          </Route>
+          <Route path='/inventory'>
+            <Inventory />
+          </Route>
+          <Route path='/reports'>
+            <Reports />
+          </Route>
+        </Switch>
+        </div>
+      </Router>
+    )
+  }
 }
+
+export default App;
