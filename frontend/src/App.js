@@ -2,11 +2,10 @@ import React from 'react';
 import { 
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import { Sidebar } from './components';
-import { Budget, Inventory, Reports } from './pages';
+import { Budget, Inventory, Reports, Recipes, Orders } from './pages';
 
 class App extends React.Component {
   render() {
@@ -23,6 +22,12 @@ class App extends React.Component {
           </Route>
           <Route path='/reports'>
             <Reports />
+          </Route>
+          <Route path='/Recipes'>
+            <Recipes />
+          </Route>
+          <Route path='/orders'>
+            <Orders />
           </Route>
         </Switch>
         </div>
