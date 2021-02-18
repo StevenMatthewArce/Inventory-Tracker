@@ -1,58 +1,51 @@
 import React from 'react';
-import { Sidebar } from './components';
-import { 
+import {
   BrowserRouter as Router,
   Switch,
   Route
 } from 'react-router-dom';
-import { 
-  Budget, 
-  Inventory, 
-  Reports, 
-  Recipes, 
-  Orders, 
+import {
+  Budget,
+  Inventory,
+  Reports,
+  Recipes,
+  Orders,
   Goals,
   Dashboard
 } from './pages';
-import { FlexboxGrid } from 'rsuite';
-import 'rsuite/dist/styles/rsuite-dark.css';
+import { Sidebar } from './components';
+import 'semantic-ui-css/semantic.min.css';
+
 
 const App = () => {
   return (
     <div>
-      <FlexboxGrid justify="space-between">
-        <Router>
-          <FlexboxGrid.Item colspan={3}>
-            <Sidebar />
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={13}>
-            <Switch>
-              <Route exact path='/'>
-                <Dashboard />
-              </Route>
-              <Route path='/inventory'>
-                <Inventory />
-              </Route>
-              <Route path='/budget'>
-                <Budget />
-              </Route>
-              <Route path='/reports'>
-                <Reports />
-              </Route>
-              <Route path='/recipes'>
-                <Recipes />
-              </Route>
-              <Route path='/orders'>
-                <Orders />
-              </Route>
-              <Route path='/goals'>
-                <Goals />
-              </Route>
-            </Switch>
-          </FlexboxGrid.Item>
-        </Router>
-      </FlexboxGrid>
-      
+      <Router>
+        <Sidebar />
+        <Switch>
+          <Route exact path='/dashboard'>
+            <Dashboard/>
+          </Route>
+          <Route path='/inventory'>
+            <Inventory/>
+          </Route>
+          <Route path='/budget'>
+            <Budget/>
+          </Route>
+          <Route path='/reports'>
+            <Reports/>
+          </Route>
+          <Route path='/recipes'>
+            <Recipes/>
+          </Route>
+          <Route path='/orders'>
+            <Orders/>
+          </Route>
+          <Route path='/goals'>
+            <Goals/>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   )
 }
