@@ -1,50 +1,63 @@
 import React from 'react';
-import { 
+import {
   BrowserRouter as Router,
   Switch,
   Route
 } from 'react-router-dom';
-import { 
-  Budget, 
-  Inventory, 
-  Reports, 
-  Recipes, 
-  Orders, 
+import {
+  Budget,
+  Inventory,
+  Reports,
+  Recipes,
+  Orders,
   Goals,
-  Dashboard
+  Dashboard,
+  Settings
 } from './pages';
-import 'rsuite/dist/styles/rsuite-default.css';
+import { Grid, Sidebar, Segment, GridColumn } from 'semantic-ui-react';
+import { Sidenav } from './components';
+import 'semantic-ui-css/semantic.min.css';
 
-const App = () => {
-  return (
-    <div>
+class App extends React.Component {
+  render() {
+    return (
       <Router>
-        <Switch>
-          <Route exact path='/'>
-            <Dashboard />
-          </Route>
-          <Route path='/inventory'>
-            <Inventory />
-          </Route>
-          <Route path='/budget'>
-            <Budget />
-          </Route>
-          <Route path='/reports'>
-            <Reports />
-          </Route>
-          <Route path='/recipes'>
-            <Recipes />
-          </Route>
-          <Route path='/orders'>
-            <Orders />
-          </Route>
-          <Route path='/goals'>
-            <Goals />
-          </Route>
-        </Switch>
+        <Grid columns={1}>
+          <Grid.Column>
+            <Sidebar.Pushable as={Segment}>
+              <Sidenav />
+              <Sidebar.Pusher>
+                <Segment basic>
+                  <Switch>
+                    <Route exact path='/'>
+                      <Dashboard />
+                    </Route>
+                    <Route path='/inventory'>
+                      <Inventory />
+                    </Route>
+                    <Route path='/budget'>
+                      <Budget />
+                    </Route>
+                    <Route path='/reports'>
+                      <Reports />
+                    </Route>
+                    <Route path='/recipes'>
+                      <Recipes />
+                    </Route>
+                    <Route path='/orders'>
+                      <Orders />
+                    </Route>
+                    <Route path='/goals'>
+                      <Goals />
+                    </Route>
+                  </Switch>
+                </Segment>
+              </Sidebar.Pusher>
+            </Sidebar.Pushable>
+          </Grid.Column>
+        </Grid>
       </Router>
-    </div>
-  )
+    )
+  }
 }
-
 export default App;
