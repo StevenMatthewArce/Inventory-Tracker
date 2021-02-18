@@ -15,17 +15,17 @@ import {
   Dashboard
 } from './pages';
 import { FlexboxGrid } from 'rsuite';
-import 'rsuite/dist/styles/rsuite-default.css';
+import 'rsuite/dist/styles/rsuite-dark.css';
 
 const App = () => {
   return (
     <div>
       <FlexboxGrid justify="space-between">
         <Router>
-          <FlexboxGrid.Item colspan={4}>
+          <FlexboxGrid.Item colspan={3}>
             <Sidebar />
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={12}>
+          <FlexboxGrid.Item colspan={13}>
             <Switch>
               <Route exact path='/'>
                 <Dashboard />
