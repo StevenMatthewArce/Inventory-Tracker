@@ -20,7 +20,6 @@ import 'semantic-ui-css/semantic.min.css';
 
 class App extends React.Component {
   render() {
-    console.log(process.env.REACT_APP_API_KEY)
     return (
       <Router>
         <Grid columns={1}>
