@@ -14,7 +14,7 @@ import {
   Dashboard,
   Settings
 } from './pages';
-import { Grid, Sidebar, Segment, GridColumn } from 'semantic-ui-react';
+import { Grid, Sidebar, Segment } from 'semantic-ui-react';
 import { Sidenav } from './components';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -49,6 +49,9 @@ class App extends React.Component {
                     </Route>
                     <Route path='/goals'>
                       <Goals />
+                    </Route>
+                    <Route path='/settings'>
+                      <Settings />
                     </Route>
                   </Switch>
                 </Segment>

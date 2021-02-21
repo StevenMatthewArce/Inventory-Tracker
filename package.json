@@ -10,7 +10,6 @@
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^4.6.0",
     "electron": "^11.2.3",
-    "electron-firebase": "^1.0.0",
     "firebase": "^8.2.9",
     "foreman": "^3.0.1",
     "react": "^17.0.1",
@@ -23,7 +22,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "electron ./main.js",
+    "start": "nf start -p 3000",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
