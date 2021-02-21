@@ -50,6 +50,9 @@ class App extends React.Component {
                     <Route path='/goals'>
                       <Goals />
                     </Route>
+                    <Route path='/settings'>
+                      <Settings />
+                    </Route>
                   </Switch>
                 </Segment>
               </Sidebar.Pusher>
