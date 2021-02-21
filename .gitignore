@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# .env files
+**.env
+
 # testing
 /coverage
 
@@ -22,4 +25,32 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-.idea/
+# OS X
+.DS_Store*
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+*~
+
+
+# npm
+node_modules
+package-lock.json
+*.log
+*.gz
+
+
+# Coveralls
+coverage
+
+# Benchmarking
+benchmarks/graphs
+backend/.env
+frontend/yarn.lock
