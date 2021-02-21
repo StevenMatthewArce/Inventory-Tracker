@@ -10,25 +10,28 @@
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^4.6.0",
     "electron": "^11.2.3",
+    "electron-firebase": "^1.0.0",
     "firebase": "^8.2.9",
     "foreman": "^3.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.2",
+    "react-scripts": "^2.0.5",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "victory": "^35.4.9",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "nf start -p 3000",
+    "start": "electron ./main.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-start": "node src/electron-wait-react",
-    "react-start": "react-scripts start"
+    "react-start": "react-scripts start",
+    "rebuild": "./node_modules/.bin/electron-rebuild",
+    "deploy": "node ./config/firebase-deploy.js"
   },
   "eslintConfig": {
     "extends": [
