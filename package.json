@@ -2,7 +2,7 @@
   "name": "inventory-tracker",
   "version": "0.1.0",
   "private": true,
-  "main": "src/main.js",
+  "main": "./main.js",
   "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
@@ -14,6 +14,7 @@
     "foreman": "^3.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^2.0.5",
     "semantic-ui-css": "^2.4.1",
