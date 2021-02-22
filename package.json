@@ -2,7 +2,7 @@
   "name": "inventory-tracker",
   "version": "0.1.0",
   "private": true,
-  "main": "./main.js",
+  "main": "./src/main.js",
   "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
