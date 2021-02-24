@@ -33,10 +33,11 @@ class App extends React.Component {
      <Router>
         <Grid columns={1}>
           <Grid.Column>
+            <Grid.Row></Grid.Row>
             <Sidebar.Pushable as={Segment}>
               <Sidenav toggleMenu = {this.state.toggle}/>
               <Sidebar.Pusher>
-                <Segment basic>
+                <Segment padded>
                   <Switch>
                     <Route exact path='/'>
                       <Dashboard />
