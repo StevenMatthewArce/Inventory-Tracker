@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-import {
-  Button,
-  Modal,
-  Table,
-} from 'semantic-ui-react';
-import { AddItem } from '../components/InventoryComponents';
+import { Table } from 'semantic-ui-react';
 
 const tableData = [
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
@@ -42,10 +36,10 @@ class Inventory extends Component {
   }
   render() {
     return (
-      <Table striped celled size='small'>
+      <Table celled>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Name</Table.HeaderCell>
+            <Table.HeaderCell singleLine>Name</Table.HeaderCell>
             <Table.HeaderCell>Description</Table.HeaderCell>
             <Table.HeaderCell>Cost</Table.HeaderCell>
             <Table.HeaderCell>Date Restocked</Table.HeaderCell>
@@ -56,11 +50,11 @@ class Inventory extends Component {
         <Table.Body>
           {tableData.map(({ name, description, cost, dateRestocked, notes}) => (
             <Table.Row key={name}>
-              <Table.Cell>{name}</Table.Cell>
-              <Table.Cell>{description}</Table.Cell>
-              <Table.Cell>{cost}</Table.Cell>
-              <Table.Cell>{dateRestocked}</Table.Cell>
-              <Table.Cell>{notes}</Table.Cell>
+              <Table.Cell textAlign='left'>{name}</Table.Cell>
+              <Table.Cell textAlign='left'>{description}</Table.Cell>
+              <Table.Cell textAlign='left'>{cost}</Table.Cell>
+              <Table.Cell textAlign='left'>{dateRestocked}</Table.Cell>
+              <Table.Cell textAlign='left'>{notes}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
