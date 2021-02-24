@@ -19,41 +19,44 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <Header onToggleMenu={this.toggleMenu} />
-        <div sideBar="ui attached pushable">
-          <Router>
-            <Grid columns={1}>
-              <Grid.Column>
-                <Sidebar.Pushable as={Segment}>
-                  <Sidenav toggleMenu={this.state.toggle} />
-                  <Sidebar.Pusher>
-                    <Segment basic>
-                      <Switch>
-                        <Route exact path="/">
-                          <Dashboard />
-                        </Route>
-                        <Route path="/inventory">
-                          <Inventory />
-                        </Route>
-                        <Route path="/budget">
-                          <Budget />
-                        </Route>
-                        <Route path="/orders">
-                          <Orders />
-                        </Route>
-                        <Route path="/settings">
-                          <Settings />
-                        </Route>
-                      </Switch>
-                    </Segment>
-                  </Sidebar.Pusher>
-                </Sidebar.Pushable>
-              </Grid.Column>
-            </Grid>
-          </Router>
-        </div>
-        <div main></div>
+     <div className = "App">
+     <Header onToggleMenu = {this.toggleMenu}/>
+     <div sideBar ="ui attached pushable">
+     <Router>
+        <Grid columns={1}>
+          <Grid.Column>
+            <Grid.Row></Grid.Row>
+            <Sidebar.Pushable as={Segment}>
+              <Sidenav toggleMenu = {this.state.toggle}/>
+              <Sidebar.Pusher>
+                <Segment padded>
+                  <Switch>
+                    <Route exact path='/'>
+                      <Dashboard />
+                    </Route>
+                    <Route path='/inventory'>
+                      <Inventory />
+                    </Route>
+                    <Route path='/budget'>
+                      <Budget />
+                    </Route>
+                    <Route path='/orders'>
+                      <Orders />
+                    </Route>
+                    <Route path='/settings'>
+                      <Settings />
+                    </Route>
+                  </Switch>
+                </Segment>
+              </Sidebar.Pusher>
+            </Sidebar.Pushable>
+          </Grid.Column>
+        </Grid>
+      </Router>
+      </div>
+      <div main>
+
+      </div>
       </div>
     );
   }
