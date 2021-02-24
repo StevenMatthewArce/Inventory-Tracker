@@ -4,7 +4,6 @@ import {
   Button,
   Modal,
   Table,
-  TableBody
 } from 'semantic-ui-react';
 import { AddItem } from '../components/InventoryComponents';
 
@@ -12,8 +11,18 @@ const tableData = [
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
+  { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'}
-
 ]
 class Inventory extends Component {
   constructor(props) {
@@ -31,25 +40,9 @@ class Inventory extends Component {
       }
     }
   }
-
-  componentDidMount() {
-    const itemsRef = firebase.database().ref('items');
-    itemsRef.on('value', (snapshot) => {
-      let items = snapshot.val();
-      let newState = [];
-      for (let item in items) {
-        newState.push({
-          id: item.uid
-        })
-      }
-    })
-  }
-
   render() {
     return (
-      <div>
-        <Button content='Add Item' icon='plus square outline' labelPosition='right' as={Link} to='/addItem'/>
-        <Table celled>
+      <Table striped celled size='small'>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -61,18 +54,17 @@ class Inventory extends Component {
         </Table.Header>
 
         <Table.Body>
-          {tableData.map(({ name, description, cost, dateRestocked, notes }) => (
+          {tableData.map(({ name, description, cost, dateRestocked, notes}) => (
             <Table.Row key={name}>
-              <Table.Cell textAlign='left'>{name}</Table.Cell>
-              <Table.Cell textAlign='left'>{description}</Table.Cell>
-              <Table.Cell textAlign='left'>{cost}</Table.Cell>
-              <Table.Cell textAlign='left'>{dateRestocked}</Table.Cell>
-              <Table.Cell textAlign='left'>{notes}</Table.Cell>
+              <Table.Cell>{name}</Table.Cell>
+              <Table.Cell>{description}</Table.Cell>
+              <Table.Cell>{cost}</Table.Cell>
+              <Table.Cell>{dateRestocked}</Table.Cell>
+              <Table.Cell>{notes}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
-    </div>
     )
   }
   
