@@ -25,11 +25,8 @@ class App extends React.Component {
       
     }
         return (
-      <div>
-        
-
-
-     <Header onToggleMuneu = {toggleMenu}/>
+    <div>
+    <Header onToggleMenu = {toggleMenu}/>
      <Router>
         <Grid columns={1}>
           <Grid.Column>
