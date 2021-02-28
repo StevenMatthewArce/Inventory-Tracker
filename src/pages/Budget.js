@@ -5,6 +5,7 @@ class Budget extends Component {
     return (
       <div>
         Budget Tracker
+        hello
       </div>
     )
   }
