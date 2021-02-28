@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Budget extends Component {
   render() {
     return (
-      <div>
+      <div style={{height: '100vh'}}>
         Budget Tracker
       </div>
     )

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Tasks extends Component {
   render() {
     return(
-      <div>
+      <div style={{height: '100vh'}}>
         Tasks
       </div>
     )
