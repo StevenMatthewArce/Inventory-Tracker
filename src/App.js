@@ -7,10 +7,7 @@ import {
 import {
   Budget,
   Inventory,
-  Reports,
-  Recipes,
   Orders,
-  Goals,
   Dashboard,
   Settings
 } from './pages';
@@ -38,17 +35,8 @@ class App extends React.Component {
                     <Route path='/budget'>
                       <Budget />
                     </Route>
-                    <Route path='/reports'>
-                      <Reports />
-                    </Route>
-                    <Route path='/recipes'>
-                      <Recipes />
-                    </Route>
                     <Route path='/orders'>
                       <Orders />
-                    </Route>
-                    <Route path='/goals'>
-                      <Goals />
                     </Route>
                     <Route path='/settings'>
                       <Settings />
