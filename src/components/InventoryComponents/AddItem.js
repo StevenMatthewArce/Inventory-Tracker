@@ -1,5 +1,9 @@
 import React from 'react';
-import firebase from '.../firebase.js';
+import {
+  Form,
+  Input 
+} from 'semantic-ui-react';
+import DayJS from 'react-dayjs';
 
 class AddItem extends React.Component {
   constructor(props) {
@@ -26,12 +30,45 @@ class AddItem extends React.Component {
     });
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit = () => {
+    this.setState({
+      name: '',
+      description: '',
+      cost: '',
+      quantity: '',
+      dateRestocked: '',
+      notes: '',
+      photo: '',
+    })
   }
+
   render() {
     return (
-      <div>Add item</div>
+      <div className="add-item">
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group widths='equal'>
+            <Form.Field required>
+              <label>Name</label>
+              <Input fluid placeholder='Name of item' />
+            </Form.Field>
+            <Form.Field required>
+              <label>Cost</label>
+              <Input fluid placeholder='Cost of item' />
+            </Form.Field>
+            <Form.Field required>
+              <label>Quantity</label>
+              <Input fluid placeholder='Quantity' />
+            </Form.Field>
+            <Form.Field required>
+              <label>Date Restocked</label>
+              <Input fluid placeholder='MM-DD-YYYY' />
+            </Form.Field>
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <Form.Field required></Form.Field>
+          </Form.Group>
+        </Form>
+      </div>
     )
     
   }
