@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { Table } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { 
+  Table,
+  Button
+ } from 'semantic-ui-react';
 import firebase from '../firebase.js';
 
 const tableData = [
@@ -52,10 +56,12 @@ class Inventory extends Component {
 
   render() {
     return (
-      <Table celled>
+      <div>
+        <Button content='Add Item' icon='plus square outline' labelPosition='right' as={Link} to='/addItem'/>
+        <Table celled>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell singleLine>Name</Table.HeaderCell>
+            <Table.HeaderCell>Name</Table.HeaderCell>
             <Table.HeaderCell>Description</Table.HeaderCell>
             <Table.HeaderCell>Cost</Table.HeaderCell>
             <Table.HeaderCell>Date Restocked</Table.HeaderCell>
@@ -64,7 +70,7 @@ class Inventory extends Component {
         </Table.Header>
 
         <Table.Body>
-          {tableData.map(({ name, description, cost, dateRestocked, notes}) => (
+          {tableData.map(({ name, description, cost, dateRestocked, notes }) => (
             <Table.Row key={name}>
               <Table.Cell textAlign='left'>{name}</Table.Cell>
               <Table.Cell textAlign='left'>{description}</Table.Cell>
@@ -75,6 +81,7 @@ class Inventory extends Component {
           ))}
         </Table.Body>
       </Table>
+    </div>
     )
   }
   
