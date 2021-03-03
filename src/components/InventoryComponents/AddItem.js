@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Form,
-  Input 
-} from 'semantic-ui-react';
-import DayJS from 'react-dayjs';
+import firebase from '.../firebase.js';
 
 class AddItem extends React.Component {
   constructor(props) {
