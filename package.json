@@ -5,6 +5,7 @@
   "main": "./src/main.js",
   "homepage": "./",
   "dependencies": {
+    "@firebase/firestore": "^2.1.7",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -12,7 +13,8 @@
     "dayjs": "^1.10.4",
     "electron": "^11.2.3",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "firebase": "^8.2.9",
+    "firebase": "^4.12.0",
+    "firestore": "^1.1.6",
     "foreman": "^3.0.1",
     "lodash": "^4.17.21",
     "react": "^17.0.1",
@@ -21,8 +23,10 @@
     "react-helmet": "^6.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^2.0.5",
+    "react-semantic-ui-datepickers": "^2.13.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
+    "uid": "^2.0.0",
     "victory": "^35.4.9",
     "web-vitals": "^1.0.1"
   },

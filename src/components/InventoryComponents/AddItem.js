@@ -1,9 +1,12 @@
 import React from 'react';
 import {
   Form,
-  Input 
+  Input,
+  TextArea 
 } from 'semantic-ui-react';
-import DayJS from 'react-dayjs';
+import { handleAddItem } from '../Firebase';
+import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
 class AddItem extends React.Component {
   constructor(props) {
@@ -16,12 +19,10 @@ class AddItem extends React.Component {
         cost: null,
         quantity: null,
         dateRestocked: null,
-        notes: null,
         photo: null
       }
     }
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e) {
@@ -30,43 +31,32 @@ class AddItem extends React.Component {
     });
   }
 
-  handleSubmit = () => {
-    this.setState({
-      name: '',
-      description: '',
-      cost: '',
-      quantity: '',
-      dateRestocked: '',
-      notes: '',
-      photo: '',
-    })
-  }
-
   render() {
     return (
       <div className="add-item">
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={ handleAddItem }>
           <Form.Group widths='equal'>
             <Form.Field required>
               <label>Name</label>
-              <Input fluid placeholder='Name of item' />
+              <Input fluid placeholder='Name of item' onChange={this.handleChange}/>
             </Form.Field>
             <Form.Field required>
               <label>Cost</label>
-              <Input fluid placeholder='Cost of item' />
+              <Input fluid placeholder='Cost of item' onChange={this.handleChange}/>
             </Form.Field>
             <Form.Field required>
               <label>Quantity</label>
-              <Input fluid placeholder='Quantity' />
+              <Input fluid placeholder='Quantity' onChange={this.handleChange}/>
             </Form.Field>
             <Form.Field required>
               <label>Date Restocked</label>
-              <Input fluid placeholder='MM-DD-YYYY' />
+              <Form.Input></Form.Input>
             </Form.Field>
           </Form.Group>
           <Form.Group widths='equal'>
-            <Form.Field required></Form.Field>
+            <Form.Field control={TextArea} placeholder='Add additional information' />
           </Form.Group>
+          <Form.Button onClick={ handleAddItem } style={{ marginTop: '10px'}}>Add Item</Form.Button>
         </Form>
       </div>
     )

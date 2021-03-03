@@ -1,1 +1,2 @@
-export { default as firebase } from './firebase';
+export { default } from './firebase';
+export { handleAddItem } from './firebase';

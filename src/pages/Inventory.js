@@ -4,7 +4,6 @@ import {
   Table,
   Button
  } from 'semantic-ui-react';
-import firebase from '../firebase.js';
 
 const tableData = [
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
@@ -35,23 +34,9 @@ class Inventory extends Component {
         cost: '0',
         quantity: '12',
         dateRestocked: '12/12/2000',
-        notes: 'N/A',
         photo: null
       }
     }
-  }
-
-  componentDidMount() {
-    const itemsRef = firebase.database().ref('items');
-    itemsRef.on('value', (snapshot) => {
-      let items = snapshot.val();
-      let newState = [];
-      for (let item in items) {
-        newState.push({
-          id: item.uid
-        })
-      }
-    })
   }
 
   render() {
