@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Table } from 'semantic-ui-react';
+import firebase from '../firebase.js';
 
 const tableData = [
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
@@ -18,6 +19,7 @@ const tableData = [
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'}
 ]
+
 class Inventory extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,20 @@ class Inventory extends Component {
       }
     }
   }
+
+  componentDidMount() {
+    const itemsRef = firebase.database().ref('items');
+    itemsRef.on('value', (snapshot) => {
+      let items = snapshot.val();
+      let newState = [];
+      for (let item in items) {
+        newState.push({
+          id: item.uid
+        })
+      }
+    })
+  }
+
   render() {
     return (
       <Table celled>
