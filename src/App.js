@@ -54,6 +54,9 @@ class App extends React.Component {
                     <Route path='/settings'>
                       <Settings />
                     </Route>
+                    <Route path='/addItem'>
+                      <AddItem />
+                    </Route>
                   </Switch>
                 </Segment>
               </Sidebar.Pusher>
