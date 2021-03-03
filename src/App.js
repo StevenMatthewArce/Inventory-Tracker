@@ -8,9 +8,13 @@ import {
   Inventory,
   Orders,
   Dashboard,
-  Settings} from './pages';
-import { Grid, Sidebar, Segment } from 'semantic-ui-react';
-import { Sidenav, Header } from './components/Navigation';
+  Settings
+} from './pages';
+import {
+  AddItem
+} from './components/InventoryComponents';
+import { Grid, Sidebar, Segment, Container } from 'semantic-ui-react';
+import { Sidenav } from './components/Navigation';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends React.Component {
