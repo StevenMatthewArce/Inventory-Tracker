@@ -12,7 +12,7 @@ import {
   Settings
 } from './pages';
 import { Grid, Sidebar, Segment } from 'semantic-ui-react';
-import { Sidenav } from './components';
+import { Sidenav } from './components/Navigation';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends React.Component {
