@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 class Dashboard extends Component {
   render() {
     return (
-      <div style={{height: '100vh'}}>Dashboard
-      </div>
+      <div>Dashboard</div>
     )
   }
 }

@@ -19,19 +19,27 @@ import { Sidenav,Header } from './components';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      toggle: false
+    };
+  }
+   
+  toggleMenu =() => {
+    this.setState({toggle: !this.state.toggle})
+  }
+  
   render() {
-
-    function toggleMenu(){
-      
-    }
-        return (
-    <div>
-    <Header onToggleMenu = {toggleMenu}/>
+    return (
+     <div className = "App">
+     <Header onToggleMenu = {this.toggleMenu}/>
+     <div sideBar ="ui attached pushable">
      <Router>
         <Grid columns={1}>
           <Grid.Column>
             <Sidebar.Pushable as={Segment}>
-              <Sidenav />
+              <Sidenav toggleMenu = {this.state.toggle}/>
               <Sidebar.Pusher>
                 <Segment basic>
                   <Switch>
@@ -66,7 +74,11 @@ class App extends React.Component {
           </Grid.Column>
         </Grid>
       </Router>
-    </div>
+      </div>
+      <div main>
+
+      </div>
+      </div>
     )
   }
 }
