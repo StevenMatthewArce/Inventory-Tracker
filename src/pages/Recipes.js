@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class Settings extends Component {
+class Recipes extends Component {
   render() {
     return (
       <div style={{height: '100vh'}}>
-        Settings
+        Recipes
       </div>
     )
   }
 }
 
-export default Settings;
+export default Recipes;

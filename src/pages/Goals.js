@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class Settings extends Component {
+class Tasks extends Component {
   render() {
-    return (
+    return(
       <div style={{height: '100vh'}}>
-        Settings
+        Tasks
       </div>
     )
   }
 }
 
-export default Settings;
+export default Tasks;
