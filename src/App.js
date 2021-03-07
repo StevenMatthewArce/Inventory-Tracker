@@ -12,8 +12,7 @@ import {
   Orders,
   Goals,
   Dashboard,
-  Settings
-} from './pages';
+  Settings} from './pages';
 import { Grid, Sidebar, Segment } from 'semantic-ui-react';
 import { Sidenav,Header } from './components';
 import 'semantic-ui-css/semantic.min.css';

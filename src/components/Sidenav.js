@@ -1,15 +1,11 @@
-import React, { Component, useEffect } from 'react';
-import {  Checkbox,
-  Grid,
-  Header,
+import React from 'react';
+import {
   Icon,
-  Image,
   Menu,
-  Segment,
   Sidebar} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-const Sidenav =(props) => {
+const Sidenav = (props) => {
     
   {
     return (
@@ -21,7 +17,6 @@ const Sidenav =(props) => {
         icon='labeled'
         inverted
         vertical
-        visible 
         visible ={props.toggleMenu}
         width='thin'
       >
