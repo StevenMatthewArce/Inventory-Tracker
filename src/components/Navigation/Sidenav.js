@@ -1,12 +1,15 @@
 import React from 'react';
-import { Sidebar, Menu, Icon } from 'semantic-ui-react';
+import {
+  Icon,
+  Menu,
+  Sidebar} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-class Sidenav extends React.Component {
-
-  render() {
+const Sidenav = (props) => {
+    
+  {
     return (
-      
+    
       <Sidebar
         as={Menu}
         animation='slide along'
@@ -14,7 +17,7 @@ class Sidenav extends React.Component {
         icon='labeled'
         inverted
         vertical
-        visible
+        visible ={props.toggleMenu}
         width='thin'
       >
         <Menu.Item as={Link} to='/'>
@@ -50,7 +53,7 @@ class Sidenav extends React.Component {
           Settings
         </Menu.Item>
       </Sidebar>
-      
+   
     )
   }
 }
