@@ -2,15 +2,13 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
-} from 'react-router-dom';
+  Route} from 'react-router-dom';
 import {
   Budget,
   Inventory,
   Orders,
   Dashboard,
-  Settings
-} from './pages';
+  Settings} from './pages';
 import { Grid, Sidebar, Segment } from 'semantic-ui-react';
 import { Sidenav } from './components/Navigation';
 import 'semantic-ui-css/semantic.min.css';
