@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -12,20 +13,10 @@ const config = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-firebase.initializeApp(config);
+class Firebase {
+  constructor() {
+    firebase.initializeApp(config);
+  }
+}
 
-export const handleAddItem = (e, name, cost, quantity, dateRestocked) => {
-  e.preventDefault();
-  const ref = firestore.doc('items');
-
-  ref.add({
-    name: name,
-    cost: cost,
-    quantity: quantity,
-    dateRestocked: dateRestocked
-  })
-};
-
-export default firebase;
-
-export const firestore = firebase.firestore();
+export default Firebase;

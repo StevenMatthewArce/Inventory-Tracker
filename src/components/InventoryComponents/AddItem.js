@@ -1,67 +1,66 @@
 import React from 'react';
-import {
-  Form,
-  Input,
-  TextArea 
-} from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import { handleAddItem } from '../Firebase';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
 class AddItem extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      item: {
-        uid: null,
-        name: null,
-        description: null,
-        cost: null,
-        quantity: null,
-        dateRestocked: null,
-        photo: null
-      }
-    }
-    this.handleChange = this.handleChange.bind(this);
+      name: '',
+      description: '',
+      cost: '',
+      quantity: '',
+      dateRestocked: '',
+      photo: '',
+    };
   }
 
-  handleChange(e) {
+  handleChange = (e, { name, value }) => this.setState({ [name]: value }) 
+
+  handleSubmit = () => {
+    const { 
+      name,
+      description,
+      cost,
+      quantity,
+      dateRestocked,
+      photo,
+    } = this.state;
+
     this.setState({
-      [e.target.name]: e.target.value
-    });
+      name: name,
+
+    })
   }
 
   render() {
+    const {
+      name,
+      description,
+      cost,
+      quantity,
+      dateRestocked,
+      photo,
+    } = this.state;
+
     return (
-      <div className="add-item">
-        <Form onSubmit={ handleAddItem }>
-          <Form.Group widths='equal'>
-            <Form.Field required>
-              <label>Name</label>
-              <Input fluid placeholder='Name of item' onChange={this.handleChange}/>
-            </Form.Field>
-            <Form.Field required>
-              <label>Cost</label>
-              <Input fluid placeholder='Cost of item' onChange={this.handleChange}/>
-            </Form.Field>
-            <Form.Field required>
-              <label>Quantity</label>
-              <Input fluid placeholder='Quantity' onChange={this.handleChange}/>
-            </Form.Field>
-            <Form.Field required>
-              <label>Date Restocked</label>
-              <Form.Input></Form.Input>
-            </Form.Field>
+      <div className='add-item'>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group>
+            <Form.Input placeholder="Name" name="name" value={name} onChange={this.handleChange} />
+            <Form.Input placeholder="Cost" name="cost" value={cost} onChange={this.handleChange} />
+            <Form.Input placeholder="Quantity" name="quantity" value={quantity} onChange={this.handleChange} />
           </Form.Group>
-          <Form.Group widths='equal'>
-            <Form.Field control={TextArea} placeholder='Add additional information' />
-          </Form.Group>
-          <Form.Button onClick={ handleAddItem } style={{ marginTop: '10px'}}>Add Item</Form.Button>
         </Form>
       </div>
     )
     
   }
 }
+
+
 
 export default AddItem;
