@@ -7,14 +7,11 @@ import {
 import {
   Budget,
   Inventory,
-  Reports,
-  Recipes,
   Orders,
-  Goals,
   Dashboard,
   Settings} from './pages';
 import { Grid, Sidebar, Segment } from 'semantic-ui-react';
-import { Sidenav,Header } from './components';
+import { Sidenav, Header } from './components/Navigation';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends React.Component {
@@ -51,17 +48,8 @@ class App extends React.Component {
                     <Route path='/budget'>
                       <Budget />
                     </Route>
-                    <Route path='/reports'>
-                      <Reports />
-                    </Route>
-                    <Route path='/recipes'>
-                      <Recipes />
-                    </Route>
                     <Route path='/orders'>
                       <Orders />
-                    </Route>
-                    <Route path='/goals'>
-                      <Goals />
                     </Route>
                     <Route path='/settings'>
                       <Settings />
