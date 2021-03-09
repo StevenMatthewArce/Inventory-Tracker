@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/storage';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const config = {
@@ -13,10 +14,10 @@ const config = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-class Firebase {
-  constructor() {
-    firebase.initializeApp(config);
-  }
-}
+firebase.initializeApp(config);
 
-export default Firebase;
+const projectStorage = firebase.storage();
+const projectFirestore = firebase.firestore();
+const timestamp = firebase.firestore.FieldValue.serverTimestamp;
+
+export { projectStorage, projectFirestore, timestamp };

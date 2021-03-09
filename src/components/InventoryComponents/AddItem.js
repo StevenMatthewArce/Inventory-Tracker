@@ -1,10 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, TextArea } from 'semantic-ui-react';
-import { handleAddItem } from '../Firebase';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import { InputFile } from 'semantic-ui-react-input-file';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
+const AddItem = () => {
+  const [name, setName] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [cost, setCost] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [dateRestocked, setDate] = useState(null);
+  const [photo, setPhoto] = useState(null);
+  const [alert, setAlert] = useState(null);
+
+  const imageTypes = ['image/png', 'image/jpeg'];
+
+  const handlePhotoChange = (e) => {
+    let selected = e.target.files[0];
+    
+    if (selected && imageTypes.includes(selected.type)) {
+      setPhoto(selected);
+      setAlert('');
+    } else {
+      setPhoto(null);
+      setAlert('Must be an image file (png or jpeg');
+      alert({alert});
+    }
+  }
+
+  const handleDateChange = (event, data) => {
+    setDate(data.value);
+    console.log(data.value);
+  }
+
+  return (
+    <div>
+      <Form>
+
+      </Form>
+    </div>
+  )
+}
+/*
 class AddItem extends React.Component {
 
   constructor(props) {
@@ -123,4 +160,5 @@ class AddItem extends React.Component {
 
 
 
+*/
 export default AddItem;
