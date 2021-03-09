@@ -41,7 +41,7 @@ class Inventory extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{height: '100vh'}}>
         <Button content='Add Item' icon='plus square outline' labelPosition='right' as={Link} to='/addItem'/>
         <Table celled>
         <Table.Header>

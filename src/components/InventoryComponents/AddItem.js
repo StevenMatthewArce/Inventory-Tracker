@@ -1,7 +1,8 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
+import { Form, TextArea } from 'semantic-ui-react';
 import { handleAddItem } from '../Firebase';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import { InputFile } from 'semantic-ui-react-input-file';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
 class AddItem extends React.Component {
@@ -20,6 +21,16 @@ class AddItem extends React.Component {
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value }) 
 
+  handleDateChange = (event, data) => {
+    this.setState({
+      dateRestocked: data.value
+    })
+  }
+
+  handleUpload = () => {
+
+  }
+
   handleSubmit = () => {
     const { 
       name,
@@ -32,7 +43,11 @@ class AddItem extends React.Component {
 
     this.setState({
       name: name,
-
+      description: description,
+      cost: cost,
+      quantity: quantity,
+      dateRestocked: dateRestocked,
+      photo: photo
     })
   }
 
@@ -47,12 +62,57 @@ class AddItem extends React.Component {
     } = this.state;
 
     return (
-      <div className='add-item'>
+      <div className='add-item' style={{ height: '100vh' }}>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Group>
-            <Form.Input placeholder="Name" name="name" value={name} onChange={this.handleChange} />
-            <Form.Input placeholder="Cost" name="cost" value={cost} onChange={this.handleChange} />
-            <Form.Input placeholder="Quantity" name="quantity" value={quantity} onChange={this.handleChange} />
+          <Form.Group widths='equal'>
+            <Form.Input 
+              placeholder="Name" 
+              name="name" value={name} 
+              onChange={this.handleChange} 
+              label="Name"
+              required
+            />
+            <Form.Input 
+              placeholder="Cost" 
+              name="cost" 
+              value={cost} 
+              onChange={this.handleChange} 
+              label="Cost"
+              required
+            />
+            <Form.Input 
+              placeholder="Quantity" 
+              name="quantity" 
+              value={quantity} 
+              onChange={this.handleChange} 
+              label="Quantity"
+              required
+            />
+            <Form.Input
+              name="dateRestocked"
+              label="Date Restocked"
+              value={dateRestocked}
+              required
+            >
+              <SemanticDatepicker onChange={this.handleDateChange}/>
+            </Form.Input>
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <Form.Input
+              placeholder="Enter additional information" 
+              name="description" 
+              value={description} 
+              onChange={this.handleChange} 
+              label="Description"
+              control={TextArea}
+            />
+            <InputFile 
+              
+              input={{
+                id: 'input-control-id',
+                onChange: this.handleUpload
+              }}
+            />
           </Form.Group>
         </Form>
       </div>
