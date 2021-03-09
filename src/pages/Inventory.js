@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import _ from 'lodash'
-import { 
-  Tab,
- } from 'semantic-ui-react';
-import { Raw } from '../components/Inventory_Components';
+import { Tab, } from 'semantic-ui-react';
+import { Raw, FinishedGoods, Recipes } from '../components/Inventory_Components';
 
 
 const panes = [
@@ -14,17 +10,17 @@ const panes = [
   },
   {
     menuItem: 'Finished Goods',
-    render: () => <Tab.Pane>Tab 2 Content</Tab.Pane>,
+    render: () => <Tab.Pane><FinishedGoods/></Tab.Pane>,
+  },
+  {
+    menuItem: 'Recipes',
+    render: () => <Tab.Pane><Recipes/></Tab.Pane>,
   },
 ]
 
 class Inventory extends Component {
-
-
    render() {
-    
-
-    return (
+        return (
         <Tab
           menu={{ color:'black', inverted: true, pointing: true}}
           panes={panes}

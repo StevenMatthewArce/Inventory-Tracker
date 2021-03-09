@@ -41,16 +41,16 @@ const tableData = [
       this.setState({ expandedRows: newExpandedRows });
     }
   
-    renderItemCaret(rowId) {
-      const currentExpandedRows = this.state.expandedRows;
-      const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
+    // renderItemCaret(rowId) {
+    //   const currentExpandedRows = this.state.expandedRows;
+    //   const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
   
-      if (isRowCurrentlyExpanded) {
-        return <Icon name="caret down" />;
-      } else {
-        return <Icon name="caret right" />;
-      }
-    }
+    //   if (isRowCurrentlyExpanded) {
+    //     return <Icon name="caret down" />;
+    //   } else {
+    //     return <Icon name="caret right" />;
+    //   }
+    // }
   
     renderItemDetails(item) {
       return (
@@ -72,10 +72,10 @@ const tableData = [
       const clickCallback = () => this.handleRowClick(index);
       const itemRows = [
         <Table.Row onClick={clickCallback} key={"row-data-" + index}>
-          <Table.Cell>{this.renderItemCaret(index)}{item.name}</Table.Cell>
-          <Table.Cell>{item.dateRestocked}</Table.Cell>
-          <Table.Cell>{item.quantity}</Table.Cell>
-          <Table.Cell>{item.cost}</Table.Cell>
+          <Table.Cell textAlign= "center" >{item.name}</Table.Cell>
+          <Table.Cell textAlign= "center" >{item.dateRestocked}</Table.Cell>
+          <Table.Cell textAlign= "center" >{item.quantity}</Table.Cell>
+          <Table.Cell textAlign= "center" >{item.cost}</Table.Cell>
         </Table.Row>
       ];
   
@@ -103,10 +103,10 @@ const tableData = [
         <Table celled fixed singleLine collapsing>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Date Restocked</Table.HeaderCell>
-          <Table.HeaderCell>Quantity</Table.HeaderCell>
-          <Table.HeaderCell>Cost</Table.HeaderCell>
+          <Table.HeaderCell textAlign= "center" width={4} >Name</Table.HeaderCell>
+          <Table.HeaderCell textAlign= "center" width={2} >Date Restocked</Table.HeaderCell>
+          <Table.HeaderCell textAlign= "center" width={2} >Quantity</Table.HeaderCell>
+          <Table.HeaderCell textAlign= "center" width={2} >Cost</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body> {allItemRows}
