@@ -2,7 +2,8 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route} from 'react-router-dom';
+  Route
+} from 'react-router-dom';
 import {
   Budget,
   Inventory,
@@ -13,8 +14,8 @@ import {
 import {
   AddItem
 } from './components/InventoryComponents';
-import { Grid, Sidebar, Segment, Container } from 'semantic-ui-react';
-import { Sidenav } from './components/Navigation';
+import { Grid, Sidebar, Segment } from 'semantic-ui-react';
+import { Sidenav, Header } from './components/Navigation';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends React.Component {
@@ -68,9 +69,6 @@ class App extends React.Component {
           </Grid.Column>
         </Grid>
       </Router>
-      </div>
-      <div main>
-
       </div>
       </div>
     )
