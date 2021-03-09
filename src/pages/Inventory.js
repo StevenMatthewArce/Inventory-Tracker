@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Table,
-  Button
+  Table, Icon, Segment, Grid
  } from 'semantic-ui-react';
+
 
 const tableData = [
   { name: 'Eggs', description: 'Egg', cost: '12.20', quantity: '100', dateRestocked: '12/12/2020', notes: 'none'},
@@ -27,22 +27,94 @@ class Inventory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: {
-        uid: '12345',
-        name: 'default',
-        description: 'placeholder',
-        cost: '0',
-        quantity: '12',
-        dateRestocked: '12/12/2000',
-        notes: 'N/A',
-        photo: null
-      }
+      data: tableData,
+      expandedRows: []
+    }
+  }
+  
+  handleRowClick(rowId) {
+    const currentExpandedRows = this.state.expandedRows;
+    const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
+
+    const newExpandedRows = isRowCurrentlyExpanded
+      ? currentExpandedRows.filter(id => id !== rowId)
+      : currentExpandedRows.concat(rowId);
+
+    this.setState({ expandedRows: newExpandedRows });
+  }
+
+  renderItemCaret(rowId) {
+    const currentExpandedRows = this.state.expandedRows;
+    const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
+
+    if (isRowCurrentlyExpanded) {
+      return <Icon name="caret down" />;
+    } else {
+      return <Icon name="caret right" />;
     }
   }
 
-  render() {
+  renderItemDetails(item) {
     return (
-      <div style={{height: '100vh'}} >Inventory Tracker</div>
+      <Segment basic>
+        <Grid columns={2}>
+          <Grid.Column>
+            {item.description}
+          </Grid.Column>
+
+          <Grid.Column>
+            {item.notes}
+          </Grid.Column>
+        </Grid>
+      </Segment>
+    );
+  }
+
+  renderItem(item, index) {
+    const clickCallback = () => this.handleRowClick(index);
+    const itemRows = [
+      <Table.Row onClick={clickCallback} key={"row-data-" + index}>
+        <Table.Cell>{this.renderItemCaret(index)}{item.name}</Table.Cell>
+        <Table.Cell>{item.dateRestocked}</Table.Cell>
+        <Table.Cell>{item.quantity}</Table.Cell>
+        <Table.Cell>{item.cost}</Table.Cell>
+      </Table.Row>
+    ];
+
+    if (this.state.expandedRows.includes(index)) {
+      itemRows.push(
+        <Table.Row key={"row-expanded-" + index}>
+          <Table.Cell colSpan="4">{this.renderItemDetails(item)}</Table.Cell>
+        </Table.Row>
+      );
+    }
+
+    return itemRows;
+  }
+
+   render() {
+    let allItemRows = [];
+
+    this.state.data.forEach((item, index) => {
+      const perItemRows = this.renderItem(item, index);
+      allItemRows = allItemRows.concat(perItemRows);
+    });
+    return (
+      
+      <div style={{height: '100vh'}} >Inventory Tracker
+      <Table celled fixed singleLine collapsing>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Name</Table.HeaderCell>
+        <Table.HeaderCell>Date Restocked</Table.HeaderCell>
+        <Table.HeaderCell>Quantity</Table.HeaderCell>
+        <Table.HeaderCell>Cost</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
+    <Table.Body> {allItemRows}
+    </Table.Body>
+  </Table>
+      </div>
     )
   }
 }
