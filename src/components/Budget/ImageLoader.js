@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import Tesseract from "tesseract.js";
 import ImageUploader from "react-images-upload";
 import ClipLoader from "react-spinners/ClipLoader";
+import { Button } from "semantic-ui-react";
 
-function ImageLoader() {
+//this needs to be an array of items that are already in the database
+const data = ["BANANA", "BRUSSEL SPROUTS", "POTATOES"];
+const recognized = [];
+
+function ImageLoader(props) {
   const [picUrl, setPicUrl] = useState([]);
   const [ocrText, setOcrText] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [items, setItems] = useState([]);
 
   const onDrop = (_, pictureURL) => {
     setPicUrl(pictureURL);
@@ -21,8 +27,23 @@ function ImageLoader() {
     setIsLoading(true);
   };
 
+  const saveAndContinue = e => {
+    e.preventDefault();
+    props.nextStep();
+  };
+
+  const textAnalysis = ot => {
+    for (var i = 0; i < data.length; i++) {
+      if (ot.includes(data[i])) {
+        recognized.push(data[i]);
+        
+        // setItems(recognized);
+      }
+    }
+  };
+
   return (
-    <div>
+    <div className="centered">
       <ImageUploader
         withIcon={true}
         withPreview={true}
@@ -31,12 +52,16 @@ function ImageLoader() {
         imgExtension={[".jpg", ".gif", ".png", ".gif"]}
         maxFileSize={5242880}
       />
-      <button onClick={runOcr}>Run OCR</button>
+      <div className="ocr-button" onClick={runOcr}>
+        Run OCR
+      </div>
       {ocrText.length > 0 ? (
         <ul className="ocr-list">
           {ocrText.map(ot => (
             <li className="ocr-element" key={ocrText.indexOf(ot)}>
               <strong>{ocrText.indexOf(ot) + 1}-) </strong>
+              {textAnalysis(ot)}
+              {console.log(recognized)}
               {ot}
             </li>
           ))}
@@ -44,6 +69,7 @@ function ImageLoader() {
       ) : (
         <ClipLoader color="#ffffff" loading={isLoading} size={150} />
       )}
+      <Button onClick={saveAndContinue}>Save And Continue </Button>
     </div>
   );
 }
