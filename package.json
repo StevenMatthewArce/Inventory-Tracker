@@ -13,7 +13,7 @@
     "dayjs": "^1.10.4",
     "electron": "^11.2.3",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "firebase": "^4.12.0",
+    "firebase": "^8.2.10",
     "firestore": "^1.1.6",
     "foreman": "^3.0.1",
     "lodash": "^4.17.21",
