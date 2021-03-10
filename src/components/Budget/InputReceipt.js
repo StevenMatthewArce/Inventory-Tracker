@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+import ImageLoader from "./ImageLoader";
 
 export class InputReceipt extends Component {
   render() {
-    return <div>
-        
-    </div>;
+    return (
+      <div>
+        <ImageLoader />
+      </div>
+    );
   }
 }
 

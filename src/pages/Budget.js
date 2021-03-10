@@ -32,13 +32,14 @@ class Budget extends Component {
   render() {
     return (
       <div style={{ height: "100vh" }}>
-        {this.state.isEmptyState && (
+        <InputReceipt />
+        {/* {this.state.isEmptyState && (
           <AddTripButton addTrip={this.triggerAddTripState} />
         )}
 
         {this.state.isAddTripState && (
           <AnotherComponent addTrip={this.triggerAddTripState} />
-        )}
+        )} */}
       </div>
     );
   }
