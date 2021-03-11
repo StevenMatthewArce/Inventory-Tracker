@@ -5,13 +5,8 @@ import { Button, List } from "semantic-ui-react";
 class Confirmation extends Component {
   constructor(props) {
     super(props);
-
-    const initialState = {
-      name: this.props.values.name
-    };
-
     this.state = {
-      ...initialState
+      name: this.props.values.name
     };
   }
 
@@ -43,7 +38,8 @@ class Confirmation extends Component {
             );
           })}
         </List>
-
+        {console.log(this.props)}
+        {console.log(this.state.name)}
         <Button onClick={this.back}>Back</Button>
         <Button onClick={this.saveAndContinue}>Confirm</Button>
       </div>

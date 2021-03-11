@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Form, Button } from "semantic-ui-react";
-import { throws } from "assert";
 
 export class Correction extends Component {
   constructor(props) {
@@ -38,8 +37,6 @@ export class Correction extends Component {
 
   handleRemove(index) {
     this.state.name.splice(index, 1);
-    console.log(this.state.name, "$$$$");
-
     this.setState({ name: this.state.name });
   }
 
@@ -47,19 +44,32 @@ export class Correction extends Component {
     return (
       <Form color="blue">
         <h1 className="ui centered">Receipt Items</h1>
-        <label> Item </label>
+
         {this.state.name.map((names, index) => {
           return (
             <div key={index}>
-              <input
-                onChange={e => this.handleChange(e, index)}
-                value={names}
-              />
-              <Button onClick={() => this.handleRemove(index)}>Remove</Button>
+              <Form.Group>
+                <Form.Field inline>
+                  <label> Name </label>
+                  <input
+                    onChange={e => this.handleChange(e, index)}
+                    value={names}
+                  />
+                </Form.Field>
+                <Form.Field inline>
+                  <label> Cost </label>
+                  <input
+                    onChange={e => this.handleChange(e, index)}
+                    value={names}
+                  />
+                </Form.Field>
+                <Button onClick={() => this.handleRemove(index)}>Remove</Button>
+              </Form.Group>
             </div>
           );
         })}
-        {console.log(this.props)}
+        <br></br>
+        {console.log(this.state.name)}
         <Button onClick={e => this.addItem(e)}> Add Item</Button>
         <Button onClick={this.back}>Back</Button>
         <Button onClick={this.saveAndContinue}>Save And Continue </Button>
