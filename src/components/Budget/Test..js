@@ -5,6 +5,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "semantic-ui-react";
 
 const data = ["BANANA", "BRUSSEL SPROUTS", "POTATOES"];
+var recognized2 = [];
 
 export class Test extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ export class Test extends Component {
       picUrl: "",
       ocrText: [],
       isLoading: false,
-      recognized: []
+      recognized: ["HI"]
     };
   }
 
@@ -28,20 +29,20 @@ export class Test extends Component {
       })
     );
 
-    console.log("WE HERE");
+    // console.log("WE HERE");
     var x = [];
     this.state.ocrText.map(ot => (x = ot.replace(/\n/g, " ").split(" ")));
-    console.log(x);
+    // console.log(x);
 
-    var recognized2 = [];
     for (var i = 0; i < data.length; i++) {
-      console.log("we made it");
+      // console.log("we made it");
       if (x.includes(data[i])) {
-        recognized2.push(data[i]);
+        this.state.recognized.push(data[i]);
       }
     }
-    console.log(recognized2);
-    this.setState({ recognized: [recognized2] });
+    // console.log(this.state.recognized);
+    // console.log("dsfhjksdhfjksdjkfhksdhffkjsdhfkjsdhfkj");
+    this.setState({ isLoading: !this.state.isLoading });
   };
 
   saveAndContinue = e => {
@@ -61,11 +62,22 @@ export class Test extends Component {
           maxFileSize={5242880}
         />
         <button onClick={this.runOcr}>Run OCR</button>
-
+        {this.state.ocrText.length > 0 ? (
+          <div>
+            <p>The result is</p>
+            <p>{this.state.recognized}</p>
+          </div>
+        ) : (
+          <ClipLoader
+            color="#000000"
+            loading={this.state.isLoading}
+            size={150}
+          />
+        )}
         {/* <Button onClick={(saveAndContinue)}>
           Save And Continue{" "}
         </Button> */}
-        {console.log("GFDJHSGDJKFHSDKJ")}
+        {console.log("End")}
         {console.log(this.state.recognized)}
       </div>
     );
