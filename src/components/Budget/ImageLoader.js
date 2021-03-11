@@ -6,13 +6,13 @@ import { Button } from "semantic-ui-react";
 
 //this needs to be an array of items that are already in the database
 const data = ["BANANA", "BRUSSEL SPROUTS", "POTATOES"];
-const recognized = [];
+const recognized2 = [];
 
 function ImageLoader(props) {
   const [picUrl, setPicUrl] = useState([]);
   const [ocrText, setOcrText] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [items, setItems] = useState([]);
+  const [recognized, setRecognized] = useState([]);
 
   const onDrop = (_, pictureURL) => {
     setPicUrl(pictureURL);
@@ -35,11 +35,15 @@ function ImageLoader(props) {
   const textAnalysis = ot => {
     for (var i = 0; i < data.length; i++) {
       if (ot.includes(data[i])) {
-        recognized.push(data[i]);
-        
-        // setItems(recognized);
+        recognized2.push(data[i]);
+        setRecognized(recognized2)
       }
     }
+  };
+
+  const sendToParent = () => {
+    //here calling Parents changeValue
+   props.getChildInputOnSubmit(this.state.recognized);
   };
 
   return (
@@ -69,7 +73,7 @@ function ImageLoader(props) {
       ) : (
         <ClipLoader color="#ffffff" loading={isLoading} size={150} />
       )}
-      <Button onClick={saveAndContinue}>Save And Continue </Button>
+      <Button onClick={saveAndContinue, sendToParent}>Save And Continue </Button>
     </div>
   );
 }
