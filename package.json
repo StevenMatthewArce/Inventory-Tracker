@@ -26,11 +26,7 @@
     "semantic-ui-react-input-file": "^1.0.3",
     "react-helmet": "^6.1.0",
     "react-images-upload": "^1.2.8",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^2.0.5",
     "react-spinners": "^0.10.6",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.0.3",
     "tesseract.js": "^2.1.4",
     "victory": "^35.4.9",
     "web-vitals": "^1.0.1"
