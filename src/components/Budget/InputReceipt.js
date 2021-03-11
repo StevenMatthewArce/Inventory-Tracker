@@ -1,26 +1,18 @@
 import React, { Component } from "react";
-import ImageLoader from "./ImageLoader";
-import Test from "./Test.";
-import UserDetails from "./UserDetails";
-import PersonalDetails from "./PersonalDetails";
+import Ocr from "./Ocr";
+import Correction from "./Correction";
 import Confirmation from "./Confirmation";
 import Success from "./Success";
 
 export class InputReceipt extends Component {
   state = {
-    name: [""],
+    name: ["APPLES", "PEARS", "PINEAPPLES"],
     description: "",
     cost: "",
     quantity: "",
     dateRestocked: "",
     notes: "",
     step: 1
-    // firstName: "",
-    // lastName: "",
-    // email: "",
-    // age: "",
-    // city: "",
-    // country: ""
   };
 
   nextStep = () => {
@@ -37,8 +29,14 @@ export class InputReceipt extends Component {
     });
   };
 
-  handleChange = input => {
-    this.setState({ input });
+  handleChange = input => event => {
+    this.setState({ input: event.target.value });
+  };
+
+  handleName = name => {
+    this.setState({
+      name: [...this.state.name, ...name]
+    });
   };
 
   render() {
@@ -55,18 +53,19 @@ export class InputReceipt extends Component {
     switch (step) {
       case 1:
         return (
-          <Test
+          <Ocr
             nextStep={this.nextStep}
-            getChildInputOnSubmit={this.handleChange}
+            getChildInputOnSubmit={this.handleName}
             values={values}
           />
         );
       case 2:
         return (
-          <PersonalDetails
+          <Correction
             nextStep={this.nextStep}
             prevStep={this.prevStep}
             handleChange={this.handleChange}
+            getChildInputOnSubmit={this.handleName}
             values={values}
           />
         );
