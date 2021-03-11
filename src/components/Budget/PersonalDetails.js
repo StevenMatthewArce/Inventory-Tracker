@@ -24,15 +24,15 @@ class PersonalDetails extends Component {
           <input
             placeholder="Age"
             onChange={this.props.handleChange("age")}
-            defaultValue={values.age}
+            defaultValue={values.name}
           />
         </Form.Field>
         <Form.Field>
           <label>City</label>
           <input
-            placeholder="City"
+            placeholder={values.name[1]}
             onChange={this.props.handleChange("city")}
-            defaultValue={values.city}
+            defaultValue={values.name[1]}
           />
         </Form.Field>
         <Form.Field>
