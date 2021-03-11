@@ -18,6 +18,7 @@ export class Correction extends Component {
   saveAndContinue = e => {
     e.preventDefault();
     this.props.nextStep();
+    this.props.getChildInputOnSubmit(this.state.name);
   };
 
   back = e => {
@@ -54,7 +55,7 @@ export class Correction extends Component {
                 onChange={e => this.handleChange(e, index)}
                 value={names}
               />
-              <button onClick={() => this.handleRemove(index)}>Remove</button>
+              <Button onClick={() => this.handleRemove(index)}>Remove</Button>
             </div>
           );
         })}

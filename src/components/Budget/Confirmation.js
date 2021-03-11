@@ -3,6 +3,18 @@ import React, { Component } from "react";
 import { Button, List } from "semantic-ui-react";
 
 class Confirmation extends Component {
+  constructor(props) {
+    super(props);
+
+    const initialState = {
+      name: this.props.values.name
+    };
+
+    this.state = {
+      ...initialState
+    };
+  }
+
   saveAndContinue = e => {
     e.preventDefault();
     this.props.nextStep();
@@ -14,10 +26,6 @@ class Confirmation extends Component {
   };
 
   render() {
-    const {
-       name, description, cost, quantity, dateRestocked, notes
-    } = this.props;
-
     return (
       <div>
         <h1 className="ui centered">Confirm your Details</h1>
@@ -25,30 +33,15 @@ class Confirmation extends Component {
           Click Confirm if the following details have been correctly entered
         </p>
         <List>
-          <List.Item>
-            <List.Icon name="users" />
-            <List.Content>First Name: {name}</List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name="users" />
-            <List.Content>Last Name: {description}</List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name="mail" />
-            <List.Content>
-              <a href="mailto:jack@semantic-ui.com">{cost}</a>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name="calendar" />
-            <List.Content>{quantity} Years</List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name="marker" />
-            <List.Content>
-              {dateRestocked}, {notes}
-            </List.Content>
-          </List.Item>
+          {this.state.name.map((names, index) => {
+            return (
+              <div key={index}>
+                <List.Item>
+                  <List.Content>{names}</List.Content>
+                </List.Item>
+              </div>
+            );
+          })}
         </List>
 
         <Button onClick={this.back}>Back</Button>
