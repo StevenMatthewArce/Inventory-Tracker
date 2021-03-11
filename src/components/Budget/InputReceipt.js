@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ImageLoader from "./ImageLoader";
+import Test from "./Test.";
 import UserDetails from "./UserDetails";
 import PersonalDetails from "./PersonalDetails";
 import Confirmation from "./Confirmation";
@@ -36,8 +37,8 @@ export class InputReceipt extends Component {
     });
   };
 
-  handleChange = input => event => {
-    this.setState({ [input]: event.target.value });
+  handleChange = input => {
+    this.setState({ input });
   };
 
   render() {
@@ -54,9 +55,9 @@ export class InputReceipt extends Component {
     switch (step) {
       case 1:
         return (
-          <ImageLoader
+          <Test
             nextStep={this.nextStep}
-            handleChange={this.handleChange}
+            getChildInputOnSubmit={this.handleChange}
             values={values}
           />
         );
