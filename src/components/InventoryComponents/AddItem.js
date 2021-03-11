@@ -84,6 +84,13 @@ const AddItem = () => {
     .catch((err) => {
       setError(err);
     })
+    
+    setItem(null);
+    setCost(0);
+    setDate(null);
+    setDescription(null);
+    setName(null);
+    setQuantity(0);
   }
 
   const isInvalid = name === '' || dateRestocked === null || quantity === 0 || cost === 0;
