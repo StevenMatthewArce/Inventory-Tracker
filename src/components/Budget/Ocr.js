@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import Tesseract from "tesseract.js";
 import ImageUploader from "react-images-upload";
+<<<<<<< HEAD
 import { Button, Loader } from "semantic-ui-react";
+=======
+import ClipLoader from "react-spinners/ClipLoader";
+import { Button } from "semantic-ui-react";
+>>>>>>> input-receipt
 
 //this needs to be an array of items that are already in the database
 const data = ["BANANA", "BRUSSEL SPROUTS", "POTATOES"];
@@ -35,7 +40,10 @@ export class Ocr extends Component {
         this.state.name.push(data[i]);
       }
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> input-receipt
     this.setState({ isLoading: !this.state.isLoading });
   };
 
@@ -56,6 +64,7 @@ export class Ocr extends Component {
           imgExtension={[".jpg", ".gif", ".png", ".gif"]}
           maxFileSize={5242880}
         />
+<<<<<<< HEAD
         <div>
           {this.state.ocrText.length > 0 ? (
             <div>
@@ -75,6 +84,21 @@ export class Ocr extends Component {
           )}
         </div>
         <Button onClick={this.runOcr}>Run OCR</Button>
+=======
+        <Button onClick={this.runOcr}>Run OCR</Button>
+        {this.state.ocrText.length > 0 ? (
+          <div>
+            <p>The result is</p>
+            <p>{this.state.name}</p>
+          </div>
+        ) : (
+          <ClipLoader
+            color="#000000"
+            loading={this.state.isLoading}
+            size={150}
+          />
+        )}
+>>>>>>> input-receipt
         <Button onClick={this.saveAndContinue}>Save And Continue</Button>
         {console.log("End")}
         {console.log(this.state.name)}

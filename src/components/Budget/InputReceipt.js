@@ -64,6 +64,10 @@ export class InputReceipt extends Component {
           <Correction
             nextStep={this.nextStep}
             prevStep={this.prevStep}
+<<<<<<< HEAD
+=======
+            handleChange={this.handleChange}
+>>>>>>> input-receipt
             getChildInputOnSubmit={this.handleName}
             values={values}
           />
