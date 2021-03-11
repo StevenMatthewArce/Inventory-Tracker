@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { Form, TextArea } from 'semantic-ui-react';
+import { db } from '../Firebase/config';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import { InputFile } from 'semantic-ui-react-input-file';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
-import ProgressBar from './ProgressBar';
+import { 
+  Form, 
+  TextArea, 
+  Button, 
+  Message 
+} from 'semantic-ui-react';
 
 const AddItem = () => {
   const [item, setItem] = useState();
@@ -12,6 +18,8 @@ const AddItem = () => {
   const [quantity, setQuantity] = useState(0);
   const [dateRestocked, setDate] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const imageTypes = ['image/png', 'image/jpeg'];
 
@@ -20,9 +28,10 @@ const AddItem = () => {
     
     if (selected && imageTypes.includes(selected.type)) {
       setPhoto(selected);
+      setError(null);
     } else {
       setPhoto(null);
-      alert('File must be an image (png or jpeg');
+      setError('File must be an image (png or jpeg');
     }
   }
 
@@ -46,16 +55,45 @@ const AddItem = () => {
     console.log(e.target.value);
   }
 
-  const handleDateChange = (event, data) => {
+  const handleDateChange = (eevent, data) => {
     console.log(data.value)
     setDate(data.value)
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setItem({
+      name: name,
+      description: description,
+      cost: cost,
+      quantity: quantity,
+      dateRestocked: dateRestocked,
+    });
+
+    db.collection('items')
+    .add({
+      cost: cost,
+      dateRestocked: dateRestocked,
+      description: description,
+      name: name,
+      quantity: quantity,
+    })
+    .then(() => {
+      setMessage("Item has been submitted")
+    })
+    .catch((err) => {
+      setError(err);
+    })
+  }
+
+  const isInvalid = name === '' || dateRestocked === null || quantity === 0 || cost === 0;
+
   return (
-    <div>
+    <div className='add-item' style={{ height: '100vh' }}>
+      {error && (<Message negative>{error}</Message>)}
+      {message && <Message positive>{message}</Message>}
       <Form>
-      <div className='add-item' style={{ height: '100vh' }}>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Form.Group widths='equal'>
             <Form.Input 
               placeholder="Name" 
@@ -99,16 +137,22 @@ const AddItem = () => {
               label="Description"
               control={TextArea}
             />
-            <Form.Input 
-              label="Upload photo"
-              type='file'
-              onChange={handlePhotoChange}
-            />
+            <Form.Field>
+              <label>Choose photo</label>
+              <InputFile
+                input={{
+                  id: 'input-control-id',
+                  onChange: handlePhotoChange
+                }}
+                value={photo}
+              />
+            </Form.Field>
           </Form.Group>
+          <Button primary disabled={isInvalid} type='submit' onClick={handleSubmit}>
+            Submit
+          </Button>
         </Form>
-        </div>
       </Form>
-      { item && <ProgressBar item={item} setItem={setItem}/>}
     </div>
   )
 }
