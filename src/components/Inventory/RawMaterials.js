@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Table, Icon, Segment, Grid } from "semantic-ui-react";
-import { db } from '../Firebase/config';
+import db from '../Firebase/config';
 
 const RawMaterials = () => {
   const [tableData, setData] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]);
 
-  useEffect(() => {
-    const unsub = db.collection('items')
-      .orderBy('name', 'desc')
-      .onSnapshot((snap) => {
-        let items = [];
-        snap.forEach(doc => {
-          items.push({ ...doc.data() })
-        });
-        setData(items);
-      })
-      return () => unsub();
-  }, [db.collection('items')])
-  
   const handleRowClick = (rowId) => {
     const currentExpandedRows = expandedRows;
     const isRowExpanded = currentExpandedRows.includes(rowId);
@@ -68,7 +55,6 @@ const RawMaterials = () => {
     const perItemRows = renderItem(item, index);
     allItemRows = allItemRows.concat(perItemRows);
   });
-  
   return (
     <div style={{ height: "100vh" }}>
       <Table celled fixed singleLine collapsing>
@@ -88,7 +74,7 @@ const RawMaterials = () => {
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body> {allItemRows} </Table.Body>
+        <Table.Body> {allItemRows}</Table.Body>
       </Table>
     </div>
   );

@@ -44,7 +44,7 @@ class Inventory extends Component {
         <Tab
           menu={{ color: "black", inverted: true, pointing: true }}
           panes={panes}
-          defaultActiveIndex={0}
+          defaultActiveIndex={1}
         />
       </div>
     );
