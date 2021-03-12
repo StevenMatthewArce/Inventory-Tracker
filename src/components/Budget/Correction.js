@@ -6,7 +6,8 @@ export class Correction extends Component {
     super(props);
 
     const initialState = {
-      name: this.props.values.name
+      name: this.props.values.name,
+      cost: this.props.values.cost
     };
 
     this.state = {
@@ -60,7 +61,7 @@ export class Correction extends Component {
                   <label> Cost </label>
                   <input
                     onChange={e => this.handleChange(e, index)}
-                    value={names}
+                    value={this.state.cost}
                   />
                 </Form.Field>
                 <Button onClick={() => this.handleRemove(index)}>Remove</Button>

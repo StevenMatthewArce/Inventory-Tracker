@@ -7,11 +7,11 @@ import Success from "./Success";
 export class InputReceipt extends Component {
   state = {
     name: ["APPLES", "PEARS", "PINEAPPLES"],
-    description: "",
-    cost: "",
-    quantity: "",
-    dateRestocked: "",
-    notes: "",
+    description: [],
+    cost: ["3.00", "3.00", "3.00"],
+    quantity: [],
+    dateRestocked: [],
+    notes: [],
     step: 1
   };
 
@@ -29,13 +29,19 @@ export class InputReceipt extends Component {
     });
   };
 
-  handleChange = input => event => {
-    this.setState({ input: event.target.value });
-  };
+  // handleChange = input => event => {
+  //   this.setState({ input: event.target.value });
+  // };
 
   handleName = name => {
     this.setState({
       name: [...this.state.name, ...name]
+    });
+  };
+
+  handleCost = cost => {
+    this.setState({
+      cost: [...this.state.cost, ...cost]
     });
   };
 
@@ -55,7 +61,8 @@ export class InputReceipt extends Component {
         return (
           <Ocr
             nextStep={this.nextStep}
-            getChildInputOnSubmit={this.handleName}
+            getChildNameOnSubmit={this.handleName}
+            getChildCostOnSubmit={this.handleCost}
             values={values}
           />
         );
@@ -64,7 +71,7 @@ export class InputReceipt extends Component {
           <Correction
             nextStep={this.nextStep}
             prevStep={this.prevStep}
-            getChildInputOnSubmit={this.handleName}
+            getChildInputOnSubmit={this.handleInput}
             values={values}
           />
         );

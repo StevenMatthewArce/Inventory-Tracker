@@ -4,7 +4,7 @@ import ImageUploader from "react-images-upload";
 import { Button, Loader } from "semantic-ui-react";
 
 //this needs to be an array of items that are already in the database
-const data = ["BANANA", "BRUSSEL SPROUTS", "POTATOES"];
+const data = ["BANANA", "BRUSSEL", "POTATOES"];
 
 export class Ocr extends Component {
   constructor(props) {
@@ -13,7 +13,8 @@ export class Ocr extends Component {
       picUrl: "",
       ocrText: [],
       isLoading: false,
-      name: []
+      name: [],
+      cost: []
     };
   }
 
@@ -27,20 +28,55 @@ export class Ocr extends Component {
         this.setState({ ocrText: [text] });
       })
     );
-    var x = [];
-    this.state.ocrText.map(ot => (x = ot.replace(/\n/g, " ").split(" ")));
-    console.log(x);
-    for (var i = 0; i < data.length; i++) {
-      if (x.includes(data[i])) {
-        this.state.name.push(data[i]);
-      }
-    }
     this.setState({ isLoading: !this.state.isLoading });
+    this.textAnalysis();
+  };
+
+  textAnalysis = () => {
+    var x = [];
+    var y = [];
+    this.state.ocrText.map(ot => (x = ot.split(/\n/)));
+    for (var i = 0; i < data.length; i++) {
+      y.push(x.filter(element => element.includes(data[i])));
+    }
+    console.log("y");
+    console.log(y);
+    this.splitNameFromCost(y);
+  };
+
+  splitNameFromCost = input => {
+    console.log("input");
+    console.log(input);
+    var newArray = [];
+    for (var i = 0; i < input.length; i++) {
+      console.log(input[i]);
+      newArray.push(input[i].toString().split("$"));
+    }
+    console.log(newArray);
+    var name = [];
+    var cost = [];
+    for (var i = 0; i < newArray.length; i++) {
+      name.push(newArray[i][0]);
+      cost.push(newArray[i][1]);
+    }
+    this.changeName(name);
+    this.changeCost(cost);
+  };
+
+  changeName = input => {
+    this.setState({ name: input });
+    console.log("done name");
+  };
+
+  changeCost = input => {
+    this.setState({ cost: input });
+    console.log("done cost");
   };
 
   saveAndContinue = e => {
     e.preventDefault();
-    this.props.getChildInputOnSubmit(this.state.name);
+    this.props.getChildNameOnSubmit(this.state.name);
+    // this.props.getChildCostOnSubmit(this.state.cost);
     this.props.nextStep();
   };
 
@@ -60,6 +96,7 @@ export class Ocr extends Component {
             <div>
               <p>The result is</p>
               <p>{this.state.name}</p>
+              <p>{this.state.cost}</p>
             </div>
           ) : (
             <div>
@@ -73,10 +110,13 @@ export class Ocr extends Component {
             </div>
           )}
         </div>
+        {console.log("name and cost")}
+        {console.log(this.state)}
+        {console.log(this.state)}
         <Button onClick={this.runOcr}>Run OCR</Button>
         <Button onClick={this.saveAndContinue}>Save And Continue</Button>
-        {console.log("End")}
-        {console.log(this.state.name)}
+        {/* {console.log(this.state.ocrText)}
+        {console.log(this.state.name)} */}
       </div>
     );
   }
