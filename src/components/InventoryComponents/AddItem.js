@@ -1,74 +1,105 @@
-import React from 'react';
-import { Form, TextArea } from 'semantic-ui-react';
-import { handleAddItem } from '../Firebase';
+import React, { useState } from 'react';
+import { db } from '../Firebase/config';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import { InputFile } from 'semantic-ui-react-input-file';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
+import { 
+  Form, 
+  TextArea, 
+  Button, 
+  Message 
+} from 'semantic-ui-react';
 
-class AddItem extends React.Component {
+const AddItem = () => {
+  const [item, setItem] = useState();
+  const [name, setName] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [cost, setCost] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [dateRestocked, setDate] = useState(null);
+  const [photo, setPhoto] = useState(null);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      description: '',
-      cost: '',
-      quantity: '',
-      dateRestocked: '',
-      photo: '',
-    };
+  const imageTypes = ['image/png', 'image/jpeg'];
+
+  const handlePhotoChange = (e) => {
+    let selected = e.target.files[0];
+    
+    if (selected && imageTypes.includes(selected.type)) {
+      setPhoto(selected);
+      setError(null);
+    } else {
+      setPhoto(null);
+      setError('File must be an image (png or jpeg');
+    }
   }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value }) 
-
-  handleDateChange = (event, data) => {
-    this.setState({
-      dateRestocked: data.value
-    })
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+    console.log(e.target.value)
   }
 
-  handleUpload = () => {
-
+  const handleDescChange = (e) => {
+    setDescription(e.target.value);
+    console.log(e.target.value);
   }
 
-  handleSubmit = () => {
-    const { 
-      name,
-      description,
-      cost,
-      quantity,
-      dateRestocked,
-      photo,
-    } = this.state;
+  const handleCostChange = e => {
+    setCost(e.target.value);
+    console.log(e.target.value)
+  }
 
-    this.setState({
+  const handleQuantityChange = e => {
+    setQuantity(e.target.value);
+    console.log(e.target.value);
+  }
+
+  const handleDateChange = (eevent, data) => {
+    console.log(data.value)
+    setDate(data.value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setItem({
       name: name,
       description: description,
       cost: cost,
       quantity: quantity,
       dateRestocked: dateRestocked,
-      photo: photo
+    });
+
+    db.collection('items')
+    .add({
+      cost: cost,
+      dateRestocked: dateRestocked,
+      description: description,
+      name: name,
+      quantity: quantity,
+    })
+    .then(() => {
+      setMessage("Item has been submitted")
+    })
+    .catch((err) => {
+      setError(err);
     })
   }
 
-  render() {
-    const {
-      name,
-      description,
-      cost,
-      quantity,
-      dateRestocked,
-      photo,
-    } = this.state;
+  const isInvalid = name === '' || dateRestocked === null || quantity === 0 || cost === 0;
 
-    return (
-      <div className='add-item' style={{ height: '100vh' }}>
-        <Form onSubmit={this.handleSubmit}>
+  return (
+    <div className='add-item' style={{ height: '100vh' }}>
+      {error && (<Message negative>{error}</Message>)}
+      {message && <Message positive>{message}</Message>}
+      <Form>
+        <Form onSubmit={handleSubmit}>
           <Form.Group widths='equal'>
             <Form.Input 
               placeholder="Name" 
-              name="name" value={name} 
-              onChange={this.handleChange} 
+              name="name" 
+              value={name}
+              onChange={handleNameChange} 
               label="Name"
               required
             />
@@ -76,7 +107,7 @@ class AddItem extends React.Component {
               placeholder="Cost" 
               name="cost" 
               value={cost} 
-              onChange={this.handleChange} 
+              onChange={handleCostChange} 
               label="Cost"
               required
             />
@@ -84,7 +115,7 @@ class AddItem extends React.Component {
               placeholder="Quantity" 
               name="quantity" 
               value={quantity} 
-              onChange={this.handleChange} 
+              onChange={handleQuantityChange} 
               label="Quantity"
               required
             />
@@ -94,7 +125,7 @@ class AddItem extends React.Component {
               value={dateRestocked}
               required
             >
-              <SemanticDatepicker onChange={this.handleDateChange}/>
+              <SemanticDatepicker onChange={handleDateChange}/>
             </Form.Input>
           </Form.Group>
           <Form.Group widths='equal'>
@@ -102,25 +133,28 @@ class AddItem extends React.Component {
               placeholder="Enter additional information" 
               name="description" 
               value={description} 
-              onChange={this.handleChange} 
+              onChange={handleDescChange} 
               label="Description"
               control={TextArea}
             />
-            <InputFile 
-              
-              input={{
-                id: 'input-control-id',
-                onChange: this.handleUpload
-              }}
-            />
+            <Form.Field>
+              <label>Choose photo</label>
+              <InputFile
+                input={{
+                  id: 'input-control-id',
+                  onChange: handlePhotoChange
+                }}
+                value={photo}
+              />
+            </Form.Field>
           </Form.Group>
+          <Button primary disabled={isInvalid} type='submit' onClick={handleSubmit}>
+            Submit
+          </Button>
         </Form>
-      </div>
-    )
-    
-  }
+      </Form>
+    </div>
+  )
 }
-
-
 
 export default AddItem;
