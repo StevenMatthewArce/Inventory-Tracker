@@ -6,24 +6,19 @@ const RawMaterials = () => {
   const [tableData, setData] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]);
 
-  const getItems = (collection) => {
-    useEffect(() => {
-      const unsub = db.collection(collection)
-        .orderBy('name', 'desc')
-        .onSnapshot((snap) => {
-          let items = [];
-          snap.forEach(doc => {
-            items.push({ ...doc.data(), id: doc.id })
-          });
-          setData(items);
-        })
-
-        return () => unsub();
-    }, [collection])
-
-    return tableData;
-  }
-
+  useEffect(() => {
+    const unsub = db.collection('items')
+      .orderBy('name', 'desc')
+      .onSnapshot((snap) => {
+        let items = [];
+        snap.forEach(doc => {
+          items.push({ ...doc.data() })
+        });
+        setData(items);
+      })
+      return () => unsub();
+  }, [db.collection('items')])
+  
   const handleRowClick = (rowId) => {
     const currentExpandedRows = expandedRows;
     const isRowExpanded = currentExpandedRows.includes(rowId);
@@ -74,7 +69,6 @@ const RawMaterials = () => {
     allItemRows = allItemRows.concat(perItemRows);
   });
   
-
   return (
     <div style={{ height: "100vh" }}>
       <Table celled fixed singleLine collapsing>
@@ -94,7 +88,7 @@ const RawMaterials = () => {
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body> {allItemRows}</Table.Body>
+        <Table.Body> {allItemRows} </Table.Body>
       </Table>
     </div>
   );
