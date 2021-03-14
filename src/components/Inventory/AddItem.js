@@ -55,7 +55,7 @@ const AddItem = () => {
     console.log(e.target.value);
   }
 
-  const handleDateChange = (eevent, data) => {
+  const handleDateChange = (event, data) => {
     console.log(data.value)
     setDate(data.value)
   }
@@ -71,13 +71,7 @@ const AddItem = () => {
     });
 
     db.collection('items')
-    .add({
-      cost: cost,
-      dateRestocked: dateRestocked,
-      description: description,
-      name: name,
-      quantity: quantity,
-    })
+    .add({ name, description, cost, quantity, dateRestocked })
     .then(() => {
       setMessage("Item has been submitted")
     })
