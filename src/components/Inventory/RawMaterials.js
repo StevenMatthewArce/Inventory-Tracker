@@ -1,97 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { Table, Icon, Segment, Grid } from "semantic-ui-react";
-import { db } from '../Firebase/config';
+import React from 'react';
 
-const RawMaterials = () => {
-  const [tableData, setData] = useState([]);
-  const [expandedRows, setExpandedRows] = useState([]);
+import { projectFirestore } from '../Firebase';
 
-  useEffect(() => {
-    const unsub = db.collection('items')
-      .orderBy('name', 'desc')
-      .onSnapshot((snap) => {
-        let items = [];
-        snap.forEach(doc => {
-          items.push({ ...doc.data() })
-        });
-        setData(items);
-      })
-      return () => unsub();
-  }, [db.collection('items')])
-  
-  const handleRowClick = (rowId) => {
-    const currentExpandedRows = expandedRows;
-    const isRowExpanded = currentExpandedRows.includes(rowId);
-
-    const newExpandedRows = isRowExpanded
-      ? currentExpandedRows.filter(id => id !== rowId)
-      : currentExpandedRows.concat(rowId);
-
-      setExpandedRows(newExpandedRows);
+class RawMaterials extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      items: [], 
+    }
   }
 
-  const renderItemDetails = (item) => {
+  componentDidMount() {
+    projectFirestore.collection('items')
+      .orderBy('quantity', 'desc')
+      .onSnapshot((snap) => {
+        let documents = [];
+        snap.forEach(doc => {
+          documents.push({...doc.data(), id: doc.id});
+        })
+        this.setState({
+          items: documents,
+        });
+      });
+  }
+
+  render() {
+    let items = this.state.items;
+    console.log(typeof items)
     return (
-      <Segment basic>
-        <Grid columns={2}>
-          <Grid.Column>{item.description}</Grid.Column>
-          <Grid.Column>{item.photo}</Grid.Column>
-        </Grid>
-      </Segment>
+      <div>
+        {items && items.map(item => (
+          <div className='item-wrap' key={item.id}>
+            {item.cost}
+          </div>
+        ))}
+      </div>
     )
   }
 
-  const renderItem = (item, index) => {
-    const clickCallBack = () => handleRowClick(index);
-    const itemRows = [
-      <Table.Row onClick={clickCallBack} key={"row-data" + index}>
-        <Table.Cell textAlign="center">{item.name}</Table.Cell>
-        <Table.Cell textAlign="center">{item.dateRestocked}</Table.Cell>
-        <Table.Cell textAlign="center">{item.quantity}</Table.Cell>
-        <Table.Cell textAlign="center">{item.cost}</Table.Cell>
-      </Table.Row>
-    ]
-    if (expandedRows.includes(index)) {
-      itemRows.push(
-        <Table.Row key={"row-expanded-" + index}>
-          <Table.Cell colSpan="4">{renderItemDetails(item)}</Table.Cell>
-        </Table.Row>
-      );
-    }
-
-    return itemRows;
-  }
-
-  let allItemRows = [];
-
-  tableData.forEach((item, index) => {
-    const perItemRows = renderItem(item, index);
-    allItemRows = allItemRows.concat(perItemRows);
-  });
-  
-  return (
-    <div style={{ height: "100vh" }}>
-      <Table celled fixed singleLine collapsing>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell textAlign="center" width={4}>
-              Name
-            </Table.HeaderCell>
-            <Table.HeaderCell textAlign="center" width={2}>
-              Date Restocked
-            </Table.HeaderCell>
-            <Table.HeaderCell textAlign="center" width={2}>
-              Quantity
-            </Table.HeaderCell>
-            <Table.HeaderCell textAlign="center" width={2}>
-              Cost
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body> {allItemRows} </Table.Body>
-      </Table>
-    </div>
-  );
 }
 
 export default RawMaterials;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { db } from '../Firebase/config';
+import { db } from '../Firebase';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import { InputFile } from 'semantic-ui-react-input-file';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
