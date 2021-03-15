@@ -1,9 +1,7 @@
 import React from "react";
-import ReactDOM from 'react-dom';
-import { VictoryBar } from 'victory';
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
 
 import { Button, Tab } from "semantic-ui-react";
-import { Link } from 'react-router-dom';
 
 const data = [
     {quarter: 1, earnings: 13000},
@@ -15,17 +13,40 @@ const data = [
   class Dashboard extends React.Component {
     render() {
       return (
-        <div> <h1>Dashboard</h1>
-          <VictoryBar
+        <div style={{ height: '100vh' }}>
+        <h1>Dashboard</h1>
+        <VictoryChart
+            //adding the material theme provided with victory
+            theme={VictoryTheme.material}
+            // domainPadding will add space to each side of VictoryBar to 
+            // prevent it from overlapping the axis
+            domainPadding={20}
+            height={200} width={300}
+            containerComponent={<VictoryContainer responsive={false}/>}
+        >
+
+        <VictoryAxis
+            // tickValues specifies both the bumber of ticks and where
+            // they are placed on the axis
+            tickValues={[1, 2, 3, 4]}
+            tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
+        />
+        <VictoryAxis
+            dependentAxis
+            // tickFormat specifies how ticks should be displayed
+            tickFormat={(x) => `$${x/1000}k`}
+        />
+
+        <VictoryBar
           data={data}
           // data accessor for x values
           x="quarter"
           // data accessor for y values
           y="earnings"
         />
+        </VictoryChart>
         </div>
       )
     }
   }
-
 export default Dashboard;
