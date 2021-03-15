@@ -11,7 +11,7 @@ import 'semantic-ui-css/semantic.min.css';
 import * as ROUTES from '../../constants/routes';
 import { Sidenav, Header } from '../Navigation';
 
-import Dashboard from '../Dashboard';
+import { Dashboard } from '../Dashboard';
 import { Inventory, AddItem } from '../Inventory';
 import Orders from '../Orders';
 import Settings from '../Settings';
