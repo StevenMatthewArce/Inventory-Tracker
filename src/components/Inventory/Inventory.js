@@ -26,6 +26,7 @@ const panes = [
       <Tab.Pane attached={false}>
         <Recipes />
       </Tab.Pane>
+      </div>
     )
   }
 ];
