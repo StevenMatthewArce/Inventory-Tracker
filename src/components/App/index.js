@@ -15,7 +15,7 @@ import { Dashboard } from '../Dashboard';
 import { Inventory, AddItem } from '../Inventory';
 import Orders from '../Orders';
 import Settings from '../Settings';
-import Budget from '../Budget';
+import { Budget, Expense } from '../Budget';
 
 class App extends React.Component {
   constructor(props) {

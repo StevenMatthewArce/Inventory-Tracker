@@ -1,11 +1,2 @@
-import React from 'react';
-
-const Budget = () => {
-  return (
-    <div style={{ height: '100vh' }}>
-      Budget
-    </div>
-  )
-}
-
-export default Budget;
+export { default as Budget } from './Budget';
+export { default as Expense} from './Expense';
