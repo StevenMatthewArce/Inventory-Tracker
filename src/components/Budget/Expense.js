@@ -6,19 +6,19 @@ const tableData = [
     name: "Strawbery Shortcakes",
     quantity: 20,
     hoursPerProduct: 5,
-    totalHours: quantity * hoursPerProduct,
+    totalHours: 20 * 5,
   },
   {
     name: "Lemon Tart",
     quantity: 30,
     hoursPerProduct: 4,
-    totalHours: quantity * hoursPerProduct,
+    totalHours: 30 * 4,
   },
   {
     name: "Chocolate Log Cake",
     quantity: 10,
     hoursPerProduct: 7,
-    totalHours: quantity * hoursPerProduct,
+    totalHours: 10 * 7,
   }
 ];
 
