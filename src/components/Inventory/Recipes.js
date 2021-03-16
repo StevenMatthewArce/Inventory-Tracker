@@ -133,6 +133,7 @@ export class Recipes extends Component {
       </div>
     );
   }
+
 }
 
 export default Recipes;
