@@ -9,7 +9,7 @@ const panes = [
   {
     menuItem: "Raw Inventory",
     render: () => (
-      <Tab.Pane>
+      <Tab.Pane attached={false}>
         <RawMaterials />
       </Tab.Pane>
     )
@@ -17,7 +17,7 @@ const panes = [
   {
     menuItem: "Finished Goods",
     render: () => (
-      <Tab.Pane>
+      <Tab.Pane attached={false}>
         <FinishedGoods />
       </Tab.Pane>
     )
@@ -25,7 +25,7 @@ const panes = [
   {
     menuItem: "Recipes",
     render: () => (
-      <Tab.Pane>
+      <Tab.Pane attached={false}> 
         <Recipes />
       </Tab.Pane>
     )
@@ -42,7 +42,7 @@ const Inventory = () => {
         as={Link}
         to='/addItem'
       />
-      <Tab menu={{ color: 'black' }} panes={panes} />
+      <Tab menu={{ secondary: true, color: 'black', pointing: true }} panes={panes} />
     </div>
   )
 }
