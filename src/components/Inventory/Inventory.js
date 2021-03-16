@@ -3,7 +3,6 @@ import React from "react";
 import { Button, Tab } from "semantic-ui-react";
 import { Link } from 'react-router-dom';
 
-import AddItem from './AddItem';
 import { RawMaterials, FinishedGoods, Recipes } from "../Inventory";
 
 const panes = [
@@ -43,7 +42,7 @@ const Inventory = () => {
         as={Link}
         to='/addItem'
       />
-      <Tab menu={{ color: 'black', pointing: true }} panes={panes} />
+      <Tab menu={{ color: 'black' }} panes={panes} />
     </div>
   )
 }

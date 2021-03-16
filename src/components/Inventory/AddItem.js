@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { db } from '../Firebase/config';
-import SemanticDatepicker from 'react-semantic-ui-datepickers';
+
+import { db } from '../Firebase';
+
 import { InputFile } from 'semantic-ui-react-input-file';
-import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
+import { DateInput } from 'semantic-ui-calendar-react';
 import { 
   Form, 
   TextArea, 
   Button, 
-  Message 
+  Message,
 } from 'semantic-ui-react';
 
 const AddItem = () => {
@@ -55,13 +56,14 @@ const AddItem = () => {
     console.log(e.target.value);
   }
 
-  const handleDateChange = (eevent, data) => {
-    console.log(data.value)
-    setDate(data.value)
+  const handleDateChange = (name, value) => {
+    setDate(value);
+    console.log(typeof value);
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     setItem({
       name: name,
       description: description,
@@ -71,15 +73,9 @@ const AddItem = () => {
     });
 
     db.collection('items')
-    .add({
-      cost: cost,
-      dateRestocked: dateRestocked,
-      description: description,
-      name: name,
-      quantity: quantity,
-    })
+    .add({ name, description, cost, quantity, dateRestocked })
     .then(() => {
-      setMessage("Item has been submitted")
+      setMessage("Item has been submitted. ")
     })
     .catch((err) => {
       setError(err);
@@ -90,8 +86,8 @@ const AddItem = () => {
 
   return (
     <div className='add-item' style={{ height: '100vh' }}>
-      {error && (<Message negative>{error}</Message>)}
-      {message && <Message positive>{message}</Message>}
+      {error && (<Message icon='frown' negative>{error}</Message>)}
+      {message && <Message icon='smile' positive>{message}</Message>}
       <Form>
         <Form onSubmit={handleSubmit}>
           <Form.Group widths='equal'>
@@ -119,14 +115,14 @@ const AddItem = () => {
               label="Quantity"
               required
             />
-            <Form.Input
-              name="dateRestocked"
-              label="Date Restocked"
-              value={dateRestocked}
+            <DateInput
               required
-            >
-              <SemanticDatepicker onChange={handleDateChange}/>
-            </Form.Input>
+              label='Date Restocked'
+              name="dateRestocked"
+              value={dateRestocked}
+              iconPosition="left"
+              onChange={(e, {name, value}) => handleDateChange(name, value)}
+            />
           </Form.Group>
           <Form.Group widths='equal'>
             <Form.Input
