@@ -25,9 +25,18 @@ const panes = [
   {
     menuItem: "Recipes",
     render: () => (
+      <div style={{ height: '100vh' }}>
+      <Button 
+        content='Add Recipe' 
+        icon='plus square outline'
+        labelPosition='right' 
+        as={Link}
+        to='/addRecipe'
+      />
       <Tab.Pane attached={false}> 
         <Recipes />
       </Tab.Pane>
+      </div>
     )
   }
 ];

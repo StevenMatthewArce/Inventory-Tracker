@@ -8,7 +8,7 @@ class Recipes extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      items: [], 
+      recipes: [], 
       expandedRows: [],
     }
   }
@@ -49,6 +49,7 @@ class Recipes extends React.Component {
     )
   }
 
+  //create table of recipe
   renderRecipe(recipe, index) {
     const clickCallBack = () => this.handleRowClick(index);
     const recipeRows = [
