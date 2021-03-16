@@ -14,7 +14,6 @@ import { Sidenav, Header } from '../Navigation';
 import { Dashboard } from '../Dashboard';
 import { Inventory, AddItem } from '../Inventory';
 import Orders from '../Orders';
-import Settings from '../Settings';
 import { Budget, Expense } from '../Budget';
 
 class App extends React.Component {
@@ -46,7 +45,6 @@ class App extends React.Component {
                       <Route path={ROUTES.INVENTORY} component={Inventory} />
                       <Route path={ROUTES.BUDGET} component={Budget} />
                       <Route path={ROUTES.ORDERS} component={Orders} />
-                      <Route path={ROUTES.SETTINGS} component={Settings} />
                       <Route path={ROUTES.ADDITEM} component={AddItem} />
                     </Switch>
                   </Segment>

@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Icon,
-  Menu,
-  Sidebar} from 'semantic-ui-react';
+import { Icon, Menu, Sidebar } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 const Sidenav = (props) => {
@@ -33,10 +30,6 @@ const Sidenav = (props) => {
       <Menu.Item as={Link} to='/budget'>
         <Icon name='sticky note' />
         Budget
-      </Menu.Item>
-      <Menu.Item as={Link} to='/settings'>
-        <Icon name='settings' />
-        Settings
       </Menu.Item>
     </Sidebar>
   )
