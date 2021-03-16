@@ -21,69 +21,69 @@ const inventory = [
     render() {
       return (
         <div style={{ height: '100vh' }}>
-        <h1>Dashboard</h1>
-        <VictoryChart
-            //adding the material theme provided with victory
-            theme={VictoryTheme.material}
-            // domainPadding will add space to each side of VictoryBar to 
-            // prevent it from overlapping the axis
-            domainPadding={20}
-            height={300} width={400}
-            containerComponent={<VictoryContainer responsive={false}/>}
-        >
+          <h1>Dashboard</h1>
+            <VictoryChart
+              //adding the material theme provided with victory
+              theme={VictoryTheme.material}
+              // domainPadding will add space to each side of VictoryBar to 
+              // prevent it from overlapping the axis
+              domainPadding={20}
+              height={300} width={400}
+              containerComponent={<VictoryContainer responsive={false}/>}
+            >
 
-        <VictoryAxis
-            // tickValues specifies both the bumber of ticks and where
-            // they are placed on the axis
-            tickValues={[1, 2, 3, 4]}
-            tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
-        />
-        <VictoryAxis
-            dependentAxis
-            // tickFormat specifies how ticks should be displayed
-            tickFormat={(x) => `$${x/1000}k`}
-        />
+              <VictoryAxis
+                // tickValues specifies both the bumber of ticks and where
+                // they are placed on the axis
+                tickValues={[1, 2, 3, 4]}
+                tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
+              />
+              <VictoryAxis
+                dependentAxis
+                // tickFormat specifies how ticks should be displayed
+                tickFormat={(x) => `$${x/1000}k`}
+              />
 
-        <VictoryBar
-          data={profit}
-          // data accessor for x values
-          x="quarter"
-          // data accessor for y values
-          y="earnings"
-        />
-        </VictoryChart>
-        <VictoryChart
-            //adding the material theme provided with victory
-            theme={VictoryTheme.material}
-            // domainPadding will add space to each side of VictoryBar to 
-            // prevent it from overlapping the axis
-            domainPadding={20}
-            height={300} width={400}
-            containerComponent={<VictoryContainer responsive={false}/>}
-        >
+              <VictoryBar
+                data={profit}
+                // data accessor for x values
+                x="quarter"
+                // data accessor for y values
+                y="earnings"
+              />
+              </VictoryChart>
+              <VictoryChart
+                //adding the material theme provided with victory
+                theme={VictoryTheme.material}
+                // domainPadding will add space to each side of VictoryBar to 
+                // prevent it from overlapping the axis
+                domainPadding={20}
+                height={300} width={400}
+                containerComponent={<VictoryContainer responsive={false}/>}
+              >
 
-        <VictoryAxis
-            // tickValues specifies both the bumber of ticks and where
-            // they are placed on the axis
-            tickValues={[1, 2, 3, 4]}
-            tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
-        />
-        <VictoryAxis
-            dependentAxis
-            // tickFormat specifies how ticks should be displayed
-            tickFormat={(x) => `${x}%`}
-        />
+                <VictoryAxis
+                  // tickValues specifies both the bumber of ticks and where
+                  // they are placed on the axis
+                  tickValues={[1, 2, 3, 4]}
+                  tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
+                />
+                <VictoryAxis
+                  dependentAxis
+                  // tickFormat specifies how ticks should be displayed
+                  tickFormat={(x) => `${x}%`}
+                />
 
-        <VictoryBar
-          data={inventory}
-          // data accessor for x values
-          x="quarter"
-          // data accessor for y values
-          y="goodsAmt"
-        />
-        </VictoryChart>
-        </div>
-      )
-    }
-  }
+                <VictoryBar
+                  data={inventory}
+                  // data accessor for x values
+                  x="quarter"
+                  // data accessor for y values
+                  y="goodsAmt"
+                />
+                </VictoryChart>
+          </div>
+        )
+      }
+   }
 export default Dashboard;
