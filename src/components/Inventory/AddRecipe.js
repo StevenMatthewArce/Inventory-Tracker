@@ -9,6 +9,7 @@ import {
   TextArea, 
   Button, 
   Message,
+  Select,
 } from 'semantic-ui-react';
 
 const AddRecipe = () => {
@@ -17,6 +18,7 @@ const AddRecipe = () => {
   const [description, setDescription] = useState(null);
   const [dateCreated, setDate] = useState(null);
   const [ingredient, setIngredient] = useState(null);
+  const [quantity, setQuantity] = useState(0)
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -56,6 +58,11 @@ const AddRecipe = () => {
     console.log(typeof value);
   }
 
+  const handleQuantityChange = e => {
+    setQuantity(e.target.value);
+    console.log(e.target.value);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -75,6 +82,12 @@ const AddRecipe = () => {
       setError(err);
     })
   }
+
+  const options = [
+    { key: 'm', text: 'One', value: 'one' },
+    { key: 'f', text: 'Two', value: 'two' },
+    { key: 'o', text: 'Three', value: 'three' },
+  ]
 
   const isInvalid = name === '' || dateCreated === null || description ==='';
 
@@ -119,6 +132,12 @@ const AddRecipe = () => {
               label="Ingredient"
               control={TextArea}
             />
+             <Form.Field
+            control={Select}
+            label='Quantity'
+            options={options}
+            placeholder='Quantity'
+          />
             <Form.Field>
               <label>Choose photo</label>
               <InputFile

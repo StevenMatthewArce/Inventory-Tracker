@@ -10,9 +10,8 @@ import 'semantic-ui-css/semantic.min.css';
 
 import * as ROUTES from '../../constants/routes';
 import { Sidenav, Header } from '../Navigation';
-
-import { Dashboard } from '../Dashboard';
-import { Inventory, AddItem } from '../Inventory';
+import Dashboard from '../Dashboard';
+import { Inventory, AddItem, AddRecipe } from '../Inventory';
 import Orders from '../Orders';
 import { Budget, Expense } from '../Budget';
 
@@ -46,6 +45,7 @@ class App extends React.Component {
                       <Route path={ROUTES.BUDGET} component={Budget} />
                       <Route path={ROUTES.ORDERS} component={Orders} />
                       <Route path={ROUTES.ADDITEM} component={AddItem} />
+                      <Route path={ROUTES.ADDRECIPE} component={AddRecipe} />
                     </Switch>
                   </Segment>
                 </Sidebar.Pusher>
