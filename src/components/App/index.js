@@ -1,15 +1,20 @@
 import React from 'react';
+
 import {
   BrowserRouter as Router,
   Switch,
   Route
 } from 'react-router-dom';
 import { Grid, Sidebar, Segment } from 'semantic-ui-react';
-import * as ROUTES from './constants/routes';
-import * as Pages from './pages';
-import * as InventoryComponents from './components/InventoryComponents';
-import { Sidenav, Header } from './components/Navigation';
 import 'semantic-ui-css/semantic.min.css';
+
+import * as ROUTES from '../../constants/routes';
+import { Sidenav, Header } from '../Navigation';
+
+import { Dashboard } from '../Dashboard';
+import { Inventory, AddItem } from '../Inventory';
+import Orders from '../Orders';
+import { Budget, Expense } from '../Budget';
 
 class App extends React.Component {
   constructor(props) {
@@ -31,18 +36,16 @@ class App extends React.Component {
         <Router>
           <Grid columns={1}>
             <Grid.Column>
-              <Grid.Row></Grid.Row>
               <Sidebar.Pushable as={Segment}>
                 <Sidenav toggleMenu = {this.state.toggle}/>
                 <Sidebar.Pusher>
                   <Segment padded>
                     <Switch>
-                      <Route exact path={ROUTES.DASHBOARD} component={Pages.Dashboard} />
-                      <Route path={ROUTES.INVENTORY} component={Pages.Inventory} />
-                      <Route path={ROUTES.BUDGET} component={Pages.Budget} />
-                      <Route path={ROUTES.ORDERS} component={Pages.Orders} />
-                      <Route path={ROUTES.SETTINGS} component={Pages.Settings} />
-                      <Route path={ROUTES.ADDITEM} component={InventoryComponents.AddItem} />
+                      <Route exact path={ROUTES.DASHBOARD} component={Dashboard} />
+                      <Route path={ROUTES.INVENTORY} component={Inventory} />
+                      <Route path={ROUTES.BUDGET} component={Budget} />
+                      <Route path={ROUTES.ORDERS} component={Orders} />
+                      <Route path={ROUTES.ADDITEM} component={AddItem} />
                     </Switch>
                   </Segment>
                 </Sidebar.Pusher>

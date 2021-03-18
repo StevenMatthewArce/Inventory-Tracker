@@ -3,128 +3,26 @@ import { Table, Icon, Segment, Grid } from "semantic-ui-react";
 
 const tableData = [
   {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
+    name: "Strawbery Shortcakes",
+    quantity: 20,
+    hoursPerProduct: 5,
+    totalHours: 20 * 5,
   },
   {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
+    name: "Lemon Tart",
+    quantity: 30,
+    hoursPerProduct: 4,
+    totalHours: 30 * 4,
   },
   {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
-  },
-  {
-    name: "Eggs",
-    description: "Egg",
-    cost: "12.20",
-    quantity: "100",
-    dateRestocked: "12/12/2020",
-    notes: "none"
+    name: "Chocolate Log Cake",
+    quantity: 10,
+    hoursPerProduct: 7,
+    totalHours: 10 * 7,
   }
 ];
 
-class Raw extends Component {
+class Expense extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -155,7 +53,7 @@ class Raw extends Component {
   //   }
   // }
 
-  renderItemDetails(item) {
+ /* renderItemDetails(item) {
     return (
       <Segment basic>
         <Grid columns={2}>
@@ -165,16 +63,16 @@ class Raw extends Component {
         </Grid>
       </Segment>
     );
-  }
+  }*/
 
   renderItem(item, index) {
     const clickCallback = () => this.handleRowClick(index);
     const itemRows = [
       <Table.Row onClick={clickCallback} key={"row-data-" + index}>
         <Table.Cell textAlign="center">{item.name}</Table.Cell>
-        <Table.Cell textAlign="center">{item.dateRestocked}</Table.Cell>
+        <Table.Cell textAlign="center">{item.hoursPerProduct}</Table.Cell>
         <Table.Cell textAlign="center">{item.quantity}</Table.Cell>
-        <Table.Cell textAlign="center">{item.cost}</Table.Cell>
+        <Table.Cell textAlign="center">{item.totalHours}</Table.Cell>
       </Table.Row>
     ];
 
@@ -205,13 +103,13 @@ class Raw extends Component {
                 Name
               </Table.HeaderCell>
               <Table.HeaderCell textAlign="center" width={2}>
-                Date Restocked
+                Hours Per Product
               </Table.HeaderCell>
               <Table.HeaderCell textAlign="center" width={2}>
                 Quantity
               </Table.HeaderCell>
               <Table.HeaderCell textAlign="center" width={2}>
-                Cost
+                Total Hours
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -221,4 +119,4 @@ class Raw extends Component {
     );
   }
 }
-export default Raw;
+export default Expense;

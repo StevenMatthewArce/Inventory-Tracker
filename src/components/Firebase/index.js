@@ -13,5 +13,6 @@ var firebaseApp = firebase.initializeApp({
 });
 
 var db = firebaseApp.firestore();
+const projectFirestore = firebase.firestore();
 
-export { db };
+export { db, projectFirestore };
