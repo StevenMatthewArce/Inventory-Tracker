@@ -15,8 +15,25 @@ export class Ocr extends Component {
       ocrText: [],
       isLoading: false,
       name: [],
-      cost: []
+      cost: [],
+      data: []
     };
+  }
+
+  componentDidMount() {
+    projectFirestore
+      .collection("items")
+      .orderBy("quantity", "desc")
+      .onSnapshot(snap => {
+        let documents = [];
+        snap.forEach(doc => {
+          documents.push({ ...doc.data(), id: doc.id });
+        });
+        console.log(documents);
+        this.setState({
+          data: [...documents.name]
+        });
+      });
   }
 
   onDrop = (_, pictureUrl) => {
@@ -104,7 +121,6 @@ export class Ocr extends Component {
             </div>
           )}
         </div>
-        {console.log(this.props.items)}
         <Button onClick={this.runOcr}>Run OCR</Button>
         <Button onClick={this.saveAndContinue}>Save And Continue</Button>
       </div>

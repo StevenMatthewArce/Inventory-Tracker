@@ -1,96 +1,89 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+
 import Ocr from "./Ocr";
 import Correction from "./Correction";
 import Confirmation from "./Confirmation";
 import Success from "./Success";
 
-export class AddReceipt extends Component {
-  state = {
-    name: ["APPLES", "PEARS", "PINEAPPLES"],
-    description: [],
-    cost: ["3.00", "3.00", "3.00"],
-    quantity: [],
-    dateRestocked: [],
-    notes: [],
-    step: 1
+const AddReceipt = () => {
+  const [item, setItem] = useState(null);
+  const [name, setName] = useState(null);
+  const [cost, setCost] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [dateRestocked, setDate] = useState(null);
+  const [step, setStep] = useState(1);
+
+  const handleNameChange = e => {
+    setName(e.target.value);
+    console.log(e.target.value);
   };
 
-  nextStep = () => {
-    const { step } = this.state;
-    this.setState({
-      step: step + 1
+  const handleCostChange = e => {
+    setCost(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handleQuantityChange = e => {
+    setQuantity(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handleDateChange = (name, value) => {
+    setDate(value);
+    console.log(typeof value);
+  };
+
+  const handleSubmit = (n, c, q, e) => {
+    e.preventDefault();
+  };
+
+  const handleItems = (n, c, q) => {
+    setItem({
+      name: n,
+      cost: c,
+      quantity: q
     });
   };
 
-  prevStep = () => {
-    const { step } = this.state;
-    this.setState({
-      step: step - 1
-    });
+  const handleNextStep = () => {
+    setStep(step + 1);
   };
 
-  handleName = name => {
-    this.setState({
-      name: [...this.state.name, ...name]
-    });
+  const handlePrevStep = () => {
+    setStep(step - 1);
   };
 
-  handleCost = cost => {
-    this.setState({
-      cost: [...this.state.cost, ...cost]
-    });
-  };
-
-  handleValue = value => {
-    const { name, cost } = value;
-    this.setState({
-      name: [...name],
-      cost: [...cost]
-    });
-  };
-
-  render() {
-    const { step } = this.state;
-    const {
-      name,
-      description,
-      cost,
-      quantity,
-      dateRestocked,
-      notes
-    } = this.state;
-    const values = { name, description, cost, quantity, dateRestocked, notes };
-    switch (step) {
-      case 1:
-        return (
-          <Ocr
-            nextStep={this.nextStep}
-            getChildNameOnSubmit={this.handleName}
-            getChildCostOnSubmit={this.handleCost}
-            values={values}
-          />
-        );
-      case 2:
-        return (
-          <Correction
-            nextStep={this.nextStep}
-            prevStep={this.prevStep}
-            getChidlValueOnSubmit={this.handleValue}
-            values={values}
-          />
-        );
-      case 3:
-        return (
-          <Confirmation
-            nextStep={this.nextStep}
-            prevStep={this.prevStep}
-            values={values}
-          />
-        );
-      case 4:
-        return <Success />;
-    }
+  switch (step) {
+    case 1:
+      return (
+        <Ocr
+          nextStep={handleNextStep}
+          getChildItemOnSubmit={handleItems}
+          items={item}
+        />
+      );
+    case 2:
+      return (
+        <Correction
+          nextStep={handleNextStep}
+          prevStep={handlePrevStep}
+          getChildItemOnSubmit={handleItems}
+          items={item}
+        />
+      );
+    case 3:
+      return (
+        <Confirmation
+          nextStep={handleNextStep}
+          prevStep={handlePrevStep}
+          items={item}
+        />
+      );
+    case 4:
+      return <Success />;
+    default:
+      break;
   }
-}
+};
 
 export default AddReceipt;
