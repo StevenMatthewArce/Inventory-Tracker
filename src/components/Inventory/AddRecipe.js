@@ -17,7 +17,7 @@ const AddRecipe = () => {
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [dateCreated, setDate] = useState(null);
-  const [ingredient, setIngredient] = useState(null);
+  const [ingredientList, setIngredientList] = useState(null);
   const [quantity, setQuantity] = useState(0)
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
@@ -53,8 +53,11 @@ const AddRecipe = () => {
     console.log(typeof value);
   }
 
-  const handleIngredChange = (name, value) => {
-    setIngredient(value);
+  const handleIngredChange = (e, index) => {
+    const{name,value} = e.target;
+    const list = [...ingredientList];
+    list[index][name] = value
+    setIngredientList(list);
     console.log(typeof value);
   }
 
@@ -63,18 +66,27 @@ const AddRecipe = () => {
     console.log(e.target.value);
   }
 
+  const handleUnitChange = e => {
+    setQuantity(e.target.value);
+    console.log(e.target.value);
+  }
+
+  const handleAddClick = () => {
+    setIngredientList([...ingredientList,{ingredient: '', quantity: ''}]);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setRecipe({
       name: name,
       description: description,
-      ingredient: ingredient,
+      ingredientList: ingredientList,
       dateCreated: dateCreated,
     });
 
     db.collection('recipes')
-    .add({ name, description, ingredient, dateCreated })
+    .add({ name, description, ingredientList, dateCreated })
     .then(() => {
       setMessage("Recipe has been submitted. ")
     })
@@ -83,10 +95,18 @@ const AddRecipe = () => {
     })
   }
 
-  const options = [
-    { key: 'm', text: 'One', value: 'one' },
-    { key: 'f', text: 'Two', value: 'two' },
-    { key: 'o', text: 'Three', value: 'three' },
+  const unit = [
+    { key: 'o', text: 'Teaspoon', value: 'teaspoon' },
+    { key: 't', text: 'Tablespoon', value: 'tablespoon' },
+    { key: 'th', text: 'Cup', value: 'cup' },
+    { key: 'f', text: 'Gram', value: 'gram' },
+    { key: 'f', text: 'Pound', value: 'pound' },
+    { key: 'f', text: 'Other', value: 'other' },
+  ]
+
+  //get raw material from raw inventory database?
+  const rawMaterials = [
+    {key: 'a', text: 'Apple', value: 'apple'}
   ]
 
   const isInvalid = name === '' || dateCreated === null || description ==='';
@@ -96,7 +116,7 @@ const AddRecipe = () => {
       {error && (<Message icon='frown' negative>{error}</Message>)}
       {message && <Message icon='smile' positive>{message}</Message>}
       <Form>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>          
           <Form.Group widths='equal'>
             <Form.Input 
               placeholder="Name" 
@@ -124,20 +144,41 @@ const AddRecipe = () => {
             />
           </Form.Group>
           <Form.Group widths='equal'>
+            <h3>Ingredients List</h3>
+            {/* //</Form.Group> */}
+            {/* </Form>{ingredientList.map((x,i) => { */}
+
+            {/* return( */}
             <Form.Input
-              placeholder="Select ingredients" 
+              placeholder="Ingredients" 
               name="ingredient" 
-              value={ingredient} 
+              value={ingredientList} 
               onChange={handleIngredChange} 
               label="Ingredient"
-              control={TextArea}
+              control={Select}
+              options={rawMaterials}
             />
-             <Form.Field
-            control={Select}
-            label='Quantity'
-            options={options}
-            placeholder='Quantity'
-          />
+            <Form.Input
+              placeholder="Quantity" 
+              name="quantity" 
+              value={quantity} 
+              onChange={handleQuantityChange} 
+              label="Quanitity"
+              //control={TextArea}
+            />
+            <Form.Field
+              control={Select}
+              label='Unit'
+              options={unit}
+              onChange={handleUnitChange} 
+              placeholder='Units'
+            />
+            {/* {ingredientList.length - 1 === i && <button>Add</button>} */}
+          
+         
+          </Form.Group>
+      
+          <Form.Group>
             <Form.Field>
               <label>Choose photo</label>
               <InputFile
@@ -151,9 +192,13 @@ const AddRecipe = () => {
           </Form.Group>
           <Button primary disabled={isInvalid} type='submit' onClick={handleSubmit}>
             Submit
-          </Button>
+          </Button>  
         </Form>
+        
+     
       </Form>
+      
+       {/* <div style={{ marginTop: 20 }}>{JSON.stringify(ingredientList)}</div>      */}
     </div>
   )
 }
