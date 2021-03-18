@@ -5,6 +5,7 @@ import { Grid, Sidebar, Segment } from "semantic-ui-react";
 import * as V from "victory";
 import "semantic-ui-css/semantic.min.css";
 
+import { Budget, AddReceipt, Expense  } from "../Budget";
 import * as ROUTES from "../../constants/routes";
 import { Sidenav, Header } from "../Navigation";
 
