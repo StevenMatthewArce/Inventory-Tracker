@@ -74,7 +74,7 @@ export class Ocr extends Component {
 
   render() {
     return (
-      <div className="centered">
+      <div style={{ height: "100vh" }} className="centered">
         <ImageUploader
           withIcon={true}
           withPreview={true}

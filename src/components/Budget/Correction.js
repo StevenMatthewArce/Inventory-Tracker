@@ -16,9 +16,8 @@ export class Correction extends Component {
 
   saveAndContinue = e => {
     e.preventDefault();
+    this.props.getChidlValueOnSubmit(this.state.value);
     this.props.nextStep();
-    this.props.getChildNameOnSubmit(this.state.name);
-    this.props.getChildCostOnSubmit(this.state.cost);
   };
 
   back = e => {
@@ -43,39 +42,42 @@ export class Correction extends Component {
 
   render() {
     return (
-      <Form color="blue">
-        <h1 className="ui centered">Receipt Items</h1>
-        {console.log(this.state.value)}
-        {/* 
-        {this.state.value.map((value, index) => {
-          return (
-            <div key={index}>
-              <Form.Group>
-                <Form.Field inline>
-                  <label> Name </label>
-                  <input
-                    onChange={e => this.handleChange(e, index)}
-                    value={value.name}
-                  />
-                </Form.Field>
-                <Form.Field inline>
-                  <label> Cost </label>
-                  <input
-                    onChange={e => this.handleChange(e, index)}
-                    value={value.cost}
-                  />
-                </Form.Field>
-                <Button onClick={() => this.handleRemove(index)}>Remove</Button>
-              </Form.Group>
-            </div>
-          );
-        })}
-        <br></br>
-        {console.log(this.state.name)}
-        <Button onClick={e => this.addItem(e)}> Add Item</Button>
-        <Button onClick={this.back}>Back</Button>
-        <Button onClick={this.saveAndContinue}>Save And Continue </Button> */}
-      </Form>
+      <div style={{ height: "100vh" }}>
+        <Form color="blue">
+          <h1 className="ui centered">Receipt Items</h1>
+          {console.log(this.state.value)}
+          {this.state.value.name.map((name, index) => {
+            return (
+              <div key={name}>
+                <Form.Group>
+                  <Form.Field inline>
+                    <label> Name </label>
+                    <input
+                      onChange={e => this.handleChange(e, index)}
+                      value={name}
+                    />
+                  </Form.Field>
+                  <Form.Field inline>
+                    <label> Cost </label>
+                    <input
+                      onChange={e => this.handleChange(e, index)}
+                      value={this.state.value.cost[index]}
+                    />
+                  </Form.Field>
+                  <Button onClick={() => this.handleRemove(index)}>
+                    Remove
+                  </Button>
+                </Form.Group>
+              </div>
+            );
+          })}
+          <br></br>
+          {console.log(this.state.name)}
+          <Button onClick={e => this.addItem(e)}> Add Item</Button>
+          <Button onClick={this.back}>Back</Button>
+          <Button onClick={this.saveAndContinue}>Save And Continue </Button>
+        </Form>
+      </div>
     );
   }
 }

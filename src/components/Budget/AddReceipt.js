@@ -4,14 +4,14 @@ import Correction from "./Correction";
 import Confirmation from "./Confirmation";
 import Success from "./Success";
 
-export class InputReceipt extends Component {
+export class AddReceipt extends Component {
   state = {
-    name: ["APPLES", "PEARS"],
-    description: "",
-    cost: "",
-    quantity: "",
-    dateRestocked: "",
-    notes: "",
+    name: ["APPLES", "PEARS", "PINEAPPLES"],
+    description: [],
+    cost: ["3.00", "3.00", "3.00"],
+    quantity: [],
+    dateRestocked: [],
+    notes: [],
     step: 1
   };
 
@@ -29,13 +29,23 @@ export class InputReceipt extends Component {
     });
   };
 
-  handleChange = input => event => {
-    this.setState({ input: event.target.value });
-  };
-
   handleName = name => {
     this.setState({
-      name: [...this.state.name, name]
+      name: [...this.state.name, ...name]
+    });
+  };
+
+  handleCost = cost => {
+    this.setState({
+      cost: [...this.state.cost, ...cost]
+    });
+  };
+
+  handleValue = value => {
+    const { name, cost } = value;
+    this.setState({
+      name: [...name],
+      cost: [...cost]
     });
   };
 
@@ -55,7 +65,8 @@ export class InputReceipt extends Component {
         return (
           <Ocr
             nextStep={this.nextStep}
-            getChildInputOnSubmit={this.handleName}
+            getChildNameOnSubmit={this.handleName}
+            getChildCostOnSubmit={this.handleCost}
             values={values}
           />
         );
@@ -64,8 +75,7 @@ export class InputReceipt extends Component {
           <Correction
             nextStep={this.nextStep}
             prevStep={this.prevStep}
-            handleChange={this.handleChange}
-            getChildInputOnSubmit={this.handleName}
+            getChidlValueOnSubmit={this.handleValue}
             values={values}
           />
         );
@@ -83,4 +93,4 @@ export class InputReceipt extends Component {
   }
 }
 
-export default InputReceipt;
+export default AddReceipt;
