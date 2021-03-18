@@ -29,10 +29,6 @@ export class InputReceipt extends Component {
     });
   };
 
-  // handleChange = input => event => {
-  //   this.setState({ input: event.target.value });
-  // };
-
   handleName = name => {
     this.setState({
       name: [...this.state.name, ...name]
@@ -71,7 +67,8 @@ export class InputReceipt extends Component {
           <Correction
             nextStep={this.nextStep}
             prevStep={this.prevStep}
-            getChildInputOnSubmit={this.handleInput}
+            getChildNameOnSubmit={this.handleName}
+            getChildCostOnSubmit={this.handleCost}
             values={values}
           />
         );

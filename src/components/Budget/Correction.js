@@ -6,8 +6,7 @@ export class Correction extends Component {
     super(props);
 
     const initialState = {
-      name: this.props.values.name,
-      cost: this.props.values.cost
+      value: this.props.values
     };
 
     this.state = {
@@ -18,7 +17,8 @@ export class Correction extends Component {
   saveAndContinue = e => {
     e.preventDefault();
     this.props.nextStep();
-    this.props.getChildInputOnSubmit(this.state.name);
+    this.props.getChildNameOnSubmit(this.state.name);
+    this.props.getChildCostOnSubmit(this.state.cost);
   };
 
   back = e => {
@@ -45,8 +45,9 @@ export class Correction extends Component {
     return (
       <Form color="blue">
         <h1 className="ui centered">Receipt Items</h1>
-
-        {this.state.name.map((names, index) => {
+        {console.log(this.state.value)}
+        {/* 
+        {this.state.value.map((value, index) => {
           return (
             <div key={index}>
               <Form.Group>
@@ -54,14 +55,14 @@ export class Correction extends Component {
                   <label> Name </label>
                   <input
                     onChange={e => this.handleChange(e, index)}
-                    value={names}
+                    value={value.name}
                   />
                 </Form.Field>
                 <Form.Field inline>
                   <label> Cost </label>
                   <input
                     onChange={e => this.handleChange(e, index)}
-                    value={this.state.cost}
+                    value={value.cost}
                   />
                 </Form.Field>
                 <Button onClick={() => this.handleRemove(index)}>Remove</Button>
@@ -73,7 +74,7 @@ export class Correction extends Component {
         {console.log(this.state.name)}
         <Button onClick={e => this.addItem(e)}> Add Item</Button>
         <Button onClick={this.back}>Back</Button>
-        <Button onClick={this.saveAndContinue}>Save And Continue </Button>
+        <Button onClick={this.saveAndContinue}>Save And Continue </Button> */}
       </Form>
     );
   }

@@ -6,7 +6,8 @@ class Confirmation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.values.name
+      name: this.props.values.name,
+      cost: this.props.values.cost
     };
   }
 
@@ -28,11 +29,14 @@ class Confirmation extends Component {
           Click Confirm if the following details have been correctly entered
         </p>
         <List>
-          {this.state.name.map((names, index) => {
+          {this.state.name.map((names, costs, index) => {
             return (
               <div key={index}>
                 <List.Item>
-                  <List.Content>{names}</List.Content>
+                  <List.Content>
+                    {names}
+                    {this.state.cost[costs]}
+                  </List.Content>
                 </List.Item>
               </div>
             );

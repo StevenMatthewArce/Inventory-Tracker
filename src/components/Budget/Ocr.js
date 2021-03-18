@@ -39,20 +39,14 @@ export class Ocr extends Component {
     for (var i = 0; i < data.length; i++) {
       y.push(x.filter(element => element.includes(data[i])));
     }
-    console.log("y");
-    console.log(y);
     this.splitNameFromCost(y);
   };
 
   splitNameFromCost = input => {
-    console.log("input");
-    console.log(input);
     var newArray = [];
     for (var i = 0; i < input.length; i++) {
-      console.log(input[i]);
       newArray.push(input[i].toString().split("$"));
     }
-    console.log(newArray);
     var name = [];
     var cost = [];
     for (var i = 0; i < newArray.length; i++) {
@@ -65,18 +59,16 @@ export class Ocr extends Component {
 
   changeName = input => {
     this.setState({ name: input });
-    console.log("done name");
   };
 
   changeCost = input => {
     this.setState({ cost: input });
-    console.log("done cost");
   };
 
   saveAndContinue = e => {
     e.preventDefault();
     this.props.getChildNameOnSubmit(this.state.name);
-    // this.props.getChildCostOnSubmit(this.state.cost);
+    this.props.getChildCostOnSubmit(this.state.cost);
     this.props.nextStep();
   };
 
@@ -110,13 +102,8 @@ export class Ocr extends Component {
             </div>
           )}
         </div>
-        {console.log("name and cost")}
-        {console.log(this.state)}
-        {console.log(this.state)}
         <Button onClick={this.runOcr}>Run OCR</Button>
         <Button onClick={this.saveAndContinue}>Save And Continue</Button>
-        {/* {console.log(this.state.ocrText)}
-        {console.log(this.state.name)} */}
       </div>
     );
   }
