@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Tesseract from "tesseract.js";
 import ImageUploader from "react-images-upload";
 import { Button, Loader } from "semantic-ui-react";
+import { projectFirestore } from "../Firebase";
 
 //this needs to be an array of items that are already in the database
 const data = ["BANANA", "BRUSSEL", "POTATOES"];
@@ -14,8 +15,25 @@ export class Ocr extends Component {
       ocrText: [],
       isLoading: false,
       name: [],
-      cost: []
+      cost: [],
+      data: []
     };
+  }
+
+  componentDidMount() {
+    projectFirestore
+      .collection("items")
+      .orderBy("quantity", "desc")
+      .onSnapshot(snap => {
+        let documents = [];
+        snap.forEach(doc => {
+          documents.push({ ...doc.data(), id: doc.id });
+        });
+        console.log(documents);
+        this.setState({
+          data: [...documents.name]
+        });
+      });
   }
 
   onDrop = (_, pictureUrl) => {
@@ -75,6 +93,7 @@ export class Ocr extends Component {
   render() {
     return (
       <div style={{ height: "100vh" }} className="centered">
+        {console.log(this.state.data)}
         <ImageUploader
           withIcon={true}
           withPreview={true}

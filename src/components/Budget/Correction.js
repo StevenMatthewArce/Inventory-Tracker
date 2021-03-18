@@ -26,8 +26,13 @@ export class Correction extends Component {
   };
 
   addItem() {
-    this.setState({ name: [...this.state.name, "new"] });
-    console.log(this.state.name);
+    this.setState({
+      value: { ...this.state.value, name: [...this.state.value.name, "TEST"] }
+    });
+    this.setState({
+      value: { ...this.state.value, cost: [...this.state.value.cost, "0"] }
+    });
+    console.log(this.state.value.name);
   }
 
   handleChange(e, index) {
@@ -46,6 +51,7 @@ export class Correction extends Component {
         <Form color="blue">
           <h1 className="ui centered">Receipt Items</h1>
           {console.log(this.state.value)}
+          {console.log(this.state.value.name)}
           {this.state.value.name.map((name, index) => {
             return (
               <div key={name}>
@@ -72,7 +78,6 @@ export class Correction extends Component {
             );
           })}
           <br></br>
-          {console.log(this.state.name)}
           <Button onClick={e => this.addItem(e)}> Add Item</Button>
           <Button onClick={this.back}>Back</Button>
           <Button onClick={this.saveAndContinue}>Save And Continue </Button>
