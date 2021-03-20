@@ -10,7 +10,7 @@ import 'semantic-ui-css/semantic.min.css';
 
 import * as ROUTES from '../../constants/routes';
 import { Sidenav, Header } from '../Navigation';
-import Dashboard from '../Dashboard';
+import {Dashboard} from '../Dashboard';
 import { Inventory, AddItem, AddRecipe } from '../Inventory';
 import Orders from '../Orders';
 import { Budget, Expense } from '../Budget';
