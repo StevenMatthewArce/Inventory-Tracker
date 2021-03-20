@@ -5,14 +5,13 @@ import { Grid, Sidebar, Segment } from "semantic-ui-react";
 import * as V from "victory";
 import "semantic-ui-css/semantic.min.css";
 
+import * as ROUTES from '../../constants/routes';
+import { Sidenav, Header } from '../Navigation';
+import {Dashboard} from '../Dashboard';
+import { Inventory, AddItem, AddRecipe } from '../Inventory';
+import Orders from '../Orders';
+import { Budget, Expense } from '../Budget';
 import { Budget, AddReceipt, Expense  } from "../Budget";
-import * as ROUTES from "../../constants/routes";
-import { Sidenav, Header } from "../Navigation";
-
-import { Dashboard } from "../Dashboard";
-import { Inventory, AddItem } from "../Inventory";
-import { Orders, AddOrder } from "../Orders";
-import { Budget, AddReceipt } from "../Budget";
 
 class App extends React.Component {
   constructor(props) {
