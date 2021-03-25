@@ -1,6 +1,6 @@
 import { stubTrue } from "lodash";
 import React, { Component } from "react";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Message, Icon, Header } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 
 export class Correction extends Component {
@@ -17,6 +17,7 @@ export class Correction extends Component {
   }
 
   saveAndContinue = e => {
+    //change this to submit here
     e.preventDefault();
     let { name, cost, quantity } = this.state.item;
     this.props.getChildItemOnSubmit(name, cost, quantity);
@@ -59,13 +60,15 @@ export class Correction extends Component {
   };
 
   handleRemove(i) {
+    //get the previous date and then update the new date.
     this.setState({
       item: {
         name: this.state.item.name.filter((name, index) => index != i),
         cost: this.state.item.cost.filter((cost, index) => index != i),
         quantity: this.state.item.quantity.filter(
           (quantity, index) => index != i
-        )
+        ),
+        dateRestocked: this.state.dateRestocked
       }
     });
     console.log(this.state.item);
@@ -73,36 +76,36 @@ export class Correction extends Component {
   render() {
     return (
       <div style={{ height: "100vh" }}>
-        <Form color="blue">
-          <h1 className="ui centered">Receipt Items</h1>
+        <Header as="h1" textAlign="center">
+          Detected Receipt Items
+        </Header>
+        <Form>
           {this.state.item.name.map((name, index) => {
             return (
               <div key={name}>
-                <Form.Group>
-                  <Form.Field>
-                    <label> Name </label>
-                    <input
-                      name="name"
-                      onChange={e => this.handleChange(e, index)}
-                      value={name}
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label> Cost </label>
-                    <input
-                      name="cost"
-                      onChange={e => this.handleChange(e, index)}
-                      value={this.state.item.cost[index]}
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label> Quantity </label>
-                    <input
-                      name="quantity"
-                      onChange={e => this.handleChange(e, index)}
-                      value={this.state.item.quantity[index]}
-                    />
-                  </Form.Field>
+                <Form.Group inline>
+                  <Form.Input
+                    label="Name"
+                    name="name"
+                    value={name}
+                    onChange={e => this.handleChange(e, index)}
+                    required
+                  />
+                  <Form.Input
+                    label="Cost"
+                    name="cost"
+                    value={this.state.item.cost[index]}
+                    onChange={e => this.handleChange(e, index)}
+                    required
+                  />
+
+                  <Form.Input
+                    label="Quantity"
+                    name="qunatity"
+                    value={this.state.item.quantity[index]}
+                    onChange={e => this.handleChange(e, index)}
+                    required
+                  />
                   <DateInput
                     required
                     label="Date Restocked"
@@ -111,17 +114,24 @@ export class Correction extends Component {
                     iconPosition="left"
                   />
 
-                  <Button onClick={() => this.handleRemove(index)}>
+                  <Button negative onClick={() => this.handleRemove(index)}>
                     Remove
                   </Button>
                 </Form.Group>
               </div>
             );
           })}
-          <br></br>
-          <Button onClick={e => this.addItem(e)}> Add Item</Button>
-          <Button onClick={this.back}>Back</Button>
-          <Button onClick={this.saveAndContinue}>Save And Continue </Button>
+          <Button.Group>
+            <Button positive onClick={e => this.addItem(e)}>
+              Add Item
+            </Button>
+            <Button primary onClick={this.back}>
+              Back
+            </Button>
+            <Button primary type="submit" onClick={this.saveAndContinue}>
+              Save And Continue
+            </Button>
+          </Button.Group>
         </Form>
       </div>
     );

@@ -1,6 +1,6 @@
 // Confirmation.jsx
 import React, { Component } from "react";
-import { Button, List } from "semantic-ui-react";
+import { Button, List, Header, Icon, Message } from "semantic-ui-react";
 
 class Confirmation extends Component {
   constructor(props) {
@@ -28,7 +28,9 @@ class Confirmation extends Component {
   render() {
     return (
       <div style={{ height: "100vh" }}>
-        <h1 className="ui centered">Confirm your Details</h1>
+        <Header as="h1" textAlign="center">
+          Confirm your Details
+        </Header>
         <p>
           Click Confirm if the following details have been correctly entered
         </p>

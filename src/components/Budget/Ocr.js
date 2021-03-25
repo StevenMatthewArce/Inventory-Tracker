@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Tesseract from "tesseract.js";
 import ImageUploader from "react-images-upload";
-import { Button, Header, Loader, Message } from "semantic-ui-react";
+import { Button, Header, Message, Icon } from "semantic-ui-react";
 import { projectFirestore } from "../Firebase";
 import { set } from "lodash";
 
@@ -46,14 +46,14 @@ export class Ocr extends Component {
     this.state = {
       picUrl: "",
       ocrText: [],
-      isLoading: false,
       name: [],
       cost: [],
       quantity: [],
       dateRestocked: [],
       item: [],
       error: null,
-      imageUploaded: false
+      imageUploaded: false,
+      isLoading: false
     };
   }
 
@@ -94,7 +94,9 @@ export class Ocr extends Component {
     }
     this.changeDateRestocked(d);
     this.splitNameFromCost(y);
+    console.log("Turning off isLoading");
     this.setState({ isLoading: !this.state.isLoading });
+    console.log(this.state.isLoading);
   };
 
   splitNameFromCost = input => {
@@ -150,6 +152,8 @@ export class Ocr extends Component {
   render() {
     return (
       <div style={{ height: "100vh" }}>
+        {console.log(this.state)}
+
         <Header as="h1" textAlign="center">
           Upload Receipt
         </Header>
@@ -169,28 +173,29 @@ export class Ocr extends Component {
             {this.state.error}
           </Message>
         )}
-        {this.state.imageUploaded ? (
-          [
-            this.state.isLoading ? (
-              <Button loading primary onClick={this.runOcr}>
-                Run OCR
+        <div>
+          <Button.Group>
+            {this.state.imageUploaded ? (
+              <Button icon labelPosition="left" primary onClick={this.runOcr}>
+                Run Ocr <Icon name="eye" />
               </Button>
             ) : (
-              <div>
-                <Button primary onClick={this.runOcr}>
-                  Run OCR
-                </Button>
-                <p>{this.state.name}</p>
-              </div>
-            )
-          ]
-        ) : (
-          <Button disabled primary onClick={this.runOcr}>
-            Run OCR
-          </Button>
-        )}
-        <Button onClick={this.saveAndContinue}>Save And Continue</Button>
-        <Button onClick={this.debugTest}> Debug</Button>
+              <Button icon labelPosition="left" disabled primary>
+                Run OCR <Icon name="eye" />
+              </Button>
+            )}
+            <Button
+              primary
+              icon
+              labelPosition="right"
+              onClick={this.saveAndContinue}
+            >
+              Save and Continue
+              <Icon name="right arrow" />
+            </Button>
+            <Button onClick={this.debugTest}> Debug</Button>
+          </Button.Group>
+        </div>
       </div>
     );
   }
