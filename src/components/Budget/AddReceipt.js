@@ -2,40 +2,10 @@ import React, { useState } from "react";
 
 import Ocr from "./Ocr";
 import Correction from "./Correction";
-import Confirmation from "./Confirmation";
-import Success from "./Success";
 
 const AddReceipt = () => {
   const [item, setItem] = useState(null);
-  const [name, setName] = useState(null);
-  const [cost, setCost] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  const [dateRestocked, setDate] = useState(null);
   const [step, setStep] = useState(1);
-
-  const handleNameChange = e => {
-    setName(e.target.value);
-    console.log(e.target.value);
-  };
-
-  const handleCostChange = e => {
-    setCost(e.target.value);
-    console.log(e.target.value);
-  };
-
-  const handleQuantityChange = e => {
-    setQuantity(e.target.value);
-    console.log(e.target.value);
-  };
-
-  const handleDateChange = (name, value) => {
-    setDate(value);
-    console.log(typeof value);
-  };
-
-  const handleSubmit = (n, c, q, e) => {
-    e.preventDefault();
-  };
 
   const handleItems = (n, c, q, d) => {
     setItem({
