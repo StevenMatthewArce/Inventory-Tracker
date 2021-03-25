@@ -1,3 +1,4 @@
+import { stubTrue } from "lodash";
 import React, { Component } from "react";
 import { Form, Button } from "semantic-ui-react";
 
@@ -6,7 +7,7 @@ export class Correction extends Component {
     super(props);
 
     const initialState = {
-      value: this.props.values
+      item: this.props.items
     };
 
     this.state = {
@@ -16,7 +17,7 @@ export class Correction extends Component {
 
   saveAndContinue = e => {
     e.preventDefault();
-    this.props.getChidlValueOnSubmit(this.state.value);
+    // this.props.getChidlValueOnSubmit(this.state.item);
     this.props.nextStep();
   };
 
@@ -25,40 +26,57 @@ export class Correction extends Component {
     this.props.prevStep();
   };
 
-  addItem() {
+  addItem = () => {
+    this.setState(prevState => ({
+      item: {
+        ...this.state.item,
+        name: [...prevState.item.name, "Test"],
+        cost: [...prevState.item.cost, "0"]
+      }
+    }));
+    console.log(this.state.item);
+  };
+
+  handleChange = (event, index) => {
+    // get the change and create a new item list
+    // set state itemlist to new item list
+
+    let itemList = this.state.item;
+    let x = event.target.name;
+    if (x == "name") {
+      itemList.name[index] = event.target.value;
+    } else {
+      itemList.cost[index] = event.target.value;
+    }
     this.setState({
-      value: { ...this.state.value, name: [...this.state.value.name, "TEST"] }
+      ...this.state.item,
+      name: [itemList.name],
+      cost: [itemList.cost]
     });
+  };
+
+  handleRemove(i) {
     this.setState({
-      value: { ...this.state.value, cost: [...this.state.value.cost, "0"] }
+      item: {
+        name: this.state.item.name.filter((name, index) => index != i),
+        cost: this.state.item.cost.filter((name, index) => index != i)
+      }
     });
-    console.log(this.state.value.name);
+    console.log(this.state.item);
   }
-
-  handleChange(e, index) {
-    this.state.name[index] = e.target.value;
-    this.setState({ name: this.state.name });
-  }
-
-  handleRemove(index) {
-    this.state.name.splice(index, 1);
-    this.setState({ name: this.state.name });
-  }
-
   render() {
     return (
       <div style={{ height: "100vh" }}>
         <Form color="blue">
           <h1 className="ui centered">Receipt Items</h1>
-          {console.log(this.state.value)}
-          {console.log(this.state.value.name)}
-          {this.state.value.name.map((name, index) => {
+          {this.state.item.name.map((name, index) => {
             return (
               <div key={name}>
                 <Form.Group>
                   <Form.Field inline>
                     <label> Name </label>
                     <input
+                      name="name"
                       onChange={e => this.handleChange(e, index)}
                       value={name}
                     />
@@ -66,8 +84,9 @@ export class Correction extends Component {
                   <Form.Field inline>
                     <label> Cost </label>
                     <input
+                      name="cost"
                       onChange={e => this.handleChange(e, index)}
-                      value={this.state.value.cost[index]}
+                      value={this.state.item.cost[index]}
                     />
                   </Form.Field>
                   <Button onClick={() => this.handleRemove(index)}>

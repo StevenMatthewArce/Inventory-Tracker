@@ -37,11 +37,10 @@ const AddReceipt = () => {
     e.preventDefault();
   };
 
-  const handleItems = (n, c, q) => {
+  const handleItems = (n, c) => {
     setItem({
       name: n,
-      cost: c,
-      quantity: q
+      cost: c
     });
   };
 
