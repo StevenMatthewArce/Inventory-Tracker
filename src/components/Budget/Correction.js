@@ -15,13 +15,15 @@ export class Correction extends Component {
       ...initialState,
       message: null,
       error: null,
-      message: null
+      sucess: false
     };
   }
 
   saveAndContinue = e => {
     //change this to submit here
     e.preventDefault();
+
+    this.setState({ sucess: false });
     let items = [];
     for (var i = 0; i < this.state.item.name.length; i++) {
       items = {
@@ -40,6 +42,8 @@ export class Correction extends Component {
           this.setState({ error: err });
         });
     }
+
+    this.setState({ sucess: true });
   };
 
   back = e => {
@@ -97,7 +101,8 @@ export class Correction extends Component {
         <Header as="h1" textAlign="center">
           Detected Receipt Items
         </Header>
-        <Form>
+
+        <Form sucess error>
           {this.state.item.name.map((name, index) => {
             return (
               <div key={name}>
@@ -131,11 +136,7 @@ export class Correction extends Component {
                     value={this.state.item.dateRestocked}
                     iconPosition="left"
                   />
-                  {this.state.error && (
-                    <Message icon="frown" negative>
-                      {this.state.error}
-                    </Message>
-                  )}
+
                   <Button negative onClick={() => this.handleRemove(index)}>
                     Remove
                   </Button>
@@ -143,6 +144,16 @@ export class Correction extends Component {
               </div>
             );
           })}
+          {this.state.message && (
+            <Message icon="smile" positive>
+              {this.state.message}
+            </Message>
+          )}
+          {this.state.error && (
+            <Message icon="frown" negative>
+              {this.state.error}
+            </Message>
+          )}
           <Button.Group>
             <Button positive onClick={e => this.addItem(e)}>
               Add Item
@@ -154,6 +165,7 @@ export class Correction extends Component {
               Submit
             </Button>
           </Button.Group>
+          {console.log(this.state.sucess)}
         </Form>
       </div>
     );
