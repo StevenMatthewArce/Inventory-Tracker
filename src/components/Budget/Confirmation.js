@@ -7,7 +7,7 @@ class Confirmation extends Component {
     super(props);
 
     const initialState = {
-      value: this.props.values
+      item: this.props.items
     };
 
     this.state = {
@@ -33,21 +33,20 @@ class Confirmation extends Component {
           Click Confirm if the following details have been correctly entered
         </p>
         <List>
-          {this.state.value.name.map((name, index) => {
+          {this.state.item.name.map((name, index) => {
             return (
               <div key={name}>
                 <List.Item>
                   <List.Content>
                     {name}
-                    {this.state.value.cost[index]}
+                    {this.state.item.cost[index]}
+                    {this.state.item.quantity[index]}
                   </List.Content>
                 </List.Item>
               </div>
             );
           })}
         </List>
-        {console.log(this.props)}
-        {console.log(this.state.value.name)}
         <Button onClick={this.back}>Back</Button>
         <Button onClick={this.saveAndContinue}>Confirm</Button>
       </div>

@@ -1,6 +1,7 @@
 import { stubTrue } from "lodash";
 import React, { Component } from "react";
 import { Form, Button } from "semantic-ui-react";
+import { DateInput } from "semantic-ui-calendar-react";
 
 export class Correction extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ export class Correction extends Component {
 
   saveAndContinue = e => {
     e.preventDefault();
-    // this.props.getChidlValueOnSubmit(this.state.item);
+    let { name, cost, quantity } = this.state.item;
+    this.props.getChildItemOnSubmit(name, cost, quantity);
     this.props.nextStep();
   };
 
@@ -31,7 +33,8 @@ export class Correction extends Component {
       item: {
         ...this.state.item,
         name: [...prevState.item.name, "Test"],
-        cost: [...prevState.item.cost, "0"]
+        cost: [...prevState.item.cost, "0"],
+        quantity: [...prevState.item.quantity, "0"]
       }
     }));
     console.log(this.state.item);
@@ -45,13 +48,16 @@ export class Correction extends Component {
     let x = event.target.name;
     if (x == "name") {
       itemList.name[index] = event.target.value;
-    } else {
+    } else if (x == "cost") {
       itemList.cost[index] = event.target.value;
+    } else {
+      itemList.quantity[index] = event.target.value;
     }
     this.setState({
       ...this.state.item,
       name: [itemList.name],
-      cost: [itemList.cost]
+      cost: [itemList.cost],
+      quantity: [itemList.quantity]
     });
   };
 
@@ -59,7 +65,10 @@ export class Correction extends Component {
     this.setState({
       item: {
         name: this.state.item.name.filter((name, index) => index != i),
-        cost: this.state.item.cost.filter((name, index) => index != i)
+        cost: this.state.item.cost.filter((cost, index) => index != i),
+        quantity: this.state.item.quantity.filter(
+          (quantity, index) => index != i
+        )
       }
     });
     console.log(this.state.item);
@@ -73,7 +82,7 @@ export class Correction extends Component {
             return (
               <div key={name}>
                 <Form.Group>
-                  <Form.Field inline>
+                  <Form.Field>
                     <label> Name </label>
                     <input
                       name="name"
@@ -81,7 +90,7 @@ export class Correction extends Component {
                       value={name}
                     />
                   </Form.Field>
-                  <Form.Field inline>
+                  <Form.Field>
                     <label> Cost </label>
                     <input
                       name="cost"
@@ -89,6 +98,22 @@ export class Correction extends Component {
                       value={this.state.item.cost[index]}
                     />
                   </Form.Field>
+                  <Form.Field>
+                    <label> Quantity </label>
+                    <input
+                      name="quantity"
+                      onChange={e => this.handleChange(e, index)}
+                      value={this.state.item.quantity[index]}
+                    />
+                  </Form.Field>
+                  <DateInput
+                    required
+                    label="Date Restocked"
+                    name="dateRestocked"
+                    value={this.state.item.dateRestocked}
+                    iconPosition="left"
+                  />
+
                   <Button onClick={() => this.handleRemove(index)}>
                     Remove
                   </Button>

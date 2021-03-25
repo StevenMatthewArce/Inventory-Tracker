@@ -37,10 +37,12 @@ const AddReceipt = () => {
     e.preventDefault();
   };
 
-  const handleItems = (n, c) => {
+  const handleItems = (n, c, q, d) => {
     setItem({
       name: n,
-      cost: c
+      cost: c,
+      quantity: q,
+      dateRestocked: d
     });
   };
 
@@ -55,11 +57,7 @@ const AddReceipt = () => {
   switch (step) {
     case 1:
       return (
-        <Ocr
-          nextStep={handleNextStep}
-          getChildItemOnSubmit={handleItems}
-          items={item}
-        />
+        <Ocr nextStep={handleNextStep} getChildItemOnSubmit={handleItems} />
       );
     case 2:
       return (

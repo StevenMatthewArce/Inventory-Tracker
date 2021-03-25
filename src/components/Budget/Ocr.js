@@ -42,12 +42,15 @@ CHANGE $25.80`
 export class Ocr extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       picUrl: "",
       ocrText: [],
       isLoading: false,
       name: [],
       cost: [],
+      quantity: [],
+      dateRestocked: [],
       item: []
     };
   }
@@ -75,10 +78,14 @@ export class Ocr extends Component {
   textAnalysis = () => {
     var x = [];
     var y = [];
+    var d = [];
     this.state.ocrText.map(ot => (x = ot.split(/\n/)));
+    console.log(x);
     for (var i = 0; i < data.length; i++) {
       y.push(x.filter(element => element.includes(data[i])));
+      d = x.filter(element => element.includes("DATE"));
     }
+    this.changeDateRestocked(d);
     this.splitNameFromCost(y);
   };
 
@@ -89,12 +96,28 @@ export class Ocr extends Component {
     }
     var name = [];
     var cost = [];
+    var quantity = [];
     for (var i = 0; i < newArray.length; i++) {
       name.push(newArray[i][0]);
       cost.push(newArray[i][1]);
+      quantity.push("0");
     }
     this.changeName(name);
     this.changeCost(cost);
+    this.changeQuantity(quantity);
+  };
+
+  changeDateRestocked = input => {
+    let inputString = input.toString();
+    let extractedDate = inputString.match(
+      /(\d{1,4}([.\-/])\d{1,2}([.\-/])\d{1,4})/g
+    );
+
+    this.setState({ dateRestocked: extractedDate });
+  };
+
+  changeQuantity = input => {
+    this.setState({ quantity: input });
   };
 
   changeName = input => {
@@ -107,14 +130,18 @@ export class Ocr extends Component {
 
   saveAndContinue = e => {
     e.preventDefault();
-    this.props.getChildItemOnSubmit(this.state.name, this.state.cost);
+    this.props.getChildItemOnSubmit(
+      this.state.name,
+      this.state.cost,
+      this.state.quantity,
+      this.state.dateRestocked
+    );
     this.props.nextStep();
   };
 
   render() {
     return (
       <div style={{ height: "100vh" }} className="centered">
-        {console.log(this.state.data)}
         <ImageUploader
           withIcon={true}
           withPreview={true}
@@ -129,6 +156,8 @@ export class Ocr extends Component {
               <p>The result is</p>
               <p>{this.state.name}</p>
               <p>{this.state.cost}</p>
+              <br></br>
+              <p>{this.state.dateRestocked}</p>
             </div>
           ) : (
             <div>
@@ -142,7 +171,6 @@ export class Ocr extends Component {
             </div>
           )}
         </div>
-        {console.log(this.state)}
         <Button onClick={this.runOcr}>Run OCR</Button>
         <Button onClick={this.saveAndContinue}>Save And Continue</Button>
         <Button onClick={this.debugTest}> Debug</Button>
