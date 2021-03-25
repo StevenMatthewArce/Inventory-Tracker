@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Tesseract from "tesseract.js";
 import ImageUploader from "react-images-upload";
-import { Button, Loader } from "semantic-ui-react";
+import { Button, Header, Loader, Message } from "semantic-ui-react";
 import { projectFirestore } from "../Firebase";
 import { set } from "lodash";
 
@@ -51,22 +51,29 @@ export class Ocr extends Component {
       cost: [],
       quantity: [],
       dateRestocked: [],
-      item: []
+      item: [],
+      error: null,
+      imageUploaded: false
     };
   }
 
   onDrop = (_, pictureUrl) => {
     this.setState({ picUrl: pictureUrl });
+    this.setState({ imageUploaded: true });
   };
 
   runOcr = () => {
-    this.state.picUrl.forEach(picture =>
-      Tesseract.recognize(picture, "eng").then(({ data: { text } }) => {
-        this.setState({ ocrText: [text] });
-      })
-    );
     this.setState({ isLoading: !this.state.isLoading });
-    this.textAnalysis();
+    if (this.state.imageUploaded == true) {
+      this.state.picUrl.forEach(picture =>
+        Tesseract.recognize(picture, "eng").then(({ data: { text } }) => {
+          this.setState({ ocrText: [text] });
+        })
+      );
+      this.textAnalysis();
+      this.setState({ error: null });
+      console.log("1");
+    } else this.setState({ error: "File must be uploaded" });
   };
 
   debugTest = () => {
@@ -87,6 +94,7 @@ export class Ocr extends Component {
     }
     this.changeDateRestocked(d);
     this.splitNameFromCost(y);
+    this.setState({ isLoading: !this.state.isLoading });
   };
 
   splitNameFromCost = input => {
@@ -141,37 +149,46 @@ export class Ocr extends Component {
 
   render() {
     return (
-      <div style={{ height: "100vh" }} className="centered">
-        <ImageUploader
-          withIcon={true}
-          withPreview={true}
-          buttonText="Choose Images"
-          onChange={this.onDrop}
-          imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-          maxFileSize={5242880}
-        />
+      <div style={{ height: "100vh" }}>
+        <Header as="h1" textAlign="center">
+          Upload Receipt
+        </Header>
         <div>
-          {this.state.ocrText.length > 0 ? (
-            <div>
-              <p>The result is</p>
-              <p>{this.state.name}</p>
-              <p>{this.state.cost}</p>
-              <br></br>
-              <p>{this.state.dateRestocked}</p>
-            </div>
-          ) : (
-            <div>
-              <Loader
-                size="massive"
-                active={this.state.isLoading}
-                inline="centered"
-              >
-                Loading
-              </Loader>
-            </div>
-          )}
+          <ImageUploader
+            withIcon={true}
+            withPreview={true}
+            buttonText="Choose Image"
+            singleImage="true"
+            onChange={this.onDrop}
+            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+            maxFileSize={5242880}
+          />
         </div>
-        <Button onClick={this.runOcr}>Run OCR</Button>
+        {this.state.error && (
+          <Message icon="frown" negative>
+            {this.state.error}
+          </Message>
+        )}
+        {this.state.imageUploaded ? (
+          [
+            this.state.isLoading ? (
+              <Button loading primary onClick={this.runOcr}>
+                Run OCR
+              </Button>
+            ) : (
+              <div>
+                <Button primary onClick={this.runOcr}>
+                  Run OCR
+                </Button>
+                <p>{this.state.name}</p>
+              </div>
+            )
+          ]
+        ) : (
+          <Button disabled primary onClick={this.runOcr}>
+            Run OCR
+          </Button>
+        )}
         <Button onClick={this.saveAndContinue}>Save And Continue</Button>
         <Button onClick={this.debugTest}> Debug</Button>
       </div>

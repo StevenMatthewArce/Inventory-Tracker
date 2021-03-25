@@ -41,9 +41,6 @@ export class Correction extends Component {
   };
 
   handleChange = (event, index) => {
-    // get the change and create a new item list
-    // set state itemlist to new item list
-
     let itemList = this.state.item;
     let x = event.target.name;
     if (x == "name") {
