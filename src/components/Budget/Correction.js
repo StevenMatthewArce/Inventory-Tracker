@@ -1,7 +1,7 @@
-import { stubTrue } from "lodash";
 import React, { Component } from "react";
 import { Form, Button, Message, Icon, Header } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
+import { db } from "../Firebase";
 
 export class Correction extends Component {
   constructor(props) {
@@ -12,16 +12,34 @@ export class Correction extends Component {
     };
 
     this.state = {
-      ...initialState
+      ...initialState,
+      message: null,
+      error: null,
+      message: null
     };
   }
 
   saveAndContinue = e => {
     //change this to submit here
     e.preventDefault();
-    let { name, cost, quantity } = this.state.item;
-    this.props.getChildItemOnSubmit(name, cost, quantity);
-    this.props.nextStep();
+    let items = [];
+    for (var i = 0; i < this.state.item.name.length; i++) {
+      items = {
+        name: this.state.item.name[i],
+        cost: this.state.item.cost[i],
+        quantity: this.state.item.quantity[i],
+        dateRestocked: this.state.item.dateRestocked
+      };
+      let { name, cost, quantity, dateRestocked } = items;
+      db.collection("items")
+        .add({ name, cost, quantity, dateRestocked })
+        .then(() => {
+          this.setState({ message: "Items has been submitted. " });
+        })
+        .catch(err => {
+          this.setState({ error: err });
+        });
+    }
   };
 
   back = e => {
@@ -59,7 +77,7 @@ export class Correction extends Component {
     });
   };
 
-  handleRemove(i) {
+  handleRemove = i => {
     //get the previous date and then update the new date.
     this.setState({
       item: {
@@ -72,7 +90,7 @@ export class Correction extends Component {
       }
     });
     console.log(this.state.item);
-  }
+  };
   render() {
     return (
       <div style={{ height: "100vh" }}>
@@ -113,7 +131,11 @@ export class Correction extends Component {
                     value={this.state.item.dateRestocked}
                     iconPosition="left"
                   />
-
+                  {this.state.error && (
+                    <Message icon="frown" negative>
+                      {this.state.error}
+                    </Message>
+                  )}
                   <Button negative onClick={() => this.handleRemove(index)}>
                     Remove
                   </Button>
@@ -129,7 +151,7 @@ export class Correction extends Component {
               Back
             </Button>
             <Button primary type="submit" onClick={this.saveAndContinue}>
-              Save And Continue
+              Submit
             </Button>
           </Button.Group>
         </Form>

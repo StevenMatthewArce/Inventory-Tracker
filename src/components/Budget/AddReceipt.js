@@ -64,20 +64,9 @@ const AddReceipt = () => {
         <Correction
           nextStep={handleNextStep}
           prevStep={handlePrevStep}
-          getChildItemOnSubmit={handleItems}
           items={item}
         />
       );
-    case 3:
-      return (
-        <Confirmation
-          nextStep={handleNextStep}
-          prevStep={handlePrevStep}
-          items={item}
-        />
-      );
-    case 4:
-      return <Success />;
     default:
       break;
   }
