@@ -1,10 +1,20 @@
 import React, { useState } from "react";
+
 import Ocr from "./Ocr";
 import Correction from "./Correction";
 
 const AddReceipt = () => {
-  const [items, setItems] = useState(null);
+  const [item, setItem] = useState(null);
   const [step, setStep] = useState(1);
+
+  const handleItems = (n, c, q, d) => {
+    setItem({
+      name: n,
+      cost: c,
+      quantity: q,
+      dateRestocked: d
+    });
+  };
 
   const handleNextStep = () => {
     setStep(step + 1);
@@ -12,12 +22,6 @@ const AddReceipt = () => {
 
   const handlePrevStep = () => {
     setStep(step - 1);
-  };
-
-  const handleItems = items => {
-    setItems({
-      items
-    });
   };
 
   switch (step) {
@@ -30,7 +34,7 @@ const AddReceipt = () => {
         <Correction
           nextStep={handleNextStep}
           prevStep={handlePrevStep}
-          items={items}
+          items={item}
         />
       );
     default:
