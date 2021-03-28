@@ -1,38 +1,44 @@
 import React, { Component } from "react";
-import { Form, Button, Message, Icon, Header } from "semantic-ui-react";
+import {
+  Form,
+  Button,
+  Message,
+  Icon,
+  Header,
+  Divider
+} from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { db } from "../Firebase";
 
-export class Correction extends Component {
+export default class Correction extends Component {
   constructor(props) {
     super(props);
 
     const initialState = {
-      item: this.props.items
+      items: [...this.props.items]
     };
 
     this.state = {
       ...initialState,
       message: null,
-      error: null,
-      sucess: false
+      error: null
     };
+    this.addItem = this.addItem.bind(this);
+    this.removeItem = this.removeItem.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
-  saveAndContinue = e => {
-    //change this to submit here
+  back = e => {
     e.preventDefault();
+    this.props.prevStep();
+  };
 
-    this.setState({ sucess: false });
-    let items = [];
-    for (var i = 0; i < this.state.item.name.length; i++) {
-      items = {
-        name: this.state.item.name[i],
-        cost: this.state.item.cost[i],
-        quantity: this.state.item.quantity[i],
-        dateRestocked: this.state.item.dateRestocked
-      };
-      let { name, cost, quantity, dateRestocked } = items;
+  submit = e => {
+    e.preventDefault();
+    let items = this.state.items;
+
+    items.forEach(element => {
+      let { name, cost, quantity, dateRestocked } = element;
       db.collection("items")
         .add({ name, cost, quantity, dateRestocked })
         .then(() => {
@@ -41,135 +47,124 @@ export class Correction extends Component {
         .catch(err => {
           this.setState({ error: err });
         });
-    }
-
-    this.setState({ sucess: true });
-  };
-
-  back = e => {
-    e.preventDefault();
-    this.props.prevStep();
+    });
   };
 
   addItem = () => {
-    this.setState(prevState => ({
-      item: {
-        ...this.state.item,
-        name: [...prevState.item.name, "Test"],
-        cost: [...prevState.item.cost, "0"],
-        quantity: [...prevState.item.quantity, "0"]
-      }
-    }));
-    console.log(this.state.item);
+    let items = this.state.items;
+    let newItem = {
+      id: items.length,
+      name: "New Item",
+      cost: "0",
+      quantity: "1",
+      dateRestocked: "03/27/2021"
+    };
+    items.push(newItem);
+    this.setState({ items: items }, console.log(this.state));
   };
 
-  handleChange = (event, index) => {
-    let itemList = this.state.item;
-    let x = event.target.name;
-    if (x == "name") {
-      itemList.name[index] = event.target.value;
-    } else if (x == "cost") {
-      itemList.cost[index] = event.target.value;
-    } else {
-      itemList.quantity[index] = event.target.value;
-    }
-    this.setState({
-      ...this.state.item,
-      name: [itemList.name],
-      cost: [itemList.cost],
-      quantity: [itemList.quantity]
-    });
+  removeItem = id => {
+    let items = this.state.items;
+    items = items.filter(x => x.id != id);
+    this.setState({ items: items }, console.log(this.state));
   };
 
-  handleRemove = i => {
-    //get the previous date and then update the new date.
-    this.setState({
-      item: {
-        name: this.state.item.name.filter((name, index) => index != i),
-        cost: this.state.item.cost.filter((cost, index) => index != i),
-        quantity: this.state.item.quantity.filter(
-          (quantity, index) => index != i
-        ),
-        dateRestocked: this.state.dateRestocked
-      }
-    });
-    console.log(this.state.item);
+  handleChange = (e, { name, id, value }) => {
+    e.preventDefault();
+    let items = this.state.items;
+
+    items[id] = { ...items[id], [name]: value };
+    this.setState({ items: items }, console.log(this.state));
   };
+
   render() {
     return (
       <div style={{ height: "100vh" }}>
         <Header as="h1" textAlign="center">
           Detected Receipt Items
         </Header>
-
-        <Form sucess error>
-          {this.state.item.name.map((name, index) => {
+        <Form>
+          {this.state.items.map(items => {
             return (
-              <div key={name}>
+              <div key={items.id}>
                 <Form.Group inline>
                   <Form.Input
+                    required
+                    icon="tag"
+                    iconPosition="left"
+                    width={4}
+                    id={items.id}
                     label="Name"
                     name="name"
-                    value={name}
-                    onChange={e => this.handleChange(e, index)}
-                    required
+                    id={items.id}
+                    value={items.name}
+                    onChange={this.handleChange}
                   />
                   <Form.Input
+                    required
+                    icon="dollar sign"
+                    iconPosition="left"
+                    width={4}
                     label="Cost"
                     name="cost"
-                    value={this.state.item.cost[index]}
-                    onChange={e => this.handleChange(e, index)}
-                    required
+                    id={items.id}
+                    value={items.cost}
+                    onChange={this.handleChange}
                   />
-
                   <Form.Input
-                    label="Quantity"
-                    name="qunatity"
-                    value={this.state.item.quantity[index]}
-                    onChange={e => this.handleChange(e, index)}
                     required
+                    icon="shopping cart"
+                    iconPosition="left"
+                    width={4}
+                    label="Quantity"
+                    name="quantity"
+                    id={items.id}
+                    value={items.quantity}
+                    onChange={this.handleChange}
                   />
                   <DateInput
                     required
+                    width={6}
+                    dateFormat={"MM/DD/YYYY"}
                     label="Date Restocked"
                     name="dateRestocked"
-                    value={this.state.item.dateRestocked}
+                    id={items.id}
+                    value={items.dateRestocked}
                     iconPosition="left"
+                    onChange={this.handleChange}
                   />
-
-                  <Button negative onClick={() => this.handleRemove(index)}>
+                  <Button
+                    labelPosition="left"
+                    icon
+                    negative
+                    onClick={() => this.removeItem(items.id)}
+                  >
                     Remove
+                    <Icon name="minus"></Icon>
                   </Button>
                 </Form.Group>
               </div>
             );
           })}
-          {this.state.message && (
-            <Message icon="smile" positive>
-              {this.state.message}
-            </Message>
-          )}
-          {this.state.error && (
-            <Message icon="frown" negative>
-              {this.state.error}
-            </Message>
-          )}
-          <Button.Group>
-            <Button positive onClick={e => this.addItem(e)}>
-              Add Item
-            </Button>
-            <Button primary onClick={this.back}>
-              Back
-            </Button>
-            <Button primary type="submit" onClick={this.saveAndContinue}>
-              Submit
-            </Button>
-          </Button.Group>
-          {console.log(this.state.sucess)}
         </Form>
+        {this.state.message && <Message positive>{this.state.message}</Message>}
+        {this.state.error && <Message negative>{this.state.error}</Message>}
+        <Divider></Divider>
+        <Button.Group>
+          <Button labelPosition="left" icon primary onClick={this.back}>
+            Back
+            <Icon name="left arrow"></Icon>
+          </Button>
+          <Button labelPosition="left" icon positive onClick={this.addItem}>
+            Add
+            <Icon name="plus"></Icon>
+          </Button>
+          <Button labelPosition="right" icon primary onClick={this.submit}>
+            Submit
+            <Icon name="send"></Icon>
+          </Button>
+        </Button.Group>
       </div>
     );
   }
 }
-
-export default Correction;
