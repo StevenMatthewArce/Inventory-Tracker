@@ -15,9 +15,7 @@ const AddReceipt = () => {
   };
 
   const handleItems = items => {
-    setItems({
-      items
-    });
+    setItems([...items]);
   };
 
   switch (step) {
@@ -26,13 +24,7 @@ const AddReceipt = () => {
         <Ocr nextStep={handleNextStep} getChildItemOnSubmit={handleItems} />
       );
     case 2:
-      return (
-        <Correction
-          nextStep={handleNextStep}
-          prevStep={handlePrevStep}
-          items={items}
-        />
-      );
+      return <Correction prevStep={handlePrevStep} items={items} />;
     default:
       break;
   }

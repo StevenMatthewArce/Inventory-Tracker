@@ -1,46 +1,14 @@
 import React, { Component } from "react";
-import { Button, Header, Icon } from "semantic-ui-react";
+import { Button, Header, Icon, Message } from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
-
-const octest = [
-  "DATE 08/01/2016 weo",
-  "SRR",
-  "IUCHINNT GREEN $4.66",
-  "0.778kg NET @ $5.99/ka",
-  "BANANA CAVENDISH $1.32",
-  "0.442kn NET # $2.98/ka",
-  "SPECIAL $0.99",
-  "SPECIAL $1.50",
-  "POTATOES BRUSHED $3.97",
-  "] 1.328ka NET © $2.99/kg",
-  "BROCCOLT $4.84",
-  "0.808ka NET @ $5.99/ka",
-  "BRUSSEL SPROUTS $5.15",
-  "0.32kg NET @ $15.99/ka",
-  "SPECTAL $0.99",
-  "GRAPES GREEN $7.03",
-  "1.174kg NET @ $5.99/ka",
-  "PEAS SNOW $3.21",
-  "0.218ka NET @ $14.99/ka",
-  "TONATOES GRAPE $2.99",
-  "LETTUCE ICEBERG $2.49",
-  "SUBTOTAL $39.20",
-  "‘ LOYALTY -15.00",
-  "4 SUBTOTAL $24.20",
-  "SUBTOTAL $24.20",
-  "SUBTOTAL $24.20",
-  "TOTAL $24 .20",
-  "CASH $50.00",
-  "CHANGE $25.80",
-  ""
-];
 
 export class Ocr extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      id: [],
       name: [],
       cost: [],
       quantity: [],
@@ -48,16 +16,21 @@ export class Ocr extends Component {
       items: [],
       uploadedImageUrl: "",
       ocrText: [],
-      status: "0"
+      status: null,
+      imageUploadedStatus: "0",
+      updatedStatus: null,
+      errorMessage: null
     };
     this.onDrop = this.onDrop.bind(this);
     this.runOcr = this.runOcr.bind(this);
+    this.debug = this.debug.bind(this);
   }
 
   updateItems = () => {
     let item = [];
     for (var i = 0; i < this.state.name.length; i++) {
       item[i] = {
+        id: i,
         name: this.state.name[i],
         cost: this.state.cost[i],
         quantity: this.state.quantity[i],
@@ -65,9 +38,12 @@ export class Ocr extends Component {
       };
     }
 
-    this.setState({
-      items: item
-    });
+    this.setState(
+      {
+        items: item
+      },
+      () => console.log(this.state)
+    );
   };
 
   updateName = input => {
@@ -98,38 +74,47 @@ export class Ocr extends Component {
   };
 
   onDrop = (pictureFiles, pictureDataURLs) => {
+    console.log(pictureFiles.length);
+    if (pictureFiles.length == 1) {
+      this.setState({ imageUploadedStatus: "1", errorMessage: null });
+    } else {
+      this.setState({ imageUploaded: "0" });
+    }
     this.setState({
       uploadedImageUrl: pictureDataURLs
     });
-    console.log(this.state.uploadedImageUrl);
-    console.log(pictureDataURLs);
+    console.log("Image Uploaded");
   };
 
   runOcr = () => {
     console.log("runOcr");
-    this.state.uploadedImageUrl.forEach(image =>
-      Tesseract.recognize(image, "eng")
-        .then(({ data: { text } }) => {
-          this.setState({ ocrText: text.split(/\n/), status: "1" });
-          console.log("OCR Finished");
-        })
-        .then(() => {
-          this.analyzeText();
-          console.log("Analyze Text Finished");
-          this.setState({ status: "2" });
-        })
-        .then(() => {
-          this.updateItems();
-          this.setState({ status: "3" });
-          console.log("Update Items Finished");
-          console.log(this.state);
-        })
-    );
+    if (this.state.imageUploadedStatus == "1") {
+      this.setState({ status: "0" });
+      this.state.uploadedImageUrl.forEach(image =>
+        Tesseract.recognize(image, "eng")
+          .then(({ data: { text } }) => {
+            this.setState({ ocrText: text.split(/\n/), status: "1" });
+            console.log("OCR Finished");
+          })
+          .then(() => {
+            this.analyzeText();
+            console.log("Analyze Text Finished");
+            this.setState({ status: "2" });
+          })
+          .then(() => {
+            this.updateItems();
+            this.setState({ status: null, updatedStatus: "1" });
+            console.log("Update Items Finished");
+          })
+      );
+    } else {
+      this.setState({ errorMessage: "Please upload image!" });
+    }
   };
 
   analyzeText = () => {
     const text = this.state.ocrText;
-    //Compare needs to be changed to a dictionary of vegtables/fruits
+    //TODO: Change compare to dictionary so it matches more words
     const compare = ["BANANA", "BRUSSEL", "POTATOES"];
     var filteredText = [];
     var receiptDate = [];
@@ -142,21 +127,33 @@ export class Ocr extends Component {
     for (var i = 0; i < filteredText.length; i++) {
       splitArray.push(filteredText[i].toString().split("$"));
     }
-
     var name = [];
     var cost = [];
     var quantity = [];
     for (var i = 0; i < splitArray.length; i++) {
       name.push(splitArray[i][0]);
       cost.push(splitArray[i][1]);
-      quantity.push("0");
+      quantity.push("1");
     }
     this.updateName(name);
     this.updateCost(cost);
     this.updateQuantity(quantity);
     this.updateDateRestocked(receiptDate);
+    console.log("Analyze Text");
   };
 
+  debug = () => {
+    this.setState(
+      {
+        name: ["BANANA", "BRUSSEL", "POTATOES"],
+        cost: ["2.00", "3.00", "4.00"],
+        quantity: ["1", "1", "1"],
+        dateRestocked: ["02/20/2021"],
+        updatedStatus: "1"
+      },
+      this.updateItems
+    );
+  };
   render() {
     return (
       <div style={{ height: "100vh" }}>
@@ -172,23 +169,49 @@ export class Ocr extends Component {
             buttonText="Upload Receipt"
             onChange={this.onDrop}
             withPreview={true}
+            singleImage={true}
             imgExtension={[".jpg", ".gif", ".png", ".gif"]}
             maxFileSize={5242880}
           />
         </div>
+        {this.state.errorMessage && (
+          <Message negative>{this.state.errorMessage}</Message>
+        )}
         <div>
           <Button.Group>
-            <Button icon labelPosition="left" primary onClick={this.runOcr}>
-              Run OCR <Icon name="eye" />
-            </Button>
-            <Button
-              primary
-              icon
-              labelPosition="right"
-              onClick={this.saveAndContinue}
-            >
-              Save and Continue
-              <Icon name="right arrow" />
+            {this.state.status != null ? (
+              <Button icon loading labelPosition="left" primary>
+                Run OCR <Icon name="eye" />
+              </Button>
+            ) : (
+              <Button icon labelPosition="left" primary onClick={this.runOcr}>
+                Run OCR <Icon name="eye" />
+              </Button>
+            )}
+            {this.state.updatedStatus !== null ? (
+              <Button
+                primary
+                icon
+                labelPosition="right"
+                onClick={this.saveAndContinue}
+              >
+                Save and Continue
+                <Icon name="right arrow" />
+              </Button>
+            ) : (
+              <Button
+                primary
+                icon
+                disabled
+                labelPosition="right"
+                onClick={this.saveAndContinue}
+              >
+                Save and Continue
+                <Icon name="right arrow" />
+              </Button>
+            )}
+            <Button icon labelPosition="left" secondary onClick={this.debug}>
+              Debug <Icon name="eye" />
             </Button>
           </Button.Group>
         </div>
