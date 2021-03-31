@@ -4,39 +4,16 @@ import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
 
-const testData = [
-  {
-    id: "0",
-    date: "03/30/2021",
-    type: "Receipt",
-    item: "Test",
-    total: "100",
-    comments: "no comment"
-  },
-  {
-    id: "1",
-    date: "03/31/2020",
-    type: "Receipt",
-    item: "Test2",
-    total: "2",
-    comments: "no comment2"
-  },
-  {
-    id: "1",
-    date: "04/1/2021",
-    type: "Item",
-    item: "Test3",
-    total: "200",
-    comments: "no comment3"
-  }
-];
+//TODO: Add Expense Chart-Bar at the top
+//TODO: Add Filters
+//TODO: Add Selectable Rows
 
 export class Expense extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: [...testData],
+      data: [],
       column: null,
       direction: null
     };
@@ -55,7 +32,8 @@ export class Expense extends Component {
       .then(() => this.setState({ data: documents }));
   }
 
-  handleDateSort = clickedColumn => () => {
+  //TODO: Add sorting alg
+  handleSort = clickedColumn => () => {
     const { column, data, direction } = this.state;
 
     if (column !== clickedColumn) {
@@ -71,10 +49,6 @@ export class Expense extends Component {
       data: data.slice().reverse(),
       direction: direction === "ascending" ? "descending" : "ascending"
     });
-  };
-
-  handleSort = clickColumn => () => {
-    const { column, data, direction } = this.state;
   };
 
   render() {
@@ -123,14 +97,14 @@ export class Expense extends Component {
                 <Table.HeaderCell
                   width={1}
                   sorted={column === "Date" ? direction : null}
-                  onClick={this.handleDateSort("Date")}
+                  onClick={this.handleSort("Date")}
                 >
                   Date
                 </Table.HeaderCell>
                 <Table.HeaderCell
                   width={1}
                   sorted={column === "Type" ? direction : null}
-                  onClick={this.handleDateSort("Type")}
+                  onClick={this.handleSort("Type")}
                 >
                   Type
                 </Table.HeaderCell>
@@ -139,7 +113,7 @@ export class Expense extends Component {
                 <Table.HeaderCell
                   width={1}
                   sorted={column === "Total" ? direction : null}
-                  onClick={this.handleDateSort("Total")}
+                  onClick={this.handleSort("Total")}
                 >
                   Total
                 </Table.HeaderCell>

@@ -12,6 +12,11 @@ import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
 import { Link } from "react-router-dom";
 
+//TODO: Add OCR Recognition for Store Name
+//TODO: Add OCR Recognition for Total
+//TODO: Add Button to change date
+//!: Remove Debug Button
+
 export class Ocr extends Component {
   constructor(props) {
     super(props);

@@ -12,6 +12,9 @@ import {
 import { DateInput } from "semantic-ui-calendar-react";
 import { db } from "../Firebase";
 
+//TODO: Stylze Card - add picture/logo
+//TODO: Link back to Expense after submiting item
+
 export default class Correction extends Component {
   constructor(props) {
     super(props);
