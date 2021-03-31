@@ -1,16 +1,7 @@
 import React, { Component } from "react";
-import {
-  Button,
-  Header,
-  Icon,
-  Message,
-  Divider,
-  Grid,
-  GridColumn
-} from "semantic-ui-react";
+import { Button, Header, Icon, Message, Divider } from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
-import { Link } from "react-router-dom";
 
 export class Ocr extends Component {
   constructor(props) {
@@ -77,6 +68,7 @@ export class Ocr extends Component {
 
   saveAndContinue = e => {
     e.preventDefault();
+
     this.props.getChildItemOnSubmit(this.state.items);
     this.props.nextStep();
   };
@@ -166,70 +158,63 @@ export class Ocr extends Component {
     return (
       <div style={{ height: "100vh" }}>
         <div>
-          <Button labelPosition="left" icon secondary as={Link} to="/budget">
-            Back
-            <Icon name="left arrow"></Icon>
-          </Button>
+          <Header as="h1" textAlign="center">
+            Receipt Upload
+          </Header>
         </div>
-        <br></br>
+        <Divider />
         <div>
-          <Grid>
-            <Grid.Column width={9}>
-              <Grid.Row>
-                <Header as="h1" textAlign="left">
-                  Receipt Upload
-                </Header>
-                <Grid.Row>
-                  Please upload your receipt or click next to manually add items
-                </Grid.Row>
-              </Grid.Row>
-            </Grid.Column>
-            <Grid.Column width={7} textAlign="right">
-              {this.state.status != null ? (
-                <Button icon loading labelPosition="left" primary>
-                  Run OCR <Icon name="eye" />
-                </Button>
-              ) : (
-                <Button icon labelPosition="left" primary onClick={this.runOcr}>
-                  Run OCR <Icon name="eye" />
-                </Button>
-              )}
+          <ImageUploader
+            withIcon={true}
+            buttonClassName=""
+            buttonText="Upload Receipt"
+            onChange={this.onDrop}
+            withPreview={true}
+            singleImage={true}
+            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+            maxFileSize={5242880}
+          />
+        </div>
+        {this.state.errorMessage && (
+          <Message negative>{this.state.errorMessage}</Message>
+        )}
+        <div>
+          <Button.Group>
+            {this.state.status != null ? (
+              <Button icon loading labelPosition="left" primary>
+                Run OCR <Icon name="eye" />
+              </Button>
+            ) : (
+              <Button icon labelPosition="left" primary onClick={this.runOcr}>
+                Run OCR <Icon name="eye" />
+              </Button>
+            )}
+            {this.state.updatedStatus !== null ? (
               <Button
                 primary
                 icon
                 labelPosition="right"
                 onClick={this.saveAndContinue}
               >
-                Next
+                Save and Continue
                 <Icon name="right arrow" />
               </Button>
-            </Grid.Column>
-          </Grid>
-        </div>
-        <Divider />
-        <Grid>
-          <Grid.Column width={10}>
-            <ImageUploader
-              withIcon={true}
-              buttonClassName=""
-              buttonText="Upload Receipt"
-              onChange={this.onDrop}
-              withPreview={true}
-              singleImage={true}
-              imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-              maxFileSize={5242880}
-            />
-          </Grid.Column>
-          <Grid.Column>Test</Grid.Column>
-        </Grid>
-
-        {this.state.errorMessage && (
-          <Message negative>{this.state.errorMessage}</Message>
-        )}
-        <div>
-          <Button icon labelPosition="left" secondary onClick={this.debug}>
-            Debug <Icon name="eye" />
-          </Button>
+            ) : (
+              <Button
+                primary
+                icon
+                disabled
+                labelPosition="right"
+                onClick={this.saveAndContinue}
+              >
+                Save and Continue
+                <Icon name="right arrow" />
+              </Button>
+            )}
+            <Button icon labelPosition="left" secondary onClick={this.debug}>
+              Debug <Icon name="eye" />
+            </Button>
+          </Button.Group>
         </div>
       </div>
     );

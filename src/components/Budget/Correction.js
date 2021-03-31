@@ -5,7 +5,8 @@ import {
   Message,
   Icon,
   Header,
-  Divider
+  Divider,
+  Grid
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { db } from "../Firebase";
@@ -14,9 +15,23 @@ export default class Correction extends Component {
   constructor(props) {
     super(props);
 
-    const initialState = {
+    let initialState = {
       items: [...this.props.items]
     };
+
+    if (this.props.items.length == 0) {
+      initialState = {
+        items: [
+          {
+            id: "0",
+            name: "",
+            cost: "",
+            quantity: "",
+            dateRestocked: ""
+          }
+        ]
+      };
+    }
 
     this.state = {
       ...initialState,
@@ -80,90 +95,110 @@ export default class Correction extends Component {
   render() {
     return (
       <div style={{ height: "100vh" }}>
-        <Header as="h1" textAlign="center">
-          Detected Receipt Items
-        </Header>
-        <Form>
-          {this.state.items.map(items => {
-            return (
-              <div key={items.id}>
-                <Form.Group inline>
-                  <Form.Input
-                    required
-                    icon="tag"
-                    iconPosition="left"
-                    width={4}
-                    id={items.id}
-                    label="Name"
-                    name="name"
-                    id={items.id}
-                    value={items.name}
-                    onChange={this.handleChange}
-                  />
-                  <Form.Input
-                    required
-                    icon="dollar sign"
-                    iconPosition="left"
-                    width={4}
-                    label="Cost"
-                    name="cost"
-                    id={items.id}
-                    value={items.cost}
-                    onChange={this.handleChange}
-                  />
-                  <Form.Input
-                    required
-                    icon="shopping cart"
-                    iconPosition="left"
-                    width={4}
-                    label="Quantity"
-                    name="quantity"
-                    id={items.id}
-                    value={items.quantity}
-                    onChange={this.handleChange}
-                  />
-                  <DateInput
-                    required
-                    width={6}
-                    dateFormat={"MM/DD/YYYY"}
-                    label="Date Restocked"
-                    name="dateRestocked"
-                    id={items.id}
-                    value={items.dateRestocked}
-                    iconPosition="left"
-                    onChange={this.handleChange}
-                  />
-                  <Button
-                    labelPosition="left"
-                    icon
-                    negative
-                    onClick={() => this.removeItem(items.id)}
-                  >
-                    Remove
-                    <Icon name="minus"></Icon>
-                  </Button>
-                </Form.Group>
-              </div>
-            );
-          })}
-        </Form>
-        {this.state.message && <Message positive>{this.state.message}</Message>}
-        {this.state.error && <Message negative>{this.state.error}</Message>}
-        <Divider></Divider>
-        <Button.Group>
-          <Button labelPosition="left" icon primary onClick={this.back}>
+        <div>
+          <Button labelPosition="left" icon secondary onClick={this.back}>
             Back
             <Icon name="left arrow"></Icon>
           </Button>
-          <Button labelPosition="left" icon positive onClick={this.addItem}>
-            Add
-            <Icon name="plus"></Icon>
-          </Button>
-          <Button labelPosition="right" icon primary onClick={this.submit}>
-            Submit
-            <Icon name="send"></Icon>
-          </Button>
-        </Button.Group>
+        </div>
+        <br></br>
+        <div>
+          <Grid>
+            <Grid.Column width={9}>
+              <Grid.Row>
+                <Header as="h1" textAlign="left">
+                  Verification
+                </Header>
+                <Grid.Row>
+                  Please check the scanned items or manually add items.
+                  <br></br>
+                  Hit submit once complete.
+                </Grid.Row>
+              </Grid.Row>
+            </Grid.Column>
+            <Grid.Column width={7} textAlign="right">
+              <Button labelPosition="left" icon positive onClick={this.addItem}>
+                Add
+                <Icon name="plus"></Icon>
+              </Button>
+              <Button labelPosition="right" icon primary onClick={this.submit}>
+                Submit
+                <Icon name="send"></Icon>
+              </Button>
+            </Grid.Column>
+          </Grid>
+        </div>
+        <Divider />
+        <div>
+          <Form>
+            {this.state.items.map(items => {
+              return (
+                <div key={items.id}>
+                  <Form.Group inline>
+                    <Form.Input
+                      required
+                      icon="tag"
+                      iconPosition="left"
+                      width={4}
+                      id={items.id}
+                      label="Name"
+                      name="name"
+                      id={items.id}
+                      value={items.name}
+                      onChange={this.handleChange}
+                    />
+                    <Form.Input
+                      required
+                      icon="dollar sign"
+                      iconPosition="left"
+                      width={4}
+                      label="Cost"
+                      name="cost"
+                      id={items.id}
+                      value={items.cost}
+                      onChange={this.handleChange}
+                    />
+                    <Form.Input
+                      required
+                      icon="shopping cart"
+                      iconPosition="left"
+                      width={4}
+                      label="Quantity"
+                      name="quantity"
+                      id={items.id}
+                      value={items.quantity}
+                      onChange={this.handleChange}
+                    />
+                    <DateInput
+                      required
+                      width={6}
+                      dateFormat={"MM/DD/YYYY"}
+                      label="Date Restocked"
+                      name="dateRestocked"
+                      id={items.id}
+                      value={items.dateRestocked}
+                      iconPosition="left"
+                      onChange={this.handleChange}
+                    />
+                    <Button
+                      labelPosition="left"
+                      icon
+                      negative
+                      onClick={() => this.removeItem(items.id)}
+                    >
+                      Remove
+                      <Icon name="minus"></Icon>
+                    </Button>
+                  </Form.Group>
+                </div>
+              );
+            })}
+          </Form>
+          {this.state.message && (
+            <Message positive>{this.state.message}</Message>
+          )}
+          {this.state.error && <Message negative>{this.state.error}</Message>}
+        </div>
       </div>
     );
   }
