@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { db } from "../Firebase";
 import _ from "lodash";
 
 const testData = [
@@ -41,6 +42,19 @@ export class Expense extends Component {
     };
   }
 
+  componentDidMount() {
+    let documents = [];
+    db.collection("receipts")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          documents.push({ ...doc.data(), id: doc.id });
+          console.log(doc.id, " => ", doc.data());
+        });
+      })
+      .then(() => this.setState({ data: documents }));
+  }
+
   handleDateSort = clickedColumn => () => {
     const { column, data, direction } = this.state;
 
@@ -65,6 +79,7 @@ export class Expense extends Component {
 
   render() {
     const { data, column, direction } = this.state;
+    console.log(this.state.data);
     return (
       <div style={{ height: "100vh" }}>
         <div>
@@ -119,8 +134,8 @@ export class Expense extends Component {
                 >
                   Type
                 </Table.HeaderCell>
-                <Table.HeaderCell width={3}>Item</Table.HeaderCell>
-                <Table.HeaderCell width={6}>Comments</Table.HeaderCell>
+                <Table.HeaderCell width={3}>Store</Table.HeaderCell>
+                <Table.HeaderCell width={6}>Description</Table.HeaderCell>
                 <Table.HeaderCell
                   width={1}
                   sorted={column === "Total" ? direction : null}
@@ -138,9 +153,11 @@ export class Expense extends Component {
                   <Table.Row key={items.id}>
                     <Table.Cell textAlign="center">{items.date}</Table.Cell>
                     <Table.Cell textAlign="center">{items.type}</Table.Cell>
-                    <Table.Cell textAlign="center">{items.item}</Table.Cell>
-                    <Table.Cell>{items.comments}</Table.Cell>
-                    <Table.Cell textAlign="center">${items.total}</Table.Cell>
+                    <Table.Cell textAlign="center">{items.store}</Table.Cell>
+                    <Table.Cell>{items.description}</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.totalCost}
+                    </Table.Cell>
                   </Table.Row>
                 </Table.Body>
               );

@@ -6,7 +6,7 @@ import {
   Message,
   Divider,
   Grid,
-  GridColumn
+  Form
 } from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
@@ -28,7 +28,10 @@ export class Ocr extends Component {
       status: null,
       imageUploadedStatus: "0",
       updatedStatus: null,
-      errorMessage: null
+      errorMessage: null,
+      store: "",
+      totalCost: "",
+      description: ""
     };
     this.onDrop = this.onDrop.bind(this);
     this.runOcr = this.runOcr.bind(this);
@@ -51,7 +54,7 @@ export class Ocr extends Component {
       {
         items: item
       },
-      () => console.log(this.state)
+      console.log(this.state)
     );
   };
 
@@ -77,13 +80,23 @@ export class Ocr extends Component {
 
   saveAndContinue = e => {
     e.preventDefault();
-    this.props.getChildItemOnSubmit(this.state.items);
-    this.props.nextStep();
+
+    if (this.state.store === "" || this.state.totalCost === "") {
+      this.setState({ errorMessage: "Please add a Store and Total Cost" });
+    } else {
+      this.props.getChildOnSubmit(
+        this.state.items,
+        this.state.store,
+        this.state.totalCost,
+        this.state.description
+      );
+      this.props.nextStep();
+    }
   };
 
   onDrop = (pictureFiles, pictureDataURLs) => {
     console.log(pictureFiles.length);
-    if (pictureFiles.length == 1) {
+    if (pictureFiles.length === 1) {
       this.setState({ imageUploadedStatus: "1", errorMessage: null });
     } else {
       this.setState({ imageUploaded: "0" });
@@ -96,7 +109,7 @@ export class Ocr extends Component {
 
   runOcr = () => {
     console.log("runOcr");
-    if (this.state.imageUploadedStatus == "1") {
+    if (this.state.imageUploadedStatus === "1") {
       this.setState({ status: "0" });
       this.state.uploadedImageUrl.forEach(image =>
         Tesseract.recognize(image, "eng")
@@ -150,6 +163,12 @@ export class Ocr extends Component {
     console.log("Analyze Text");
   };
 
+  handleChange = (e, { name, value }) => {
+    e.preventDefault();
+    this.setState({ [name]: value }, console.log(this.state));
+  };
+
+  //! Remove After
   debug = () => {
     this.setState(
       {
@@ -157,11 +176,15 @@ export class Ocr extends Component {
         cost: ["2.00", "3.00", "4.00"],
         quantity: ["1", "1", "1"],
         dateRestocked: ["02/20/2021"],
-        updatedStatus: "1"
+        updatedStatus: "1",
+        store: "Albertsons",
+        totalCost: "120",
+        description: "This is some comment about the receipt"
       },
       this.updateItems
     );
   };
+
   render() {
     return (
       <div style={{ height: "100vh" }}>
@@ -207,11 +230,10 @@ export class Ocr extends Component {
           </Grid>
         </div>
         <Divider />
-        <Grid>
+        <Grid centered>
           <Grid.Column width={10}>
             <ImageUploader
               withIcon={true}
-              buttonClassName=""
               buttonText="Upload Receipt"
               onChange={this.onDrop}
               withPreview={true}
@@ -220,7 +242,38 @@ export class Ocr extends Component {
               maxFileSize={5242880}
             />
           </Grid.Column>
-          <Grid.Column>Test</Grid.Column>
+
+          <Form>
+            <Form.Group>
+              <Form.Input
+                required
+                icon="address card"
+                iconPosition="left"
+                label="Store:"
+                name="store"
+                value={this.state.store}
+                onChange={this.handleChange}
+              />
+              <Form.Input
+                required
+                icon="dollar sign"
+                iconPosition="left"
+                label="Total:"
+                name="totalCost"
+                value={this.state.totalCost}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.TextArea
+              width={20}
+              name="description"
+              style={{ minHeight: 100 }}
+              label="Description:"
+              placeholder="This is some comment about the receipt"
+              onChange={this.handleChange}
+            />
+          </Form>
         </Grid>
 
         {this.state.errorMessage && (

@@ -6,7 +6,8 @@ import {
   Icon,
   Header,
   Divider,
-  Grid
+  Grid,
+  Card
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { db } from "../Firebase";
@@ -15,12 +16,18 @@ export default class Correction extends Component {
   constructor(props) {
     super(props);
 
-    let initialState = {
+    const initialState = {
+      store: this.props.store,
+      totalCost: this.props.totalCost,
+      description: this.props.description
+    };
+
+    let initialItems = {
       items: [...this.props.items]
     };
 
     if (this.props.items.length == 0) {
-      initialState = {
+      initialItems = {
         items: [
           {
             id: "0",
@@ -34,6 +41,7 @@ export default class Correction extends Component {
     }
 
     this.state = {
+      ...initialItems,
       ...initialState,
       message: null,
       error: null
@@ -51,6 +59,9 @@ export default class Correction extends Component {
   submit = e => {
     e.preventDefault();
     let items = this.state.items;
+    let { store, totalCost, description } = this.state;
+    let date = this.state.items[0].dateRestocked;
+    let type = "Receipt";
 
     items.forEach(element => {
       let { name, cost, quantity, dateRestocked } = element;
@@ -62,6 +73,14 @@ export default class Correction extends Component {
         .catch(err => {
           this.setState({ error: err });
         });
+    });
+
+    db.collection("receipts").add({
+      store,
+      totalCost,
+      description,
+      date,
+      type
     });
   };
 
@@ -93,8 +112,11 @@ export default class Correction extends Component {
   };
 
   render() {
+    let date = this.state.items[0].dateRestocked;
+
     return (
       <div style={{ height: "100vh" }}>
+        {console.log(this.props)}
         <div>
           <Button labelPosition="left" icon secondary onClick={this.back}>
             Back
@@ -104,31 +126,58 @@ export default class Correction extends Component {
         <br></br>
         <div>
           <Grid>
-            <Grid.Column width={9}>
-              <Grid.Row>
-                <Header as="h1" textAlign="left">
-                  Verification
-                </Header>
+            <Grid.Row>
+              <Grid.Column width={9}>
                 <Grid.Row>
-                  Please check the scanned items or manually add items.
-                  <br></br>
-                  Hit submit once complete.
+                  <Header as="h1" textAlign="left">
+                    Verification
+                  </Header>
+                  <Grid.Row>
+                    Please check the scanned items or manually add items.
+                    <br></br>
+                    Hit submit once complete.
+                  </Grid.Row>
                 </Grid.Row>
-              </Grid.Row>
-            </Grid.Column>
-            <Grid.Column width={7} textAlign="right">
-              <Button labelPosition="left" icon positive onClick={this.addItem}>
-                Add
-                <Icon name="plus"></Icon>
-              </Button>
-              <Button labelPosition="right" icon primary onClick={this.submit}>
-                Submit
-                <Icon name="send"></Icon>
-              </Button>
-            </Grid.Column>
+              </Grid.Column>
+              <Grid.Column width={7} textAlign="right">
+                <Button
+                  labelPosition="left"
+                  icon
+                  positive
+                  onClick={this.addItem}
+                >
+                  Add
+                  <Icon name="plus"></Icon>
+                </Button>
+                <Button
+                  labelPosition="right"
+                  icon
+                  primary
+                  onClick={this.submit}
+                >
+                  Submit
+                  <Icon name="send"></Icon>
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Card
+                centered
+                header={this.state.store}
+                meta={date}
+                description={this.state.description}
+                extra={
+                  <p>
+                    <Icon name="dollar sign" />
+                    {this.state.totalCost}
+                  </p>
+                }
+              />
+            </Grid.Row>
           </Grid>
         </div>
         <Divider />
+
         <div>
           <Form>
             {this.state.items.map(items => {
@@ -143,7 +192,6 @@ export default class Correction extends Component {
                       id={items.id}
                       label="Name"
                       name="name"
-                      id={items.id}
                       value={items.name}
                       onChange={this.handleChange}
                     />
