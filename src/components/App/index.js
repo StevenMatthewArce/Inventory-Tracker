@@ -2,6 +2,7 @@ import React from "react";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Grid, Sidebar, Segment } from "semantic-ui-react";
+import * as V from "victory";
 import "semantic-ui-css/semantic.min.css";
 
 import * as ROUTES from "../../constants/routes";
@@ -46,7 +47,10 @@ class App extends React.Component {
                         <Route path={ROUTES.BUDGET} component={Budget} />
                         <Route path={ROUTES.ORDERS} component={Orders} />
                         <Route path={ROUTES.ADDITEM} component={AddItem} />
-                        <Route path={ROUTES.ADDRECEIPT} component={AddReceipt} />
+                        <Route
+                          path={ROUTES.ADDRECEIPT}
+                          component={AddReceipt}
+                        />
                       </Switch>
                     </Segment>
                   </Sidebar.Pusher>

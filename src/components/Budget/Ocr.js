@@ -1,7 +1,21 @@
 import React, { Component } from "react";
-import { Button, Header, Icon, Message } from "semantic-ui-react";
+import {
+  Button,
+  Header,
+  Icon,
+  Message,
+  Divider,
+  Grid,
+  Form
+} from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
+import { Link } from "react-router-dom";
+
+//TODO: Add OCR Recognition for Store Name
+//TODO: Add OCR Recognition for Total
+//TODO: Add Button to change date
+//!: Remove Debug Button
 
 export class Ocr extends Component {
   constructor(props) {
@@ -19,7 +33,10 @@ export class Ocr extends Component {
       status: null,
       imageUploadedStatus: "0",
       updatedStatus: null,
-      errorMessage: null
+      errorMessage: null,
+      store: "",
+      totalCost: "",
+      description: ""
     };
     this.onDrop = this.onDrop.bind(this);
     this.runOcr = this.runOcr.bind(this);
@@ -42,7 +59,7 @@ export class Ocr extends Component {
       {
         items: item
       },
-      () => console.log(this.state)
+      console.log(this.state)
     );
   };
 
@@ -69,13 +86,22 @@ export class Ocr extends Component {
   saveAndContinue = e => {
     e.preventDefault();
 
-    this.props.getChildItemOnSubmit(this.state.items);
-    this.props.nextStep();
+    if (this.state.store === "" || this.state.totalCost === "") {
+      this.setState({ errorMessage: "Please add a Store and Total Cost" });
+    } else {
+      this.props.getChildOnSubmit(
+        this.state.items,
+        this.state.store,
+        this.state.totalCost,
+        this.state.description
+      );
+      this.props.nextStep();
+    }
   };
 
   onDrop = (pictureFiles, pictureDataURLs) => {
     console.log(pictureFiles.length);
-    if (pictureFiles.length == 1) {
+    if (pictureFiles.length === 1) {
       this.setState({ imageUploadedStatus: "1", errorMessage: null });
     } else {
       this.setState({ imageUploaded: "0" });
@@ -88,7 +114,7 @@ export class Ocr extends Component {
 
   runOcr = () => {
     console.log("runOcr");
-    if (this.state.imageUploadedStatus == "1") {
+    if (this.state.imageUploadedStatus === "1") {
       this.setState({ status: "0" });
       this.state.uploadedImageUrl.forEach(image =>
         Tesseract.recognize(image, "eng")
@@ -142,6 +168,12 @@ export class Ocr extends Component {
     console.log("Analyze Text");
   };
 
+  handleChange = (e, { name, value }) => {
+    e.preventDefault();
+    this.setState({ [name]: value }, console.log(this.state));
+  };
+
+  //! Remove After
   debug = () => {
     this.setState(
       {
@@ -149,71 +181,113 @@ export class Ocr extends Component {
         cost: ["2.00", "3.00", "4.00"],
         quantity: ["1", "1", "1"],
         dateRestocked: ["02/20/2021"],
-        updatedStatus: "1"
+        updatedStatus: "1",
+        store: "Albertsons",
+        totalCost: "120",
+        description: "This is some comment about the receipt"
       },
       this.updateItems
     );
   };
+
   render() {
     return (
       <div style={{ height: "100vh" }}>
         <div>
-          <Header as="h1" textAlign="center">
-            Upload Receipt
-          </Header>
+          <Button labelPosition="left" icon secondary as={Link} to="/budget">
+            Back
+            <Icon name="left arrow"></Icon>
+          </Button>
         </div>
+        <br></br>
         <div>
-          <ImageUploader
-            withIcon={true}
-            buttonClassName=""
-            buttonText="Upload Receipt"
-            onChange={this.onDrop}
-            withPreview={true}
-            singleImage={true}
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-            maxFileSize={5242880}
-          />
+          <Grid>
+            <Grid.Column width={9}>
+              <Grid.Row>
+                <Header as="h1" textAlign="left">
+                  Receipt Upload
+                </Header>
+                <Grid.Row>
+                  Please upload your receipt or click next to manually add items
+                </Grid.Row>
+              </Grid.Row>
+            </Grid.Column>
+            <Grid.Column width={7} textAlign="right">
+              {this.state.status != null ? (
+                <Button icon loading labelPosition="left" primary>
+                  Run OCR <Icon name="eye" />
+                </Button>
+              ) : (
+                <Button icon labelPosition="left" primary onClick={this.runOcr}>
+                  Run OCR <Icon name="eye" />
+                </Button>
+              )}
+              <Button
+                primary
+                icon
+                labelPosition="right"
+                onClick={this.saveAndContinue}
+              >
+                Next
+                <Icon name="right arrow" />
+              </Button>
+            </Grid.Column>
+          </Grid>
         </div>
+        <Divider />
+        <Grid centered>
+          <Grid.Column width={10}>
+            <ImageUploader
+              withIcon={true}
+              buttonText="Upload Receipt"
+              onChange={this.onDrop}
+              withPreview={true}
+              singleImage={true}
+              imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+              maxFileSize={5242880}
+            />
+          </Grid.Column>
+
+          <Form>
+            <Form.Group>
+              <Form.Input
+                required
+                icon="address card"
+                iconPosition="left"
+                label="Store:"
+                name="store"
+                value={this.state.store}
+                onChange={this.handleChange}
+              />
+              <Form.Input
+                required
+                icon="dollar sign"
+                iconPosition="left"
+                label="Total:"
+                name="totalCost"
+                value={this.state.totalCost}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.TextArea
+              width={20}
+              name="description"
+              style={{ minHeight: 100 }}
+              label="Description:"
+              placeholder="This is some comment about the receipt"
+              onChange={this.handleChange}
+            />
+          </Form>
+        </Grid>
+
         {this.state.errorMessage && (
           <Message negative>{this.state.errorMessage}</Message>
         )}
         <div>
-          <Button.Group>
-            {this.state.status != null ? (
-              <Button icon loading labelPosition="left" primary>
-                Run OCR <Icon name="eye" />
-              </Button>
-            ) : (
-              <Button icon labelPosition="left" primary onClick={this.runOcr}>
-                Run OCR <Icon name="eye" />
-              </Button>
-            )}
-            {this.state.updatedStatus !== null ? (
-              <Button
-                primary
-                icon
-                labelPosition="right"
-                onClick={this.saveAndContinue}
-              >
-                Save and Continue
-                <Icon name="right arrow" />
-              </Button>
-            ) : (
-              <Button
-                primary
-                icon
-                disabled
-                labelPosition="right"
-                onClick={this.saveAndContinue}
-              >
-                Save and Continue
-                <Icon name="right arrow" />
-              </Button>
-            )}
-            <Button icon labelPosition="left" secondary onClick={this.debug}>
-              Debug <Icon name="eye" />
-            </Button>
-          </Button.Group>
+          <Button icon labelPosition="left" secondary onClick={this.debug}>
+            Debug <Icon name="eye" />
+          </Button>
         </div>
       </div>
     );

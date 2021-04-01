@@ -1,14 +1,21 @@
 import React from "react";
-import { Button, ButtonGroup, Tab } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { Expense } from "../Budget";
+import { Tab } from "semantic-ui-react";
+import { Expense, Sales } from "../Budget";
 
 const panes = [
   {
     menuItem: "Expense",
     render: () => (
-      <Tab.Pane>
+      <Tab.Pane attached={false}>
         <Expense />
+      </Tab.Pane>
+    )
+  },
+  {
+    menuItem: "Sales",
+    render: () => (
+      <Tab.Pane attached={false}>
+        <Sales />
       </Tab.Pane>
     )
   }
@@ -17,25 +24,7 @@ const panes = [
 const Budget = () => {
   return (
     <div style={{ height: "100vh" }}>
-      <ButtonGroup>
-        <Button
-          secondary
-          content="Add Item"
-          icon="plus square outline"
-          labelPosition="right"
-          as={Link}
-          to="/addItem"
-        />
-        <Button
-          secondary
-          content="Add Receipt"
-          icon="plus square outline"
-          labelPosition="right"
-          as={Link}
-          to="/addReceipt"
-        />
-      </ButtonGroup>
-      <Tab menu={{ color: "black", pointing: true }} panes={panes} />
+      <Tab panes={panes} />
     </div>
   );
 };

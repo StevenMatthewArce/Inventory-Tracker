@@ -1,122 +1,251 @@
 import React, { Component } from "react";
-import { Table, Icon, Segment, Grid } from "semantic-ui-react";
+import {
+  Table,
+  Dropdown,
+  Grid,
+  Header,
+  Divider,
+  Progress,
+  Statistic
+} from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { db } from "../Firebase";
+import _ from "lodash";
+import { ExpenseGraphs } from "./ExpenseGraphs";
 
-const tableData = [
-  {
-    name: "Strawbery Shortcakes",
-    quantity: 20,
-    hoursPerProduct: 5,
-    totalHours: 20 * 5,
-  },
-  {
-    name: "Lemon Tart",
-    quantity: 30,
-    hoursPerProduct: 4,
-    totalHours: 30 * 4,
-  },
-  {
-    name: "Chocolate Log Cake",
-    quantity: 10,
-    hoursPerProduct: 7,
-    totalHours: 10 * 7,
-  }
-];
+//TODO: Add Expense Chart-Bar at the top
+//TODO: Add Filters
+//TODO: Add Selectable Rows
 
-class Expense extends Component {
+export class Expense extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      data: tableData,
-      expandedRows: []
+      data: [],
+      column: null,
+      direction: null,
+      totalExpenseMonth: null,
+      totalExpenseYear: null,
+      totalSalesYear: null,
+      expenseMonthPercentage: null,
+      expenseYearPercentage: null
     };
   }
 
-  handleRowClick(rowId) {
-    const currentExpandedRows = this.state.expandedRows;
-    const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
+  componentDidMount() {
+    let documents = [];
+    db.collection("receipts")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          documents.push({ ...doc.data(), id: doc.id });
+          // console.log(doc.id, " => ", doc.data());
+        });
+      })
+      .then(() => this.setState({ data: documents }))
+      .then(() => this.calculateExpenseMonth());
 
-    const newExpandedRows = isRowCurrentlyExpanded
-      ? currentExpandedRows.filter(id => id !== rowId)
-      : currentExpandedRows.concat(rowId);
-
-    this.setState({ expandedRows: newExpandedRows });
+    this.calculateExpenseYear();
   }
 
-  // renderItemCaret(rowId) {
-  //   const currentExpandedRows = this.state.expandedRows;
-  //   const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
+  //TODO: Add sorting alg
+  handleSort = clickedColumn => () => {
+    const { column, data, direction } = this.state;
 
-  //   if (isRowCurrentlyExpanded) {
-  //     return <Icon name="caret down" />;
-  //   } else {
-  //     return <Icon name="caret right" />;
-  //   }
-  // }
-
- /* renderItemDetails(item) {
-    return (
-      <Segment basic>
-        <Grid columns={2}>
-          <Grid.Column>{item.description}</Grid.Column>
-
-          <Grid.Column>{item.notes}</Grid.Column>
-        </Grid>
-      </Segment>
-    );
-  }*/
-
-  renderItem(item, index) {
-    const clickCallback = () => this.handleRowClick(index);
-    const itemRows = [
-      <Table.Row onClick={clickCallback} key={"row-data-" + index}>
-        <Table.Cell textAlign="center">{item.name}</Table.Cell>
-        <Table.Cell textAlign="center">{item.hoursPerProduct}</Table.Cell>
-        <Table.Cell textAlign="center">{item.quantity}</Table.Cell>
-        <Table.Cell textAlign="center">{item.totalHours}</Table.Cell>
-      </Table.Row>
-    ];
-
-    if (this.state.expandedRows.includes(index)) {
-      itemRows.push(
-        <Table.Row key={"row-expanded-" + index}>
-          <Table.Cell colSpan="4">{this.renderItemDetails(item)}</Table.Cell>
-        </Table.Row>
-      );
+    if (column !== clickedColumn) {
+      this.setState({
+        column: clickedColumn,
+        data: _.sortBy(data, [clickedColumn]),
+        direction: "ascending"
+      });
+      return;
     }
 
-    return itemRows;
-  }
+    this.setState({
+      data: data.slice().reverse(),
+      direction: direction === "ascending" ? "descending" : "ascending"
+    });
+  };
+
+  calculateExpenseMonth = () => {
+    //TODO: Add code to calculate monlth expenses
+
+    //! This is only for testing
+    let totalExpenseMonth = "1652";
+    let totalExpenseYear = "10000";
+    this.setState(
+      {
+        totalExpenseMonth: totalExpenseMonth,
+        totalExpenseYear: totalExpenseYear
+      },
+      console.log(this.state)
+    );
+
+    let expenseMonthPercentage = (totalExpenseMonth / totalExpenseYear) * 100;
+    this.setState({ expenseMonthPercentage: expenseMonthPercentage });
+  };
+
+  calculateExpenseYear = () => {
+    //TODO: Add code to calculate monthly expenses
+
+    //! This is only for testing
+    let totalSalesYear = "90000";
+    this.setState(
+      {
+        totalSalesYear: totalSalesYear
+      },
+      console.log(this.state)
+    );
+
+    let expenseYearPercentage =
+      (this.state.totalExpenseYear / totalSalesYear) * 100;
+    this.setState({ expenseYearPercentage: expenseYearPercentage });
+  };
 
   render() {
-    let allItemRows = [];
-
-    this.state.data.forEach((item, index) => {
-      const perItemRows = this.renderItem(item, index);
-      allItemRows = allItemRows.concat(perItemRows);
-    });
+    const { data, column, direction } = this.state;
+    console.log(this.state.data);
     return (
       <div style={{ height: "100vh" }}>
-        <Table celled fixed singleLine collapsing>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell textAlign="center" width={4}>
-                Name
-              </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" width={2}>
-                Hours Per Product
-              </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" width={2}>
-                Quantity
-              </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" width={2}>
-                Total Hours
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body> {allItemRows}</Table.Body>
-        </Table>
+        <div>
+          <Grid centered columns={2}>
+            <Grid.Column>
+              <Grid.Row verticalAlign="top">
+                <Statistic
+                  size="mini"
+                  color="orange"
+                  value={this.state.totalExpenseMonth}
+                  label="Total Expense This Month"
+                />
+
+                <Statistic
+                  floated="right"
+                  size="mini"
+                  color="grey"
+                  value={this.state.totalExpenseYear}
+                  label="Total Expense This Year"
+                />
+              </Grid.Row>
+
+              <Grid.Row verticalAlign="bottom">
+                <Progress
+                  color="orange"
+                  percent={this.state.expenseMonthPercentage}
+                />
+              </Grid.Row>
+            </Grid.Column>
+            <Grid.Column>
+              <Grid.Row verticalAlign="top">
+                <Statistic
+                  size="mini"
+                  color="olive"
+                  value={this.state.totalExpenseYear}
+                  label="Total Expense This Year"
+                />
+
+                <Statistic
+                  floated="right"
+                  size="mini"
+                  color="grey"
+                  value={this.state.totalSalesYear}
+                  label="Total Sales"
+                />
+              </Grid.Row>
+
+              <Grid.Row verticalAlign="bottom">
+                <Progress
+                  color="olive"
+                  percent={this.state.expenseYearPercentage}
+                />
+              </Grid.Row>
+            </Grid.Column>
+          </Grid>
+        </div>
+        <div>
+          <Grid columns="equal">
+            <Grid.Column width={12}>
+              <Header as="h1">Expense Tracking</Header>
+            </Grid.Column>
+            <Grid.Column textAlign="right">
+              <Dropdown
+                text="Add"
+                icon="plus square outline"
+                labeled
+                button
+                className="icon"
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    icon="tasks"
+                    iconPosition="left"
+                    text="Receipts"
+                    as={Link}
+                    to="/addReceipt"
+                  />
+                  <Dropdown.Item
+                    icon="tags"
+                    iconPosition="left"
+                    text="Items"
+                    as={Link}
+                    to="/addItem"
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+            </Grid.Column>
+          </Grid>
+        </div>
+        <Divider />
+        <div>
+          <Table sortable celled>
+            <Table.Header>
+              <Table.Row textAlign="center">
+                <Table.HeaderCell
+                  width={1}
+                  sorted={column === "Date" ? direction : null}
+                  onClick={this.handleSort("Date")}
+                >
+                  Date
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  width={1}
+                  sorted={column === "Type" ? direction : null}
+                  onClick={this.handleSort("Type")}
+                >
+                  Type
+                </Table.HeaderCell>
+                <Table.HeaderCell width={3}>Store</Table.HeaderCell>
+                <Table.HeaderCell width={6}>Description</Table.HeaderCell>
+                <Table.HeaderCell
+                  width={1}
+                  sorted={column === "Total" ? direction : null}
+                  onClick={this.handleSort("Total")}
+                >
+                  Total
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            {data.map(items => {
+              return (
+                <Table.Body>
+                  <Table.Row key={items.id}>
+                    <Table.Cell textAlign="center">{items.date}</Table.Cell>
+                    <Table.Cell textAlign="center">{items.type}</Table.Cell>
+                    <Table.Cell textAlign="center">{items.store}</Table.Cell>
+                    <Table.Cell>{items.description}</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.totalCost}
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              );
+            })}
+          </Table>
+        </div>
       </div>
     );
   }
 }
+
 export default Expense;
