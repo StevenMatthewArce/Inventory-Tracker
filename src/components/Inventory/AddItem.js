@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+
 import { db } from "../Firebase";
+
 import { InputFile } from "semantic-ui-react-input-file";
 import { DateInput } from "semantic-ui-calendar-react";
 import {
@@ -10,7 +12,6 @@ import {
   Header,
   Divider,
   Grid,
-  Dropdown,
   TextArea
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
@@ -40,29 +41,8 @@ const AddItem = () => {
     }
   };
 
-  const handleNameChange = e => {
-    setName(e.target.value);
-    console.log(e.target.value);
-  };
-
-  const handleDescChange = e => {
-    setDescription(e.target.value);
-    console.log(e.target.value);
-  };
-
-  const handleCostChange = e => {
-    setCost(e.target.value);
-    console.log(e.target.value);
-  };
-
-  const handleQuantityChange = e => {
-    setQuantity(e.target.value);
-    console.log(e.target.value);
-  };
-
   const handleDateChange = (name, value) => {
     setDate(value);
-    console.log(typeof value);
   };
 
   const handleSubmit = e => {
@@ -130,7 +110,7 @@ const AddItem = () => {
                 placeholder="Name"
                 name="name"
                 value={name}
-                onChange={handleNameChange}
+                onChange={e => setName(e.target.value)}
                 label="Name"
                 required
               />
@@ -138,7 +118,7 @@ const AddItem = () => {
                 placeholder="Cost"
                 name="cost"
                 value={cost}
-                onChange={handleCostChange}
+                onChange={e => setCost(e.target.value)}
                 label="Cost"
                 required
               />
@@ -146,7 +126,7 @@ const AddItem = () => {
                 placeholder="Quantity"
                 name="quantity"
                 value={quantity}
-                onChange={handleQuantityChange}
+                onChange={e => setQuantity(e.target.value)}
                 label="Quantity"
                 required
               />
@@ -161,10 +141,10 @@ const AddItem = () => {
             </Form.Group>
             <Form.Group widths="equal">
               <Form.Input
-                placeholder="Enter additional information"
+                placeholder="Add additional information"
                 name="description"
                 value={description}
-                onChange={handleDescChange}
+                onChange={e => setDescription(e.target.value)}
                 label="Description"
                 control={TextArea}
               />
