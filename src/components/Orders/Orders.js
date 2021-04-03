@@ -1,13 +1,13 @@
 import React from "react";
 import { Tab } from "semantic-ui-react";
-import { Started, Finished } from "../Orders";
+import { CurrentOrders, CompletedOrders } from "../Orders";
 
 const panes = [
   {
     menuItem: "Current Orders",
     render: () => (
       <Tab.Pane attached={false}>
-        <Started />
+        <CurrentOrders />
       </Tab.Pane>
     )
   },
@@ -15,7 +15,7 @@ const panes = [
     menuItem: "Completed Orders",
     render: () => (
       <Tab.Pane attached={false}>
-        <Finished />
+        <CompletedOrders />
       </Tab.Pane>
     )
   }

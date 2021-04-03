@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
 
-export class Started extends Component {
+export class CurrentOrders extends Component {
   constructor(props) {
     super(props);
 
@@ -149,4 +149,4 @@ export class Started extends Component {
   }
 }
 
-export default Started;
+export default CurrentOrders;

@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
 
-export class Finished extends Component {
+export class CompletedOrders extends Component {
   constructor(props) {
     super(props);
 
@@ -81,22 +81,7 @@ export class Finished extends Component {
                 button
                 className="icon"
               >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    icon="tasks"
-                    iconPosition="left"
-                    text="Receipts"
-                    as={Link}
-                    to="/addReceipt"
-                  />
-                  <Dropdown.Item
-                    icon="tags"
-                    iconPosition="left"
-                    text="Items"
-                    as={Link}
-                    to="/addItem"
-                  />
-                </Dropdown.Menu>
+                <Dropdown.Menu></Dropdown.Menu>
               </Dropdown>
             </Grid.Column>
           </Grid>
@@ -156,4 +141,4 @@ export class Finished extends Component {
   }
 }
 
-export default Finished;
+export default CompletedOrders;
