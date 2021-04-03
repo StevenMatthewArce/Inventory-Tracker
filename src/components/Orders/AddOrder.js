@@ -7,14 +7,11 @@ import {
   Header,
   Divider,
   Grid,
-  Card,
-  Dropdown,
-  Label
+  Dropdown
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { db } from "../Firebase";
 import { Link } from "react-router-dom";
-
 
 //TODO: Add logic to not submit unless required fields have been added
 
@@ -105,7 +102,7 @@ export class AddOrder extends Component {
             </Grid.Column>
           </Grid>
         </div>
-        <Divider />{" "}
+        <Divider />
         <Form>
           <Form.Group>
             <Form.Input
