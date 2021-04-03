@@ -10,7 +10,7 @@ import { Sidenav, Header } from "../Navigation";
 
 import { Dashboard } from "../Dashboard";
 import { Inventory, AddItem } from "../Inventory";
-import Orders from "../Orders";
+import { Orders, AddOrder } from "../Orders";
 import { Budget, AddReceipt } from "../Budget";
 
 class App extends React.Component {
@@ -51,6 +51,7 @@ class App extends React.Component {
                           path={ROUTES.ADDRECEIPT}
                           component={AddReceipt}
                         />
+                        <Route path={ROUTES.ADDORDER} component={AddOrder} />
                       </Switch>
                     </Segment>
                   </Sidebar.Pusher>
