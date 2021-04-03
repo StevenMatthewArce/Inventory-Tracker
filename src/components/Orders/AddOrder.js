@@ -10,7 +10,7 @@ import {
   Dropdown
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
-import { db } from "../Firebase";
+import { projectFirestore } from "../Firebase";
 import { Link } from "react-router-dom";
 
 //TODO: Add logic to not submit unless required fields have been added
@@ -33,7 +33,7 @@ export class AddOrder extends Component {
 
   componentDidMount() {
     let documents = [];
-    db.collection("recipes")
+    projectFirestore.collection("recipes")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -64,7 +64,7 @@ export class AddOrder extends Component {
     let { name, dateReceived, dateNeededBy, comment, items } = this.state;
     let finished = "0";
 
-    db.collection("orders")
+    projectFirestore.collection("orders")
       .add({ name, dateReceived, dateNeededBy, comment, items, finished })
       .then(() => {
         this.setState({ message: "Items has been submitted. " });

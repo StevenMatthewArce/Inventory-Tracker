@@ -9,7 +9,7 @@ import {
   Statistic
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { db } from "../Firebase";
+import { projectFirestore } from "../Firebase";
 import _ from "lodash";
 
 export class CompletedOrders extends Component {
@@ -25,7 +25,7 @@ export class CompletedOrders extends Component {
 
   componentDidMount() {
     let documents = [];
-    db.collection("orders")
+    projectFirestore.collection("orders")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {

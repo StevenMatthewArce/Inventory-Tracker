@@ -10,7 +10,7 @@ import {
   Card
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
-import { db } from "../Firebase";
+import { projectFirestore } from "../Firebase";
 
 //TODO: Stylze Card - add picture/logo
 //TODO: Link back to Expense after submiting item
@@ -68,7 +68,7 @@ export default class Correction extends Component {
 
     items.forEach(element => {
       let { name, cost, quantity, dateRestocked } = element;
-      db.collection("items")
+      projectFirestore.collection("items")
         .add({ name, cost, quantity, dateRestocked })
         .then(() => {
           this.setState({ message: "Items has been submitted. " });
@@ -78,7 +78,7 @@ export default class Correction extends Component {
         });
     });
 
-    db.collection("receipts").add({
+    projectFirestore.collection("receipts").add({
       store,
       totalCost,
       description,

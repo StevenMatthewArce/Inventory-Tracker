@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
+
+import { Table, Dropdown, Grid, Header, Divider, Image } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { db } from "../Firebase";
+
+import { projectFirestore } from "../Firebase";
 import _ from "lodash";
 
 export class FinishedGoods extends Component {
@@ -34,7 +36,7 @@ export class FinishedGoods extends Component {
   };
 
   componentDidMount() {
-    db.collection("finishedgoods")
+    projectFirestore.collection("finishedgoods")
       .orderBy("quantity", "desc")
       .onSnapshot(snap => {
         let documents = [];

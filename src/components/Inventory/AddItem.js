@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
-import { db } from "../Firebase";
+import { projectStorage } from "../Firebase";
+import { useStorage } from '../../hooks';
 
 import { InputFile } from "semantic-ui-react-input-file";
 import { DateInput } from "semantic-ui-calendar-react";
@@ -26,6 +27,7 @@ const AddItem = () => {
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [url, setUrl] = useState(null);
 
   const imageTypes = ["image/png", "image/jpeg"];
 
@@ -48,16 +50,19 @@ const AddItem = () => {
   const handleSubmit = e => {
     e.preventDefault();
 
+    url = useStorage();
+    
     setItem({
       name: name,
       description: description,
       cost: cost,
       quantity: quantity,
-      dateRestocked: dateRestocked
+      dateRestocked: dateRestocked,
+      url: url,
     });
 
-    db.collection("items")
-      .add({ name, description, cost, quantity, dateRestocked })
+    projectStorage.collection("items")
+      .add({ name, description, cost, quantity, dateRestocked, url })
       .then(() => {
         setMessage("Item has been submitted. ");
       })

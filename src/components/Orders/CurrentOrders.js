@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { db } from "../Firebase";
+import { projectFirestore } from "../Firebase";
 import _ from "lodash";
 
 //TODO: ADD SORTING ALG
@@ -20,7 +20,7 @@ export class CurrentOrders extends Component {
 
   componentDidMount() {
     let documents = [];
-    db.collection("orders")
+    projectFirestore.collection("orders")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {

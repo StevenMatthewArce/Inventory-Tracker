@@ -9,7 +9,7 @@ import {
   Statistic
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { db } from "../Firebase";
+import { projectFirestore } from "../Firebase";
 import _ from "lodash";
 
 //TODO: Add Expense Chart-Bar at the top
@@ -34,7 +34,7 @@ export class Expense extends Component {
 
   componentDidMount() {
     let documents = [];
-    db.collection("receipts")
+    projectFirestore.collection("receipts")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {

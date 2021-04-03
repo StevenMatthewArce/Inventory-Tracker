@@ -12,7 +12,8 @@ var firebaseApp = firebase.initializeApp({
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 });
 
-var db = firebaseApp.firestore();
 const projectFirestore = firebase.firestore();
+const projectStorage = firebase.storage();
+const timestamp = firebase.firestore.FieldValue.serverTimestamp;
 
-export { db, projectFirestore };
+export { timestamp, projectFirestore, projectStorage };

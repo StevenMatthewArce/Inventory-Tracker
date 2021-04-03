@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { db } from "../Firebase";
+import { projectFirestore } from "../Firebase";
 import _ from "lodash";
 
 export class RawMaterials extends Component {
@@ -16,7 +16,7 @@ export class RawMaterials extends Component {
   }
 
   componentDidMount() {
-    db.collection("items")
+    projectFirestore.collection("items")
       .orderBy("quantity", "desc")
       .onSnapshot(snap => {
         let documents = [];

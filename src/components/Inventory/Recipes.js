@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { db } from "../Firebase";
+import { projectFirestore } from "../Firebase";
 import _ from "lodash";
 
 export class Recipes extends Component {
@@ -34,7 +34,7 @@ export class Recipes extends Component {
   };
 
   componentDidMount() {
-    db.collection("recipes").onSnapshot(snap => {
+    projectFirestore.collection("recipes").onSnapshot(snap => {
       let documents = [];
       snap.forEach(doc => {
         documents.push({ ...doc.data(), id: doc.id });
