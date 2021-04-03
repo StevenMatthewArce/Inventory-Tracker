@@ -1,9 +1,4 @@
-import React, { Component } from "react";
-
-class Orders extends Component {
-  render() {
-    return <div style={{ height: "100vh" }}>Orders</div>;
-  }
-}
-
-export default Orders;
+export { default as Orders } from "./Orders";
+export { default as CurrentOrders } from "./CurrentOrders";
+export { default as CompletedOrders } from "./CompletedOrders";
+export { default as AddOrder } from "./AddOrder";
