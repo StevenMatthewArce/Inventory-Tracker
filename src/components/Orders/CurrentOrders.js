@@ -1,16 +1,11 @@
 import React, { Component } from "react";
-import {
-  Table,
-  Dropdown,
-  Grid,
-  Header,
-  Divider,
-  Progress,
-  Statistic
-} from "semantic-ui-react";
+import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
+
+//TODO: ADD SORTING ALG
+//TODO: ADD CHECKBOX TO ADD TO COMPLETED ORDERS
 
 export class CurrentOrders extends Component {
   constructor(props) {
@@ -45,6 +40,7 @@ export class CurrentOrders extends Component {
       });
   }
 
+  //TODO: ADD SORTING ALG
   handleSort = clickedColumn => () => {
     const { column, data, direction } = this.state;
 
@@ -87,7 +83,7 @@ export class CurrentOrders extends Component {
                     iconPosition="left"
                     text="Order"
                     as={Link}
-                    to="/addOrder   "
+                    to="/addOrder"
                   />
                 </Dropdown.Menu>
               </Dropdown>
@@ -121,8 +117,8 @@ export class CurrentOrders extends Component {
                 >
                   Customer
                 </Table.HeaderCell>
-                <Table.HeaderCell width={3}>Item</Table.HeaderCell>
-                <Table.HeaderCell width={6}>Comments</Table.HeaderCell>
+                <Table.HeaderCell width={4}>Items</Table.HeaderCell>
+                <Table.HeaderCell width={5}>Comments</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {
@@ -136,7 +132,7 @@ export class CurrentOrders extends Component {
                       {items.dateNeededBy}
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.name}</Table.Cell>
-                    <Table.Cell>{items.item}</Table.Cell>
+                    <Table.Cell>{items.items.join(", ")}</Table.Cell>
                     <Table.Cell textAlign="center">{items.comment}</Table.Cell>
                   </Table.Row>
                 </Table.Body>
