@@ -87,7 +87,7 @@ export class CurrentOrders extends Component {
                     iconPosition="left"
                     text="Order"
                     as={Link}
-                    to="/addOrder   "
+                    to="/addOrder"
                   />
                 </Dropdown.Menu>
               </Dropdown>
