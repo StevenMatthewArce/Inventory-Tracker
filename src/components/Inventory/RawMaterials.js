@@ -1,109 +1,136 @@
-import React from 'react';
+import React, { Component } from "react";
+import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { db } from "../Firebase";
+import _ from "lodash";
 
-import { Grid, Segment, Table } from 'semantic-ui-react';
-
-import { projectFirestore } from '../Firebase';
-
-class RawMaterials extends React.Component {
+export class RawMaterials extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      items: [], 
-      expandedRows: [],
-    }
+
+    this.state = {
+      data: [],
+      column: null,
+      direction: null
+    };
   }
 
   componentDidMount() {
-    projectFirestore.collection('items')
-      .orderBy('quantity', 'desc')
-      .onSnapshot((snap) => {
+    db.collection("items")
+      .orderBy("quantity", "desc")
+      .onSnapshot(snap => {
         let documents = [];
         snap.forEach(doc => {
-          documents.push({...doc.data(), id: doc.id});
-        })
+          documents.push({ ...doc.data(), id: doc.id });
+        });
         this.setState({
-          items: documents,
+          data: documents
         });
       });
   }
 
-  handleRowClick(rowId) {
-    const currentExpandedRows = this.state.expandedRows;
-    const isRowExpanded = currentExpandedRows.includes(rowId);
+  handleSort = clickedColumn => () => {
+    const { column, data, direction } = this.state;
 
-    const newExpandedRows = isRowExpanded
-      ? currentExpandedRows.filter(id => id !== rowId)
-      : currentExpandedRows.concat(rowId);
-
-    this.setState({ expandedRows: newExpandedRows });
-  }
-
-  renderItemDetails(item) {
-    return (
-      <Segment basic>
-        <Grid columns={2}>
-          <Grid.Column>{item.description}</Grid.Column>
-          <Grid.Column>{item.photo}</Grid.Column>
-        </Grid>
-      </Segment>
-    )
-  }
-
-  renderItem(item, index) {
-    const clickCallBack = () => this.handleRowClick(index);
-    const itemRows = [
-      <Table.Row onClick={clickCallBack} key={"row-data-" + index}>
-        <Table.Cell textAlign='center'>{item.name}</Table.Cell>
-        <Table.Cell textAlign='center'>{item.dateRestocked.toString()}</Table.Cell>
-        <Table.Cell textAlign='center'>{item.quantity}</Table.Cell>
-        <Table.Cell textAlign='center'>{item.cost}</Table.Cell>
-      </Table.Row>
-    ]
-    if (this.state.expandedRows.includes(index)) {
-      itemRows.push(
-        <Table.Row key={'row-expanded-' + index}>
-          <Table.Cell colSpan='4'>{this.renderItemDetails(item)}</Table.Cell>
-        </Table.Row>
-      )
+    if (column !== clickedColumn) {
+      this.setState({
+        column: clickedColumn,
+        data: _.sortBy(data, [clickedColumn]),
+        direction: "ascending"
+      });
+      return;
     }
-    return itemRows;
-  }
+
+    this.setState({
+      data: data.slice().reverse(),
+      direction: direction === "ascending" ? "descending" : "ascending"
+    });
+  };
 
   render() {
-    let allItemRows = [];
-
-    this.state.items.forEach((item, index) => {
-      const perItemRows = this.renderItem(item, index);
-      allItemRows = allItemRows.concat(perItemRows);
-    })
-
+    const { data, column, direction } = this.state;
+    console.log(this.state);
     return (
-      <div style={{ height: '100vh' }}>
-        <Table celled fixed singleLine collapsing>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell textAlign='center' width={4}>
-                Name
-              </Table.HeaderCell>
-              <Table.HeaderCell textAlign='center' width={2}>
-                Date Restocked
-              </Table.HeaderCell>
-              <Table.HeaderCell textAlign='center' width={2}>
-                Quantity
-              </Table.HeaderCell>
-              <Table.HeaderCell textAlign='center' width={2}>
-                Cost
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {allItemRows}
-          </Table.Body>
-        </Table>
-      </div>
-    )
-  }
+      <div>
+        <div>
+          <Grid columns="equal">
+            <Grid.Column width={12}>
+              <Header as="h1">Raw Materials</Header>
+            </Grid.Column>
+            <Grid.Column textAlign="right">
+              <Dropdown
+                text="Add"
+                icon="plus square outline"
+                labeled
+                button
+                className="icon"
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    content="Item"
+                    icon=""
+                    labelPosition="right"
+                    as={Link}
+                    to="/addItem"
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+            </Grid.Column>
+          </Grid>
+        </div>
+        <Divider />
+        <div>
+          <Table sortable celled>
+            <Table.Header>
+              <Table.Row textAlign="center">
+                <Table.HeaderCell
+                  width={6}
+                  sorted={column === "name" ? direction : null}
+                  onClick={this.handleSort("name")}
+                >
+                  Material Name
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  width={6}
+                  sorted={column === "description" ? direction : null}
+                  onClick={this.handleSort("description")}
+                >
+                  Description
+                </Table.HeaderCell>
 
+                <Table.HeaderCell width={1}>Quantity</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Cost Per Item</Table.HeaderCell>
+                <Table.HeaderCell
+                  width={2}
+                  sorted={column === "dateRestocked" ? direction : null}
+                  onClick={this.handleSort("dateRestocked")}
+                >
+                  Date Restocked
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            {data.map(items => {
+              return (
+                <Table.Body>
+                  <Table.Row key={items.id}>
+                    <Table.Cell textAlign="center">{items.name}</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.description}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
+                    <Table.Cell textAlign="center">${items.cost}</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.dateRestocked}
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              );
+            })}
+          </Table>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default RawMaterials;
