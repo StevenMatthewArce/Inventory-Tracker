@@ -10,6 +10,7 @@ import {
   Button, 
   Message,
   Select,
+  ItemDescription,
 } from 'semantic-ui-react';
 
 const AddRecipe = () => {
@@ -17,8 +18,10 @@ const AddRecipe = () => {
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [dateCreated, setDate] = useState(null);
-  const [ingredientList, setIngredientList] = useState(null);
+  const [ingredientList, setIngredientList] = useState([{ingredient: '', quantity: '', unit: ''}]);
+  const [ingredient,setIngredient] = useState(null);
   const [quantity, setQuantity] = useState(0)
+  const [unit,setUnit] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -47,7 +50,6 @@ const AddRecipe = () => {
     console.log(e.target.value);
   }
 
-
   const handleDateChange = (name, value) => {
     setDate(value);
     console.log(typeof value);
@@ -56,24 +58,36 @@ const AddRecipe = () => {
   const handleIngredChange = (e, index) => {
     const{name,value} = e.target;
     const list = [...ingredientList];
-    list[index][name] = value
+    list[index][name] = value;
     setIngredientList(list);
-    console.log(typeof value);
+    //console.log(e.target.value);
   }
 
-  const handleQuantityChange = e => {
-    setQuantity(e.target.value);
-    console.log(e.target.value);
-  }
+  // const handleQuantityChange = e => {
+  //   setQuantity(e.target.value);
+  //   console.log(e.target.value);
+  // }
 
-  const handleUnitChange = e => {
-    setQuantity(e.target.value);
-    console.log(e.target.value);
-  }
+  // const handleUnitChange = e => {
+  //   setUnit(e.target.value);
+  //   console.log(e.target.value);
+  // }
 
   const handleAddClick = () => {
-    setIngredientList([...ingredientList,{ingredient: '', quantity: ''}]);
+    const list = {ingredient: '', quantity:'', unit: ''};
+    const newList = ingredientList.concat(list);
+    setIngredientList(newList);
+    console.log(ingredientList);
+    //setIngredientList([{...ingredientList},{ingredient: '', quantity:'', unit: ''}]);
   }
+
+  const handleRemoveClick = index => {
+    const list = [...ingredientList];
+    list.splice(index,1);
+    setIngredientList(list);
+  }
+
+  const rr = {name: "pie", description: "yumm", ingredientList: [{ingredient: "apple", quantity: "3", unit: "cup"},{ingredient: "blue", quantity: 4, unit: "tablespoon" }]};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -81,12 +95,16 @@ const AddRecipe = () => {
     setRecipe({
       name: name,
       description: description,
-      ingredientList: ingredientList,
+      ingredientList: {ingredient,quantity,unit},
       dateCreated: dateCreated,
     });
 
+    console.log(ingredientList);
+
     db.collection('recipes')
-    .add({ name, description, ingredientList, dateCreated })
+    //.add(Object.assign({},recipe))
+    .add({name,description, ingredientList: [],dateCreated})
+    //.add({rr})
     .then(() => {
       setMessage("Recipe has been submitted. ")
     })
@@ -95,7 +113,7 @@ const AddRecipe = () => {
     })
   }
 
-  const unit = [
+  const units = [
     { key: 'o', text: 'Teaspoon', value: 'teaspoon' },
     { key: 't', text: 'Tablespoon', value: 'tablespoon' },
     { key: 'th', text: 'Cup', value: 'cup' },
@@ -106,7 +124,9 @@ const AddRecipe = () => {
 
   //get raw material from raw inventory database?
   const rawMaterials = [
-    {key: 'a', text: 'Apple', value: 'apple'}
+    {key: 'a', text: 'Apple', value: 'apple'},
+    {key: 'b', text: 'blueberry', value: 'blueberry'}
+
   ]
 
   const isInvalid = name === '' || dateCreated === null || description ==='';
@@ -115,6 +135,9 @@ const AddRecipe = () => {
     <div className='add-recipe' style={{ height: '100vh' }}>
       {error && (<Message icon='frown' negative>{error}</Message>)}
       {message && <Message icon='smile' positive>{message}</Message>}
+      {/* {ingredientList.map((x,i) => { */}
+       {/* return( */}
+        {/* <div className = 'form'>  */}
       <Form>
         <Form onSubmit={handleSubmit}>          
           <Form.Group widths='equal'>
@@ -143,41 +166,52 @@ const AddRecipe = () => {
               onChange={(e, {name, value}) => handleDateChange(name, value)}
             />
           </Form.Group>
+          <h3>Ingredients List</h3>
+          {ingredientList.map((x,i) => {
+          return(
+       <div className = 'form'> 
           <Form.Group widths='equal'>
-            <h3>Ingredients List</h3>
+            {/* <h3>Ingredients List</h3> */}
             {/* //</Form.Group> */}
             {/* </Form>{ingredientList.map((x,i) => { */}
 
             {/* return( */}
-            <Form.Input
+            <Form.Select
               placeholder="Ingredients" 
               name="ingredient" 
-              value={ingredientList} 
-              onChange={handleIngredChange} 
+              value={rawMaterials.find(obj => obj.value === x.ingredient)}
+              onChange={e=> handleIngredChange(e,i)} 
               label="Ingredient"
               control={Select}
               options={rawMaterials}
+              //required
             />
             <Form.Input
               placeholder="Quantity" 
               name="quantity" 
-              value={quantity} 
-              onChange={handleQuantityChange} 
-              label="Quanitity"
+              value={x.quantity} 
+              onChange={e=> handleIngredChange(e,i)}               label="Quanitity"
               //control={TextArea}
             />
             <Form.Field
               control={Select}
+              value={units.find(obj => obj.value === x.unit)}
               label='Unit'
-              options={unit}
-              onChange={handleUnitChange} 
-              placeholder='Units'
+              options={units}
+              onChange={e=> handleIngredChange(e,i)}               placeholder='Units'
             />
             {/* {ingredientList.length - 1 === i && <button>Add</button>} */}
-          
+            <div className="addRemove">
+      {ingredientList.length !== 1 && 
+      <button onClick={() => handleRemoveClick(i)}>Remove</button>}
+      {ingredientList.length-1 === i && 
+      <button onClick={handleAddClick}>Add</button>}
+    </div>
          
           </Form.Group>
-      
+          </div>
+          )
+      })}
           <Form.Group>
             <Form.Field>
               <label>Choose photo</label>
@@ -198,8 +232,17 @@ const AddRecipe = () => {
      
       </Form>
       
-       {/* <div style={{ marginTop: 20 }}>{JSON.stringify(ingredientList)}</div>      */}
-    </div>
+       {/* <div style={{ marginTop: 20 }}>{JSON.stringify(ingredientList)}</div>       */}
+    {/* <div className="addRemove">
+      {ingredientList.length !== 1 && 
+      <button onClick={() => handleRemoveClick(i)}>Remove</button>}
+      {ingredientList.length-1 === i && 
+      <button onClick={handleAddClick}>Add</button>}
+    </div> */}
+     </div>
+  //)
+  //})}
+    //</div>
   )
 }
 
