@@ -26,13 +26,11 @@ const panes = [
       <Tab.Pane attached={false}>
         <Recipes />
       </Tab.Pane>
-      <Tab menu={{ secondary: true, color: 'black', pointing: true }} panes={panes} />
-      </div>
-      )
+    )
   }
-   else { //(panes.menuItem === "Raw Inventory"){
+];
 
-  
+const Inventory = () => {
   return (
     <div style={{ height: "100vh" }}>
       <Tab panes={panes} />
