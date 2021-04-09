@@ -26,11 +26,34 @@ const panes = [
       <Tab.Pane attached={false}>
         <Recipes />
       </Tab.Pane>
-    )
+      </div>
+     )  
+     
   }
 ];
 
-const Inventory = () => {
+const Inventory = ({menuItem}) => {
+  //<Tab menu={{ secondary: true, color: 'black', pointing: true }} panes={panes} />
+  if (menuItem === "Recipes"){
+      return( 
+      <div style={{ height: '100vh' }}>
+      <Button 
+        content='Add Recipe' 
+        icon='plus square outline'
+        labelPosition='right' 
+        as={Link}
+        to='/addRecipe'
+      />
+      <Tab.Pane attached={false}> 
+        <Recipes />
+      </Tab.Pane>
+      <Tab menu={{ secondary: true, color: 'black', pointing: true }} panes={panes} />
+      </div>
+      )
+  }
+   else { //(panes.menuItem === "Raw Inventory"){
+
+  
   return (
     <div style={{ height: "100vh" }}>
       <Tab panes={panes} />
