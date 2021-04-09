@@ -27,19 +27,10 @@ export class Recipes extends Component {
       return;
     }
 
-    direction === "ascending"
-      ? this.setState({
-          data: data.sort((a, b) =>
-            a.clickedColumn < b.clickedColumn ? 1 : -1
-          ),
-          direction: direction === "ascending" ? "descending" : "ascending"
-        })
-      : this.setState({
-          data: data.sort((a, b) =>
-            a.clickedColumn < b.clickedColumn ? 1 : -1
-          ),
-          direction: direction === "ascending" ? "descending" : "ascending"
-        });
+    this.setState({
+      data: data.slice().reverse(),
+      direction: direction === "ascending" ? "descending" : "ascending"
+    });
   };
 
   componentDidMount() {
@@ -122,7 +113,7 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {/* {items.ingredient.join(", ")} */}
+                      {items.ingredient.join(", ")}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>

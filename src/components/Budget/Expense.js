@@ -61,19 +61,10 @@ export class Expense extends Component {
       return;
     }
 
-    direction === "ascending"
-      ? this.setState({
-          data: data.sort((a, b) =>
-            a.clickedColumn < b.clickedColumn ? 1 : -1
-          ),
-          direction: direction === "ascending" ? "descending" : "ascending"
-        })
-      : this.setState({
-          data: data.sort((a, b) =>
-            a.clickedColumn < b.clickedColumn ? 1 : -1
-          ),
-          direction: direction === "ascending" ? "descending" : "ascending"
-        });
+    this.setState({
+      data: data.slice().reverse(),
+      direction: direction === "ascending" ? "descending" : "ascending"
+    });
   };
 
   calculateExpenseMonth = () => {
@@ -222,18 +213,12 @@ export class Expense extends Component {
                 >
                   Type
                 </Table.HeaderCell>
-                <Table.HeaderCell
-                  width={3}
-                  sorted={column === "store" ? direction : null}
-                  onClick={this.handleSort("store")}
-                >
-                  Store
-                </Table.HeaderCell>
+                <Table.HeaderCell width={3}>Store</Table.HeaderCell>
                 <Table.HeaderCell width={6}>Description</Table.HeaderCell>
                 <Table.HeaderCell
                   width={1}
-                  sorted={column === "totalCost" ? direction : null}
-                  onClick={this.handleSort("totalCost")}
+                  sorted={column === "Total" ? direction : null}
+                  onClick={this.handleSort("Total")}
                 >
                   Total
                 </Table.HeaderCell>
