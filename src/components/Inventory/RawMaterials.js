@@ -41,10 +41,19 @@ export class RawMaterials extends Component {
       return;
     }
 
-    this.setState({
-      data: data.slice().reverse(),
-      direction: direction === "ascending" ? "descending" : "ascending"
-    });
+    direction === "ascending"
+      ? this.setState({
+          data: data.sort((a, b) =>
+            a.clickedColumn < b.clickedColumn ? 1 : -1
+          ),
+          direction: direction === "ascending" ? "descending" : "ascending"
+        })
+      : this.setState({
+          data: data.sort((a, b) =>
+            a.clickedColumn < b.clickedColumn ? 1 : -1
+          ),
+          direction: direction === "ascending" ? "descending" : "ascending"
+        });
   };
 
   render() {
@@ -97,7 +106,6 @@ export class RawMaterials extends Component {
                 >
                   Description
                 </Table.HeaderCell>
-
                 <Table.HeaderCell width={1}>Quantity</Table.HeaderCell>
                 <Table.HeaderCell width={1}>Cost Per Item</Table.HeaderCell>
                 <Table.HeaderCell
