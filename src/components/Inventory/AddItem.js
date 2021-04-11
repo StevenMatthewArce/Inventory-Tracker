@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { db } from "../Firebase";
+import { db, storage } from "../Firebase";
 import { InputFile } from "semantic-ui-react-input-file";
 import { DateInput } from "semantic-ui-calendar-react";
 import {
@@ -14,6 +14,7 @@ import {
   TextArea
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import ImageUploader from "react-images-upload";
 
 const AddItem = () => {
   const [item, setItem] = useState();
@@ -25,6 +26,9 @@ const AddItem = () => {
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [pictures, setPictures] = useState("");
+  const [imageAsFile, setImageAsFile] = useState("");
+  const [imageAsUrl, setImageAsUrl] = useState("");
 
   const imageTypes = ["image/png", "image/jpeg"];
 
@@ -65,26 +69,72 @@ const AddItem = () => {
     console.log(typeof value);
   };
 
-  const handleSubmit = e => {
+  async function handleSubmit(e) {
     e.preventDefault();
-
-    setItem({
-      name: name,
-      description: description,
-      cost: cost,
-      quantity: quantity,
-      dateRestocked: dateRestocked
-    });
+    console.log(imageAsFile);
+    let imageAsUrl = "";
+    if (imageAsFile) {
+      imageAsUrl = await getImgFirebaseUrl();
+    }
 
     db.collection("items")
-      .add({ name, description, cost, quantity, dateRestocked })
+      .add({
+        name,
+        description,
+        cost,
+        quantity,
+        dateRestocked,
+        imageAsUrl
+      })
       .then(() => {
         setMessage("Item has been submitted. ");
       })
       .catch(err => {
         setError(err);
       });
+  }
+
+  const handleImageAsFile = e => {
+    const image = e.target.files[0];
+    setImageAsFile(imageFile => image);
+    console.log(image);
   };
+
+  async function getImgFirebaseUrl() {
+    console.log("start of upload");
+
+    const uploadTask = storage
+      .ref(`/images/${imageAsFile.name}`)
+      .put(imageAsFile);
+
+    //initiates the firebase side uploading
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        snapShot => {
+          console.log(snapShot);
+        },
+        err => {
+          reject(err);
+          console.log(err);
+        },
+        () => {
+          storage
+            .ref("images")
+            .child(imageAsFile.name)
+            .getDownloadURL()
+            .then(fireBaseUrl => {
+              setImageAsUrl(prevObject => ({
+                ...prevObject,
+                imgUrl: fireBaseUrl
+              }));
+              resolve(fireBaseUrl);
+            });
+        }
+      );
+    });
+  }
 
   const isInvalid =
     name === "" || dateRestocked === null || quantity === 0 || cost === 0;
@@ -92,6 +142,7 @@ const AddItem = () => {
   return (
     <div className="add-item" style={{ height: "100vh" }}>
       <div>
+        {console.log(imageAsUrl)}
         <Button labelPosition="left" icon secondary as={Link} to="/inventory">
           Back
           <Icon name="left arrow"></Icon>
@@ -170,13 +221,7 @@ const AddItem = () => {
               />
               <Form.Field>
                 <label>Choose photo</label>
-                <InputFile
-                  input={{
-                    id: "input-control-id",
-                    onChange: handlePhotoChange
-                  }}
-                  value={photo}
-                />
+                <input type="file" onChange={handleImageAsFile} />
               </Form.Field>
             </Form.Group>
             <Button
