@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+
 import { db, storage } from "../Firebase";
-import { InputFile } from "semantic-ui-react-input-file";
+
 import { DateInput } from "semantic-ui-calendar-react";
 import {
   Form,
@@ -10,39 +11,22 @@ import {
   Header,
   Divider,
   Grid,
-  Dropdown,
   TextArea
 } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import ImageUploader from "react-images-upload";
+import { Link, useHistory } from "react-router-dom";
 
 const AddItem = () => {
-  const [item, setItem] = useState();
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [cost, setCost] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [dateRestocked, setDate] = useState(null);
-  const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const [pictures, setPictures] = useState("");
   const [imageAsFile, setImageAsFile] = useState("");
   const [imageAsUrl, setImageAsUrl] = useState("");
 
-  const imageTypes = ["image/png", "image/jpeg"];
-
-  const handlePhotoChange = e => {
-    let selected = e.target.files[0];
-
-    if (selected && imageTypes.includes(selected.type)) {
-      setPhoto(selected);
-      setError(null);
-    } else {
-      setPhoto(null);
-      setError("File must be an image (png or jpeg");
-    }
-  };
+  let history = useHistory();
 
   const handleNameChange = e => {
     setName(e.target.value);
@@ -88,10 +72,17 @@ const AddItem = () => {
       })
       .then(() => {
         setMessage("Item has been submitted. ");
+        handleRedirect();
       })
       .catch(err => {
         setError(err);
       });
+  }
+
+  const handleRedirect = () => {
+    setTimeout(() => {
+      history.push('/inventory');
+    }, 3000)
   }
 
   const handleImageAsFile = e => {
