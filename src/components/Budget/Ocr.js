@@ -10,7 +10,7 @@ import {
 } from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 //TODO: Add OCR Recognition for Store Name
 //TODO: Add OCR Recognition for Total
@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 //!: Remove Debug Button
 
 export class Ocr extends Component {
-  constructor(props) {
+  constructor(props) {    
     super(props);
 
     this.state = {
@@ -41,6 +41,13 @@ export class Ocr extends Component {
     this.onDrop = this.onDrop.bind(this);
     this.runOcr = this.runOcr.bind(this);
     this.debug = this.debug.bind(this);
+  }
+  
+  handleRedirect = () => {
+    let history = useHistory();
+    setTimeout(() => {
+      history.push('/budget')
+    }, 3000) // 3 seconds
   }
 
   updateItems = () => {
@@ -131,6 +138,7 @@ export class Ocr extends Component {
             this.updateItems();
             this.setState({ status: null, updatedStatus: "1" });
             console.log("Update Items Finished");
+            this.handleRedirect();
           })
       );
     } else {
