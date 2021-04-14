@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { db } from "../Firebase";
-import { InputFile } from "semantic-ui-react-input-file";
+
+import { db, storage } from "../Firebase";
+
 import { DateInput } from "semantic-ui-calendar-react";
 import {
   Form,
@@ -10,35 +11,22 @@ import {
   Header,
   Divider,
   Grid,
-  Dropdown,
   TextArea
 } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const AddItem = () => {
-  const [item, setItem] = useState();
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [cost, setCost] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [dateRestocked, setDate] = useState(null);
-  const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [imageAsFile, setImageAsFile] = useState("");
+  const [imageAsUrl, setImageAsUrl] = useState("");
 
-  const imageTypes = ["image/png", "image/jpeg"];
-
-  const handlePhotoChange = e => {
-    let selected = e.target.files[0];
-
-    if (selected && imageTypes.includes(selected.type)) {
-      setPhoto(selected);
-      setError(null);
-    } else {
-      setPhoto(null);
-      setError("File must be an image (png or jpeg");
-    }
-  };
+  let history = useHistory();
 
   const handleNameChange = e => {
     setName(e.target.value);
@@ -65,26 +53,79 @@ const AddItem = () => {
     console.log(typeof value);
   };
 
-  const handleSubmit = e => {
+  async function handleSubmit(e) {
     e.preventDefault();
-
-    setItem({
-      name: name,
-      description: description,
-      cost: cost,
-      quantity: quantity,
-      dateRestocked: dateRestocked
-    });
+    console.log(imageAsFile);
+    let imageAsUrl = "";
+    if (imageAsFile) {
+      imageAsUrl = await getImgFirebaseUrl();
+    }
 
     db.collection("items")
-      .add({ name, description, cost, quantity, dateRestocked })
+      .add({
+        name,
+        description,
+        cost,
+        quantity,
+        dateRestocked,
+        imageAsUrl
+      })
       .then(() => {
         setMessage("Item has been submitted. ");
+        handleRedirect();
       })
       .catch(err => {
         setError(err);
       });
+  }
+
+  const handleRedirect = () => {
+    setTimeout(() => {
+      history.push('/inventory');
+    }, 3000)
+  }
+
+  const handleImageAsFile = e => {
+    const image = e.target.files[0];
+    setImageAsFile(imageFile => image);
+    console.log(image);
   };
+
+  async function getImgFirebaseUrl() {
+    console.log("start of upload");
+
+    const uploadTask = storage
+      .ref(`/images/${imageAsFile.name}`)
+      .put(imageAsFile);
+
+    //initiates the firebase side uploading
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        snapShot => {
+          console.log(snapShot);
+        },
+        err => {
+          reject(err);
+          console.log(err);
+        },
+        () => {
+          storage
+            .ref("images")
+            .child(imageAsFile.name)
+            .getDownloadURL()
+            .then(fireBaseUrl => {
+              setImageAsUrl(prevObject => ({
+                ...prevObject,
+                imgUrl: fireBaseUrl
+              }));
+              resolve(fireBaseUrl);
+            });
+        }
+      );
+    });
+  }
 
   const isInvalid =
     name === "" || dateRestocked === null || quantity === 0 || cost === 0;
@@ -92,6 +133,7 @@ const AddItem = () => {
   return (
     <div className="add-item" style={{ height: "100vh" }}>
       <div>
+        {console.log(imageAsUrl)}
         <Button labelPosition="left" icon secondary as={Link} to="/inventory">
           Back
           <Icon name="left arrow"></Icon>
@@ -170,13 +212,7 @@ const AddItem = () => {
               />
               <Form.Field>
                 <label>Choose photo</label>
-                <InputFile
-                  input={{
-                    id: "input-control-id",
-                    onChange: handlePhotoChange
-                  }}
-                  value={photo}
-                />
+                <input type="file" onChange={handleImageAsFile} />
               </Form.Field>
             </Form.Group>
             <Button

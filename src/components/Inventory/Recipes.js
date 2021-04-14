@@ -113,7 +113,7 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.ingredient.join(", ")}
+                      {items.ingredient}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
