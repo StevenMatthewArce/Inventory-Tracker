@@ -1,16 +1,43 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   Table,
   Dropdown,
   Grid,
   Header,
   Divider,
-  Search,
-  GridColumn
+  Search
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
+
+const ExpandableTableRow = props => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggle = () => setIsOpen(!isOpen);
+
+  const toggleStyle = {
+    display: isOpen ? "table-row" : "none"
+  };
+
+  const { items } = props;
+
+  return (
+    <>
+      <Table.Body>
+        <Table.Row key={items.id} onClick={handleToggle}>
+          <Table.Cell textAlign="center">{items.name}</Table.Cell>
+          <Table.Cell textAlign="center">{items.description}</Table.Cell>
+          <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
+          <Table.Cell textAlign="center">${items.cost}</Table.Cell>
+          <Table.Cell textAlign="center">{items.dateRestocked}</Table.Cell>
+        </Table.Row>
+        <Table.Row style={toggleStyle}>
+          <Table.Cell colSpan={5}>{items.description}</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </>
+  );
+};
 
 export class RawMaterials extends Component {
   constructor(props) {
@@ -18,11 +45,13 @@ export class RawMaterials extends Component {
 
     this.state = {
       data: [],
+      categoryNames: [],
       column: null,
       direction: null,
       isLoading: false,
       results: [],
-      value: ""
+      value: "",
+      rowToggle: false
     };
   }
 
@@ -34,9 +63,12 @@ export class RawMaterials extends Component {
         snap.forEach(doc => {
           documents.push({ ...doc.data(), id: doc.id });
         });
-        this.setState({
-          data: documents
-        });
+        this.setState(
+          {
+            data: documents
+          },
+          () => this.makeCategories()
+        );
       });
   }
 
@@ -76,8 +108,39 @@ export class RawMaterials extends Component {
     }, 300);
   };
 
+  makeCategories = () => {
+    const { data } = this.state;
+    const categoryNames = [];
+    const map = new Map();
+    for (const item of data) {
+      if (!map.has(item.name)) {
+        map.set(item.name, true); // set any value to Map
+        categoryNames.push({
+          name: item.name
+        });
+      }
+    }
+    this.setState({
+      categoryNames: categoryNames
+    });
+  };
+
+  handleToggle = () => {
+    this.setState(prevState => ({
+      rowToggle: !prevState.rowToggle
+    }));
+  };
+
   render() {
-    const { data, column, direction, isLoading, value, results } = this.state;
+    const {
+      data,
+      column,
+      direction,
+      isLoading,
+      value,
+      results,
+      rowToggle
+    } = this.state;
 
     const resRender = ({ name, cost, quantity }) => {
       return (
@@ -147,7 +210,7 @@ export class RawMaterials extends Component {
           </Grid>
         </div>
         <div>
-          <Table sortable celled>
+          <Table sortable celled selectable>
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
@@ -177,21 +240,7 @@ export class RawMaterials extends Component {
               </Table.Row>
             </Table.Header>
             {data.map(items => {
-              return (
-                <Table.Body>
-                  <Table.Row key={items.id}>
-                    <Table.Cell textAlign="center">{items.name}</Table.Cell>
-                    <Table.Cell textAlign="center">
-                      {items.description}
-                    </Table.Cell>
-                    <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
-                    <Table.Cell textAlign="center">${items.cost}</Table.Cell>
-                    <Table.Cell textAlign="center">
-                      {items.dateRestocked}
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              );
+              return <ExpandableTableRow items={items} />;
             })}
           </Table>
         </div>
