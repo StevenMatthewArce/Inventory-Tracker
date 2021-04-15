@@ -19,20 +19,20 @@ const ExpandableTableRow = props => {
     display: isOpen ? "table-row" : "none"
   };
 
-  const { items } = props;
+  const { data, value } = props;
 
+  console.log(props);
   return (
     <>
       <Table.Body>
-        <Table.Row key={items.id} onClick={handleToggle}>
-          <Table.Cell textAlign="center">{items.name}</Table.Cell>
-          <Table.Cell textAlign="center">{items.description}</Table.Cell>
-          <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
-          <Table.Cell textAlign="center">${items.cost}</Table.Cell>
-          <Table.Cell textAlign="center">{items.dateRestocked}</Table.Cell>
+        <Table.Row key={value} onClick={handleToggle}>
+          <Table.Cell textAlign="center">{value}</Table.Cell>
         </Table.Row>
         <Table.Row style={toggleStyle}>
-          <Table.Cell colSpan={5}>{items.description}</Table.Cell>
+          {Object.keys(data).map(value => {
+            
+            return <div>{console.log(value)}Test</div>;
+          })}
         </Table.Row>
       </Table.Body>
     </>
@@ -45,13 +45,11 @@ export class RawMaterials extends Component {
 
     this.state = {
       data: [],
-      categoryNames: [],
       column: null,
       direction: null,
       isLoading: false,
       results: [],
-      value: "",
-      rowToggle: false
+      value: ""
     };
   }
 
@@ -63,12 +61,12 @@ export class RawMaterials extends Component {
         snap.forEach(doc => {
           documents.push({ ...doc.data(), id: doc.id });
         });
-        this.setState(
-          {
-            data: documents
-          },
-          () => this.makeCategories()
-        );
+        var catagories = _.groupBy(documents, items => {
+          return items.name;
+        });
+        this.setState({
+          data: catagories
+        });
       });
   }
 
@@ -78,14 +76,14 @@ export class RawMaterials extends Component {
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        data: _.sortBy(data, [clickedColumn]),
+        categoryNames: _.sortBy(data, [clickedColumn]),
         direction: "ascending"
       });
       return;
     }
 
     this.setState({
-      data: data.slice().reverse(),
+      categoryNames: data.slice().reverse(),
       direction: direction === "ascending" ? "descending" : "ascending"
     });
   };
@@ -108,39 +106,8 @@ export class RawMaterials extends Component {
     }, 300);
   };
 
-  makeCategories = () => {
-    const { data } = this.state;
-    const categoryNames = [];
-    const map = new Map();
-    for (const item of data) {
-      if (!map.has(item.name)) {
-        map.set(item.name, true); // set any value to Map
-        categoryNames.push({
-          name: item.name
-        });
-      }
-    }
-    this.setState({
-      categoryNames: categoryNames
-    });
-  };
-
-  handleToggle = () => {
-    this.setState(prevState => ({
-      rowToggle: !prevState.rowToggle
-    }));
-  };
-
   render() {
-    const {
-      data,
-      column,
-      direction,
-      isLoading,
-      value,
-      results,
-      rowToggle
-    } = this.state;
+    const { data, column, direction, isLoading, value, results } = this.state;
 
     const resRender = ({ name, cost, quantity }) => {
       return (
@@ -239,8 +206,8 @@ export class RawMaterials extends Component {
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-            {data.map(items => {
-              return <ExpandableTableRow items={items} />;
+            {Object.keys(data).map(value => {
+              return <ExpandableTableRow data={data} value={value} />;
             })}
           </Table>
         </div>
