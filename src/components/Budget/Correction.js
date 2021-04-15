@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { Redirect } from 'react-router-dom';
 import {
   Form,
   Button,
@@ -14,8 +16,7 @@ import { db } from "../Firebase";
 
 //TODO: Stylze Card - add picture/logo
 //TODO: Link back to Expense after submiting item
-
-export default class Correction extends Component {
+class Correction extends Component {
   constructor(props) {
     super(props);
 
@@ -47,7 +48,8 @@ export default class Correction extends Component {
       ...initialItems,
       ...initialState,
       message: null,
-      error: null
+      error: null, 
+      redirect: false
     };
     this.addItem = this.addItem.bind(this);
     this.removeItem = this.removeItem.bind(this);
@@ -85,6 +87,9 @@ export default class Correction extends Component {
       date,
       type
     });
+    setTimeout(() => {
+      this.setState({ redirect: true });
+    }, 3000)
   };
 
   addItem = () => {
@@ -116,6 +121,10 @@ export default class Correction extends Component {
 
   render() {
     let date = this.state.items[0].dateRestocked;
+
+    if (this.state.redirect) {
+      return <Redirect to='/budget' />
+    }
 
     return (
       <div style={{ height: "100vh" }}>
@@ -254,3 +263,5 @@ export default class Correction extends Component {
     );
   }
 }
+
+export default Correction;

@@ -42,13 +42,6 @@ export class Ocr extends Component {
     this.runOcr = this.runOcr.bind(this);
     this.debug = this.debug.bind(this);
   }
-  
-  handleRedirect = () => {
-    let history = useHistory();
-    setTimeout(() => {
-      history.push('/budget')
-    }, 3000) // 3 seconds
-  }
 
   updateItems = () => {
     let item = [];
@@ -138,7 +131,6 @@ export class Ocr extends Component {
             this.updateItems();
             this.setState({ status: null, updatedStatus: "1" });
             console.log("Update Items Finished");
-            this.handleRedirect();
           })
       );
     } else {
