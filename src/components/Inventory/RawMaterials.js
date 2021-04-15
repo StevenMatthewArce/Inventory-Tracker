@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
+import {
+  Table,
+  Dropdown,
+  Grid,
+  Header,
+  Divider,
+  Search,
+  GridColumn
+} from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
@@ -11,7 +19,10 @@ export class RawMaterials extends Component {
     this.state = {
       data: [],
       column: null,
-      direction: null
+      direction: null,
+      isLoading: false,
+      results: [],
+      value: ""
     };
   }
 
@@ -47,9 +58,41 @@ export class RawMaterials extends Component {
     });
   };
 
+  handleResultSelect = (e, { result }) => this.setState({ value: result.name });
+
+  handleSearchChange = (e, { value }) => {
+    const { data } = this.state;
+    const { name } = data;
+    this.setState({ isLoading: true, value });
+
+    setTimeout(() => {
+      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
+      const isMatch = result => re.test(result.name);
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(data, isMatch)
+      });
+    }, 300);
+  };
+
   render() {
-    const { data, column, direction } = this.state;
+    const { data, column, direction, isLoading, value, results } = this.state;
+
+    const resRender = ({ name, cost, quantity }) => {
+      return (
+        <div key="name">
+          <Grid columns="equal">
+            <Grid.Column>Material Name: {name}</Grid.Column>
+            <Grid.Column>Quantity: {quantity}</Grid.Column>
+            <Grid.Column>Cost: {cost}</Grid.Column>
+          </Grid>
+        </div>
+      );
+    };
+
     console.log(this.state);
+
     return (
       <div>
         <div>
@@ -86,6 +129,23 @@ export class RawMaterials extends Component {
           </Grid>
         </div>
         <Divider />
+        <div>
+          <Grid>
+            <Grid.Column>
+              <Search
+                fluid
+                loading={isLoading}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                  leading: true
+                })}
+                results={results}
+                value={value}
+                resultRenderer={resRender}
+              />
+            </Grid.Column>
+          </Grid>
+        </div>
         <div>
           <Table sortable celled>
             <Table.Header>
