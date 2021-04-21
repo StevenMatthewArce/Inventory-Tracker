@@ -9,7 +9,7 @@ import * as ROUTES from "../../constants/routes";
 import { Sidenav, Header } from "../Navigation";
 
 import { Dashboard } from "../Dashboard";
-import { Inventory, AddItem } from "../Inventory";
+import { Inventory, AddItem, AddRecipe } from "../Inventory";
 import { Orders, AddOrder } from "../Orders";
 import { Budget, AddReceipt } from "../Budget";
 
@@ -47,11 +47,9 @@ class App extends React.Component {
                         <Route path={ROUTES.BUDGET} component={Budget} />
                         <Route path={ROUTES.ORDERS} component={Orders} />
                         <Route path={ROUTES.ADDITEM} component={AddItem} />
-                        <Route
-                          path={ROUTES.ADDRECEIPT}
-                          component={AddReceipt}
-                        />
+                        <Route path={ROUTES.ADDRECEIPT} component={AddReceipt} />
                         <Route path={ROUTES.ADDORDER} component={AddOrder} />
+                        <Route path={ROUTES.ADDRECIPE} component={AddRecipe} />
                       </Switch>
                     </Segment>
                   </Sidebar.Pusher>
