@@ -11,7 +11,7 @@ import {
   Dropdown
 } from 'semantic-ui-react';
 import { db } from '../Firebase';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const AddRecipe = () => {
   const [name, setName] = useState(null);
@@ -20,6 +20,8 @@ const AddRecipe = () => {
   const [error, setError] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [description, setDescription] = useState([]);
+
+  let history = useHistory();
 
   useEffect(() => {
     let docs = [];
@@ -50,16 +52,20 @@ const AddRecipe = () => {
       .add({ name, items, description })
       .then(() => {
         setMessage('Recipe has been submitted. ');
+        handleRedirect();
       })
       .catch((err) => {
         setError(err);
       })
   }
 
+  // redirects after 3 seconds
+  const handleRedirect = () => setTimeout(() => { history.push('/recipes') }, 3000) 
+
   return (
     <div style={{ height: '100vh' }}>
       <div>
-        <Button labelPosition='left' icon secondary as={Link} to='/inventory'>
+        <Button labelPosition='left' icon secondary onClick={history.push('/recipes')}>
           Back
           <Icon name='left arrow' />
         </Button>
