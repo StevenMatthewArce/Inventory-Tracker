@@ -8,7 +8,7 @@ import * as ROUTES from "../../constants/routes";
 import { Sidenav, Header } from "../Navigation";
 
 import { Dashboard } from "../Dashboard";
-import { Inventory, AddItem, AddRecipe } from "../Inventory";
+import { Inventory, AddItem, AddRecipe, AddFinishedGood } from "../Inventory";
 import { Orders, AddOrder } from "../Orders";
 import { Budget, AddReceipt } from "../Budget";
 
@@ -37,11 +37,7 @@ class App extends React.Component {
                   <Sidebar.Pusher>
                     <Segment padded>
                       <Switch>
-                        <Route
-                          exact
-                          path={ROUTES.DASHBOARD}
-                          component={Dashboard}
-                        />
+                        <Route exact path={ROUTES.DASHBOARD} component={Dashboard} />
                         <Route path={ROUTES.INVENTORY} component={Inventory} />
                         <Route path={ROUTES.BUDGET} component={Budget} />
                         <Route path={ROUTES.ORDERS} component={Orders} />
@@ -49,6 +45,7 @@ class App extends React.Component {
                         <Route path={ROUTES.ADDRECEIPT} component={AddReceipt} />
                         <Route path={ROUTES.ADDORDER} component={AddOrder} />
                         <Route path={ROUTES.ADDRECIPE} component={AddRecipe} />
+                        <Route path={ROUTES.ADDFINISHEDGOOD} component={AddFinishedGood} />
                       </Switch>
                     </Segment>
                   </Sidebar.Pusher>
