@@ -10,7 +10,7 @@ import {
 } from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 //TODO: Add OCR Recognition for Store Name
 //TODO: Add OCR Recognition for Total
@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 //!: Remove Debug Button
 
 export class Ocr extends Component {
-  constructor(props) {
+  constructor(props) {    
     super(props);
 
     this.state = {
