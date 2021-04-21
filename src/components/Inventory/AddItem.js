@@ -91,7 +91,7 @@ const AddItem = () => {
     console.log(image);
   };
 
-  async function getImgFirebaseUrl() {
+  const getImgFirebaseUrl = async () => {
     console.log("start of upload");
 
     const uploadTask = storage
@@ -220,8 +220,11 @@ const AddItem = () => {
               disabled={isInvalid}
               type="submit"
               onClick={handleSubmit}
+              labelPosition='right'
+              icon
             >
               Submit
+              <Icon name='send' />
             </Button>
           </Form>
         </Form>

@@ -97,7 +97,7 @@ export class AddOrder extends Component {
             <Grid.Column width={7} textAlign="right">
               <Button labelPosition="right" icon primary onClick={this.submit}>
                 Submit
-                <Icon name="send"></Icon>
+                <Icon name="send" />
               </Button>
             </Grid.Column>
           </Grid>
@@ -137,12 +137,12 @@ export class AddOrder extends Component {
               onChange={this.handleChange}
             />
           </Form.Group>
-          <b>Add Item:</b>
+          <b>Add Recipe:</b>
           <Dropdown
             required
-            labeled="Add Item"
+            labeled="Add Recipe"
             name="items"
-            placeholder="Items"
+            placeholder="Recipes"
             fluid
             multiple
             selection
