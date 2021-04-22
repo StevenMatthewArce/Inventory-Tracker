@@ -11,7 +11,10 @@ export class Recipes extends Component {
     this.state = {
       data: [],
       column: null,
-      direction: null
+      direction: null,
+      isLoading: false,
+      results: [],
+      value: ""
     };
   }
 
@@ -45,8 +48,28 @@ export class Recipes extends Component {
     });
   }
 
+  handleResultSelect = (e, { result }) => this.setState({ value: result.name });
+
+  handleSearchChange = (e, { value }) => {
+    const { data } = this.state;
+    const { name } = data;
+
+    console.log(data);
+    this.setState({ isLoading: true, value });
+
+    setTimeout(() => {
+      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
+      const isMatch = result => re.test(result.name);
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(data, isMatch)
+      });
+    }, 300);
+  };
+
   render() {
-    const { data, column, direction } = this.state;
+    const { data, column, direction, isLoading, value, results } = this.state;
     console.log(this.state);
     return (
       <div>
@@ -113,7 +136,7 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.ingredient}
+                      {items.items.join(", ")}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>

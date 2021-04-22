@@ -5,8 +5,7 @@ import {
   Grid,
   Header,
   Divider,
-  Search,
-  GridColumn
+  Search
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";

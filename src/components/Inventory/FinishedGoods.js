@@ -1,8 +1,16 @@
 import React, { Component } from "react";
-import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
+import {
+  Table,
+  Dropdown,
+  Grid,
+  Header,
+  Divider,
+  Search
+} from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
+import "./style.css";
 
 export class FinishedGoods extends Component {
   constructor(props) {
@@ -11,7 +19,10 @@ export class FinishedGoods extends Component {
     this.state = {
       data: [],
       column: null,
-      direction: null
+      direction: null,
+      isLoading: false,
+      results: [],
+      value: ""
     };
   }
 
@@ -34,21 +45,51 @@ export class FinishedGoods extends Component {
   };
 
   componentDidMount() {
-    db.collection("finishedgoods")
-      .orderBy("quantity", "desc")
-      .onSnapshot(snap => {
-        let documents = [];
-        snap.forEach(doc => {
-          documents.push({ ...doc.data(), id: doc.id });
-        });
-        this.setState({
-          data: documents
-        });
+    db.collection("finishedgoods").onSnapshot(snap => {
+      let documents = [];
+      snap.forEach(doc => {
+        documents.push({ ...doc.data(), id: doc.id });
       });
+      this.setState({
+        data: documents
+      });
+    });
   }
 
+  handleResultSelect = (e, { result }) => this.setState({ value: result.name });
+
+  handleSearchChange = (e, { value }) => {
+    const { data } = this.state;
+    const { name } = data;
+
+    console.log(data);
+    this.setState({ isLoading: true, value });
+
+    setTimeout(() => {
+      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
+      const isMatch = result => re.test(result.name);
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(data, isMatch)
+      });
+    }, 300);
+  };
+
   render() {
-    const { data, column, direction } = this.state;
+    const { data, column, direction, isLoading, value, results } = this.state;
+
+    const resRender = ({ name, cost, quantity }) => {
+      return (
+        <div key="name">
+          <Grid columns="equal">
+            <Grid.Column>Material Name: {name}</Grid.Column>
+            <Grid.Column>Quantity: {quantity}</Grid.Column>
+            <Grid.Column>Cost: {cost}</Grid.Column>
+          </Grid>
+        </div>
+      );
+    };
     console.log(this.state);
     return (
       <div>
@@ -80,6 +121,24 @@ export class FinishedGoods extends Component {
         </div>
         <Divider />
         <div>
+          <Grid>
+            <Grid.Column>
+              <Search
+                className="search-area"
+                loading={isLoading}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                  leading: true
+                })}
+                results={results}
+                value={value}
+                resultRenderer={resRender}
+              />
+            </Grid.Column>
+          </Grid>
+        </div>
+        <br />
+        <div>
           <Table sortable celled>
             <Table.Header>
               <Table.Row textAlign="center">
@@ -99,8 +158,8 @@ export class FinishedGoods extends Component {
                 </Table.HeaderCell>
                 <Table.HeaderCell
                   width={2}
-                  sorted={column === "dateRestocked" ? direction : null}
-                  onClick={this.handleSort("dateRestocked")}
+                  sorted={column === "composedOf" ? direction : null}
+                  onClick={this.handleSort("composedOf")}
                 >
                   Composed Of
                 </Table.HeaderCell>
@@ -116,11 +175,11 @@ export class FinishedGoods extends Component {
                     <Table.Cell textAlign="center">
                       {items.description}
                     </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.composedOf.join(", ")}
+                    </Table.Cell>
                     <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
                     <Table.Cell textAlign="center">${items.cost}</Table.Cell>
-                    <Table.Cell textAlign="center">
-                      {items.dateRestocked}
-                    </Table.Cell>
                   </Table.Row>
                 </Table.Body>
               );
