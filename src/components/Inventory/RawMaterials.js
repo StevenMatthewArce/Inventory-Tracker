@@ -83,6 +83,7 @@ export class RawMaterials extends Component {
   }
 
   componentDidMount() {
+    //!Uncomment this when firebase is back up
     // db.collection("items")
     //   .orderBy("quantity", "desc")
     //   .onSnapshot(snap => {
@@ -97,7 +98,11 @@ export class RawMaterials extends Component {
     //       data: catagories
     //     });
     //   });
-    this.setState({ data: data });
+    //!Uncomment this when firebase is back up
+    var catagories = _.groupBy(data, items => {
+      return items.name;
+    });
+    this.setState({ data: catagories });
   }
 
   handleSort = clickedColumn => () => {
