@@ -30,27 +30,22 @@ const AddItem = () => {
 
   const handleNameChange = e => {
     setName(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleDescChange = e => {
     setDescription(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleCostChange = e => {
     setCost(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleQuantityChange = e => {
     setQuantity(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleDateChange = (name, value) => {
     setDate(value);
-    console.log(typeof value);
   };
 
   async function handleSubmit(e) {

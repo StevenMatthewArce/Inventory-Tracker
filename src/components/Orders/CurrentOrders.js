@@ -32,7 +32,7 @@ export class CurrentOrders extends Component {
       .then(() => {
         let unfinished = [];
         for (var i = 0; i < documents.length; i++) {
-          if (documents[i].finished == "0") {
+          if (documents[i].finished === "0") {
             unfinished.push(documents[i]);
           }
         }

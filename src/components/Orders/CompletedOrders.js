@@ -5,10 +5,7 @@ import {
   Grid,
   Header,
   Divider,
-  Progress,
-  Statistic
 } from "semantic-ui-react";
-import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
 
@@ -37,7 +34,7 @@ export class CompletedOrders extends Component {
       .then(() => {
         let unfinished = [];
         for (var i = 0; i < documents.length; i++) {
-          if (documents[i].finished == "1") {
+          if (documents[i].finished === "1") {
             unfinished.push(documents[i]);
           }
         }
