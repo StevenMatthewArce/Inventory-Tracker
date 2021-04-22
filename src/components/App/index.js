@@ -2,6 +2,7 @@ import React from "react";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Grid, Sidebar, Segment } from "semantic-ui-react";
+
 import "semantic-ui-css/semantic.min.css";
 
 import * as ROUTES from "../../constants/routes";

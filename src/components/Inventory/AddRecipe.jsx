@@ -146,7 +146,4 @@ class AddRecipe extends React.Component {
     )
   }
 }
-
-
-
 export default AddRecipe;
