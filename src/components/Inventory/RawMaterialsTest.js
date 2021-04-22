@@ -194,3 +194,11 @@ export class RawMaterials extends Component {
 }
 
 export default RawMaterials;
+
+<Table.Row key={value.id}>
+  <Table.Cell textAlign="center">{value.name}</Table.Cell>
+  <Table.Cell textAlign="center">{value.description}</Table.Cell>
+  <Table.Cell textAlign="center">{value.quantity}</Table.Cell>
+  <Table.Cell textAlign="center">${value.cost}</Table.Cell>
+  <Table.Cell textAlign="center">{value.dateRestocked}</Table.Cell>
+</Table.Row>;

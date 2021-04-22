@@ -5,7 +5,8 @@ import {
   Grid,
   Header,
   Divider,
-  Search
+  Search,
+  Tab
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -51,7 +52,6 @@ const ExpandableTableRow = props => {
 
   const { data, value } = props;
 
-  console.log(props);
   return (
     <>
       <Table.Body>
@@ -60,7 +60,13 @@ const ExpandableTableRow = props => {
         </Table.Row>
         <Table.Row style={toggleStyle}>
           {Object.keys(data).map(value => {
-            return <div>{console.log(value)}Test</div>;
+            const items = data[value];
+            console.log(items);
+            return (
+              itemsforEach(element => {
+                
+              });
+            );
           })}
         </Table.Row>
       </Table.Body>
@@ -78,7 +84,8 @@ export class RawMaterials extends Component {
       direction: null,
       isLoading: false,
       results: [],
-      value: ""
+      value: "",
+      isOpen: false
     };
   }
 
@@ -102,6 +109,7 @@ export class RawMaterials extends Component {
     var catagories = _.groupBy(data, items => {
       return items.name;
     });
+    console.log(catagories);
     this.setState({ data: catagories });
   }
 
@@ -141,8 +149,23 @@ export class RawMaterials extends Component {
     }, 300);
   };
 
+  //TODO: This toggles every row, need to fix based on ID of row
+  handleToggle = () => {
+    this.setState(prevState => ({
+      isOpen: !prevState.isOpen
+    }));
+  };
+
   render() {
-    const { data, column, direction, isLoading, value, results } = this.state;
+    const {
+      data,
+      column,
+      direction,
+      isLoading,
+      value,
+      results,
+      isOpen
+    } = this.state;
 
     const resRender = ({ name, cost, quantity }) => {
       return (
@@ -154,6 +177,10 @@ export class RawMaterials extends Component {
           </Grid>
         </div>
       );
+    };
+
+    const toggleStyle = {
+      display: isOpen ? "table-row" : "none"
     };
 
     console.log(this.state);
@@ -241,7 +268,9 @@ export class RawMaterials extends Component {
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
+
             {Object.keys(data).map(value => {
+              const items = data[value];
               return <ExpandableTableRow data={data} value={value} />;
             })}
           </Table>
