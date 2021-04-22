@@ -12,6 +12,36 @@ import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
 
+const data = [
+  {
+    cost: "5.00",
+    dateRestocked: "01-06-2021",
+    description: "This is an Apples Test 1",
+    id: "C3vt9MLMcEPD8tpa8MyC",
+    imageAsUrl: "",
+    names: "Apples",
+    quantity: "10"
+  },
+  {
+    cost: "32.99",
+    dateRestocked: "01-09-2021",
+    description: "This is an Oranges Test 1",
+    id: "brsSdYjT5VTfFOPtW8JD",
+    imageAsUrl: "",
+    name: "Oranges",
+    quantity: "19"
+  },
+  {
+    cost: "3.56",
+    dateRestocked: "01-01-2021",
+    description: "This is an Oranges Test 2",
+    id: "qQlC3RfRomdQoqXjtggg",
+    imageAsUrl: "",
+    name: "Oranges",
+    quantity: "11"
+  }
+];
+
 export class RawMaterials extends Component {
   constructor(props) {
     super(props);
@@ -27,17 +57,23 @@ export class RawMaterials extends Component {
   }
 
   componentDidMount() {
-    db.collection("items")
-      .orderBy("quantity", "desc")
-      .onSnapshot(snap => {
-        let documents = [];
-        snap.forEach(doc => {
-          documents.push({ ...doc.data(), id: doc.id });
-        });
-        this.setState({
-          data: documents
-        });
-      });
+    // db.collection("items")
+    //   .orderBy("quantity", "desc")
+    //   .onSnapshot(snap => {
+    //     let documents = [];
+    //     snap.forEach(doc => {
+    //       documents.push({ ...doc.data(), id: doc.id });
+    //     });
+    //     this.setState({
+    //       data: documents
+    //     });
+    //   });
+
+    // var catagories = _.groupBy(data, items => {
+    //   return items.name;
+    // });
+    // console.log(catagories);
+    this.setState({ data: data });
   }
 
   handleSort = clickedColumn => () => {
@@ -63,6 +99,8 @@ export class RawMaterials extends Component {
   handleSearchChange = (e, { value }) => {
     const { data } = this.state;
     const { name } = data;
+
+    console.log(data);
     this.setState({ isLoading: true, value });
 
     setTimeout(() => {
@@ -91,7 +129,7 @@ export class RawMaterials extends Component {
       );
     };
 
-    console.log(this.state);
+    // console.log(this.state);
 
     return (
       <div>
@@ -194,11 +232,3 @@ export class RawMaterials extends Component {
 }
 
 export default RawMaterials;
-
-<Table.Row key={value.id}>
-  <Table.Cell textAlign="center">{value.name}</Table.Cell>
-  <Table.Cell textAlign="center">{value.description}</Table.Cell>
-  <Table.Cell textAlign="center">{value.quantity}</Table.Cell>
-  <Table.Cell textAlign="center">${value.cost}</Table.Cell>
-  <Table.Cell textAlign="center">{value.dateRestocked}</Table.Cell>
-</Table.Row>;

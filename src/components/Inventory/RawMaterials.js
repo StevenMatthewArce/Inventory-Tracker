@@ -6,12 +6,14 @@ import {
   Header,
   Divider,
   Search,
-  Tab
+  Icon
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _, { floor } from "lodash";
+import "./style.css";
 
+//! ONLY FOR TESTING W/Out Firebase
 const data = [
   {
     cost: "5.00",
@@ -42,45 +44,6 @@ const data = [
   }
 ];
 
-const ExpandableTableRow = props => {
-  const [isOpen, setIsOpen] = useState(false);
-  const handleToggle = () => setIsOpen(!isOpen);
-
-  const toggleStyle = {
-    display: isOpen ? "table-row" : "none"
-  };
-
-  const { data, value } = props;
-
-  const items = data[value];
-  console.log(items);
-  return (
-    <>
-      <Table.Body>
-        <Table.Row onClick={handleToggle}>
-          <Table.Cell textAlign="center">{value}</Table.Cell>
-          <Table.Cell textAlign="center">{value}</Table.Cell>
-          <Table.Cell textAlign="center">{value}</Table.Cell>
-          <Table.Cell textAlign="center">{value}</Table.Cell>
-          <Table.Cell textAlign="center">{value}</Table.Cell>
-        </Table.Row>
-        {items.map(items => {
-          console.log(items.name);
-          return (
-            <Table.Row style={toggleStyle}>
-              <Table.Cell textAlign="center">{items.name}</Table.Cell>
-              <Table.Cell textAlign="center">{items.description}</Table.Cell>
-              <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
-              <Table.Cell textAlign="center">${items.cost}</Table.Cell>
-              <Table.Cell textAlign="center">{items.dateRestocked}</Table.Cell>
-            </Table.Row>
-          );
-        })}
-      </Table.Body>
-    </>
-  );
-};
-
 export class RawMaterials extends Component {
   constructor(props) {
     super(props);
@@ -92,32 +55,34 @@ export class RawMaterials extends Component {
       isLoading: false,
       results: [],
       value: "",
-      isOpen: false
+      isOpen: [false]
     };
+
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
   componentDidMount() {
     //!Uncomment this when firebase is back up
-    // db.collection("items")
-    //   .orderBy("quantity", "desc")
-    //   .onSnapshot(snap => {
-    //     let documents = [];
-    //     snap.forEach(doc => {
-    //       documents.push({ ...doc.data(), id: doc.id });
-    //     });
-    //     var catagories = _.groupBy(documents, items => {
-    //       return items.name;
-    //     });
-    //     this.setState({
-    //       data: catagories
-    //     });
-    //   });
+    db.collection("items")
+      .orderBy("quantity", "desc")
+      .onSnapshot(snap => {
+        let documents = [];
+        snap.forEach(doc => {
+          documents.push({ ...doc.data(), id: doc.id });
+        });
+        var catagories = _.groupBy(documents, items => {
+          return items.name;
+        });
+        this.setState({
+          data: catagories
+        });
+      });
     //!Uncomment this when firebase is back up
-    var catagories = _.groupBy(data, items => {
-      return items.name;
-    });
-    // console.log(catagories);
-    this.setState({ data: catagories });
+    // var catagories = _.groupBy(data, items => {
+    //   return items.name;
+    // });
+    // // console.log(catagories);
+    // this.setState({ data: catagories });
   }
 
   handleSort = clickedColumn => () => {
@@ -142,25 +107,26 @@ export class RawMaterials extends Component {
 
   handleSearchChange = (e, { value }) => {
     const { data } = this.state;
-    const { name } = data;
+
+    const keys = Object.keys(data);
+
     this.setState({ isLoading: true, value });
 
     setTimeout(() => {
       const re = new RegExp(_.escapeRegExp(this.state.value), "i");
-      const isMatch = result => re.test(result.name);
+      const isMatch = result => re.test(result);
 
       this.setState({
         isLoading: false,
-        results: _.filter(data, isMatch)
+        results: _.filter(keys, isMatch)
       });
     }, 300);
   };
 
-  //TODO: This toggles every row, need to fix based on ID of row
-  handleToggle = () => {
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen
-    }));
+  handleToggle = index => {
+    const { isOpen } = this.state;
+    isOpen[index] = !isOpen[index];
+    this.setState({ isOpen: isOpen });
   };
 
   render() {
@@ -174,23 +140,24 @@ export class RawMaterials extends Component {
       isOpen
     } = this.state;
 
-    const resRender = ({ name, cost, quantity }) => {
+    const resRender = () => {
+      const { results, data } = this.state;
+
+      const items = data[results[0]];
       return (
-        <div key="name">
-          <Grid columns="equal">
-            <Grid.Column>Material Name: {name}</Grid.Column>
-            <Grid.Column>Quantity: {quantity}</Grid.Column>
-            <Grid.Column>Cost: {cost}</Grid.Column>
-          </Grid>
-        </div>
+        <>
+          {items.map(element => {
+            return (
+              <Grid columns="equal">
+                <Grid.Column>Name: {element.name} </Grid.Column>
+                <Grid.Column>Quantity: {element.quantity}</Grid.Column>
+                <Grid.Column>Cost: {element.cost}</Grid.Column>
+              </Grid>
+            );
+          })}
+        </>
       );
     };
-
-    const toggleStyle = {
-      display: isOpen ? "table-row" : "none"
-    };
-
-    // console.log(this.state);
 
     return (
       <div>
@@ -210,7 +177,7 @@ export class RawMaterials extends Component {
                 <Dropdown.Menu>
                   <Dropdown.Item
                     content="Item"
-                    icon=""
+                    icon="tags"
                     labelPosition="right"
                     as={Link}
                     to="/addItem"
@@ -232,7 +199,7 @@ export class RawMaterials extends Component {
           <Grid>
             <Grid.Column>
               <Search
-                fluid
+                className="search-area"
                 loading={isLoading}
                 onResultSelect={this.handleResultSelect}
                 onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -245,8 +212,9 @@ export class RawMaterials extends Component {
             </Grid.Column>
           </Grid>
         </div>
+        <br />
         <div>
-          <Table sortable celled selectable>
+          <Table sortable celled selectable structured>
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
@@ -265,7 +233,7 @@ export class RawMaterials extends Component {
                 </Table.HeaderCell>
 
                 <Table.HeaderCell width={1}>Quantity</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Cost Per Item</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Cost</Table.HeaderCell>
                 <Table.HeaderCell
                   width={2}
                   sorted={column === "dateRestocked" ? direction : null}
@@ -276,7 +244,7 @@ export class RawMaterials extends Component {
               </Table.Row>
             </Table.Header>
 
-            {Object.keys(data).map(value => {
+            {Object.keys(data).map((value, index) => {
               const items = data[value];
 
               let totalCost = 0;
@@ -291,26 +259,61 @@ export class RawMaterials extends Component {
               const restockedDatesSorted = items
                 .map(element => element.dateRestocked)
                 .sort((a, b) => {
-                  return Date.parse(a) > Date.parse(b);
+                  return Date.parse(a) - Date.parse(b);
                 });
 
               return (
                 <Table.Body>
-                  <Table.Row key={value} onClick={this.handleToggle}>
-                    <Table.Cell textAlign="center">{value}</Table.Cell>
+                  <Table.Row
+                    key={value}
+                    onClick={() => this.handleToggle(index)}
+                  >
+                    <Table.Cell textAlign="center">
+                      <Icon name="dropdown" />
+                      {value}
+                    </Table.Cell>
                     <Table.Cell textAlign="center">{}</Table.Cell>
                     <Table.Cell textAlign="center">{totalQty}</Table.Cell>
                     <Table.Cell textAlign="center">${totalCost}</Table.Cell>
                     <Table.Cell textAlign="center">
-                      {restockedDatesSorted}
+                      {restockedDatesSorted[0]}
                     </Table.Cell>
                   </Table.Row>
-                  <Table.Row style={toggleStyle}></Table.Row>
+
+                  {/* <Table.Row
+                    style={
+                      isOpen[index]
+                        ? { display: "table-row" }
+                        : { display: "none" }
+                    }
+                  >
+                    <Table.HeaderCell textAlign="center">
+                      Material Name
+                    </Table.HeaderCell>
+                    <Table.HeaderCell textAlign="center">
+                      Description
+                    </Table.HeaderCell>
+
+                    <Table.HeaderCell textAlign="center">
+                      Quantity
+                    </Table.HeaderCell>
+                    <Table.HeaderCell textAlign="center">Cost</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="center">
+                      Date Restocked
+                    </Table.HeaderCell>
+                  </Table.Row> */}
+
                   {items.map(items => {
-                    console.log(items.name);
                     return (
-                      <Table.Row style={toggleStyle}>
-                        <Table.Cell textAlign="center">{items.name}</Table.Cell>
+                      <Table.Row
+                        key={items.id}
+                        style={
+                          isOpen[index]
+                            ? { display: "table-row" }
+                            : { display: "none" }
+                        }
+                      >
+                        <Table.Cell textAlign="left">{items.name}</Table.Cell>
                         <Table.Cell textAlign="center">
                           {items.description}
                         </Table.Cell>
