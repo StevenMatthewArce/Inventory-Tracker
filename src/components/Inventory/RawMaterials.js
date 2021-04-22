@@ -11,7 +11,35 @@ import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
 
-
+const data = [
+  {
+    cost: "5.00",
+    dateRestocked: "01-06-2021",
+    description: "This is an Apples Test 1",
+    id: "C3vt9MLMcEPD8tpa8MyC",
+    imageAsUrl: "",
+    name: "Apples",
+    quantity: "10"
+  },
+  {
+    cost: "32.99",
+    dateRestocked: "01-09-2021",
+    description: "This is an Oranges Test 1",
+    id: "brsSdYjT5VTfFOPtW8JD",
+    imageAsUrl: "",
+    name: "Oranges",
+    quantity: "19"
+  },
+  {
+    cost: "3.56",
+    dateRestocked: "01-01-2021",
+    description: "This is an Oranges Test 2",
+    id: "qQlC3RfRomdQoqXjtggg",
+    imageAsUrl: "",
+    name: "Oranges",
+    quantity: "11"
+  }
+];
 
 const ExpandableTableRow = props => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +60,6 @@ const ExpandableTableRow = props => {
         </Table.Row>
         <Table.Row style={toggleStyle}>
           {Object.keys(data).map(value => {
-            
             return <div>{console.log(value)}Test</div>;
           })}
         </Table.Row>
@@ -56,20 +83,21 @@ export class RawMaterials extends Component {
   }
 
   componentDidMount() {
-    db.collection("items")
-      .orderBy("quantity", "desc")
-      .onSnapshot(snap => {
-        let documents = [];
-        snap.forEach(doc => {
-          documents.push({ ...doc.data(), id: doc.id });
-        });
-        var catagories = _.groupBy(documents, items => {
-          return items.name;
-        });
-        this.setState({
-          data: catagories
-        });
-      });
+    // db.collection("items")
+    //   .orderBy("quantity", "desc")
+    //   .onSnapshot(snap => {
+    //     let documents = [];
+    //     snap.forEach(doc => {
+    //       documents.push({ ...doc.data(), id: doc.id });
+    //     });
+    //     var catagories = _.groupBy(documents, items => {
+    //       return items.name;
+    //     });
+    //     this.setState({
+    //       data: catagories
+    //     });
+    //   });
+    this.setState({ data: data });
   }
 
   handleSort = clickedColumn => () => {
@@ -148,12 +176,12 @@ export class RawMaterials extends Component {
                     as={Link}
                     to="/addItem"
                   />
-                  <Dropdown.Item 
-                    content='Recipe'
-                    icon=''
-                    labelPosition='right'
+                  <Dropdown.Item
+                    content="Recipe"
+                    icon=""
+                    labelPosition="right"
                     as={Link}
-                    to='/addRecipe'
+                    to="/addRecipe"
                   />
                 </Dropdown.Menu>
               </Dropdown>
