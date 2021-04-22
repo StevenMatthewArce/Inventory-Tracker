@@ -30,7 +30,7 @@ class Correction extends Component {
       items: [...this.props.items]
     };
 
-    if (this.props.items.length == 0) {
+    if (this.props.items.length === 0) {
       initialItems = {
         items: [
           {
@@ -107,7 +107,7 @@ class Correction extends Component {
 
   removeItem = id => {
     let items = this.state.items;
-    items = items.filter(x => x.id != id);
+    items = items.filter(x => x.id !== id);
     this.setState({ items: items }, console.log(this.state));
   };
 
