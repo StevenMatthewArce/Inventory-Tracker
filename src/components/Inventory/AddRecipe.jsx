@@ -27,6 +27,7 @@ class AddRecipe extends React.Component {
   }
 
   componentDidMount() {
+
     let docs = [];
     db.collection('items')
       .get()
@@ -59,6 +60,7 @@ class AddRecipe extends React.Component {
       .add({ name, items, description })
       .then(() => {
         this.setState({ message: 'Recipe has been submitted. ' });
+        handleRedirect();
       })
       .catch((error) => {
         this.setState({ error: error });
