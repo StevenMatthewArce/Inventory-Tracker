@@ -10,7 +10,7 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
-import _ from "lodash";
+import _, { floor } from "lodash";
 
 const data = [
   {
@@ -52,23 +52,30 @@ const ExpandableTableRow = props => {
 
   const { data, value } = props;
 
+  const items = data[value];
+  console.log(items);
   return (
     <>
       <Table.Body>
-        <Table.Row key={value} onClick={handleToggle}>
+        <Table.Row onClick={handleToggle}>
+          <Table.Cell textAlign="center">{value}</Table.Cell>
+          <Table.Cell textAlign="center">{value}</Table.Cell>
+          <Table.Cell textAlign="center">{value}</Table.Cell>
+          <Table.Cell textAlign="center">{value}</Table.Cell>
           <Table.Cell textAlign="center">{value}</Table.Cell>
         </Table.Row>
-        <Table.Row style={toggleStyle}>
-          {Object.keys(data).map(value => {
-            const items = data[value];
-            console.log(items);
-            return (
-              itemsforEach(element => {
-                
-              });
-            );
-          })}
-        </Table.Row>
+        {items.map(items => {
+          console.log(items.name);
+          return (
+            <Table.Row style={toggleStyle}>
+              <Table.Cell textAlign="center">{items.name}</Table.Cell>
+              <Table.Cell textAlign="center">{items.description}</Table.Cell>
+              <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
+              <Table.Cell textAlign="center">${items.cost}</Table.Cell>
+              <Table.Cell textAlign="center">{items.dateRestocked}</Table.Cell>
+            </Table.Row>
+          );
+        })}
       </Table.Body>
     </>
   );
@@ -109,7 +116,7 @@ export class RawMaterials extends Component {
     var catagories = _.groupBy(data, items => {
       return items.name;
     });
-    console.log(catagories);
+    // console.log(catagories);
     this.setState({ data: catagories });
   }
 
@@ -183,7 +190,7 @@ export class RawMaterials extends Component {
       display: isOpen ? "table-row" : "none"
     };
 
-    console.log(this.state);
+    // console.log(this.state);
 
     return (
       <div>
@@ -271,7 +278,56 @@ export class RawMaterials extends Component {
 
             {Object.keys(data).map(value => {
               const items = data[value];
-              return <ExpandableTableRow data={data} value={value} />;
+
+              let totalCost = 0;
+              let totalQty = 0;
+
+              items.forEach(element => {
+                totalCost += parseFloat(element.cost);
+                totalQty += parseFloat(element.quantity);
+              });
+              totalCost = floor(totalCost / items.length);
+
+              const restockedDatesSorted = items
+                .map(element => element.dateRestocked)
+                .sort((a, b) => {
+                  return Date.parse(a) > Date.parse(b);
+                });
+
+              return (
+                <Table.Body>
+                  <Table.Row key={value} onClick={this.handleToggle}>
+                    <Table.Cell textAlign="center">{value}</Table.Cell>
+                    <Table.Cell textAlign="center">{}</Table.Cell>
+                    <Table.Cell textAlign="center">{totalQty}</Table.Cell>
+                    <Table.Cell textAlign="center">${totalCost}</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {restockedDatesSorted}
+                    </Table.Cell>
+                  </Table.Row>
+                  <Table.Row style={toggleStyle}></Table.Row>
+                  {items.map(items => {
+                    console.log(items.name);
+                    return (
+                      <Table.Row style={toggleStyle}>
+                        <Table.Cell textAlign="center">{items.name}</Table.Cell>
+                        <Table.Cell textAlign="center">
+                          {items.description}
+                        </Table.Cell>
+                        <Table.Cell textAlign="center">
+                          {items.quantity}
+                        </Table.Cell>
+                        <Table.Cell textAlign="center">
+                          ${items.cost}
+                        </Table.Cell>
+                        <Table.Cell textAlign="center">
+                          {items.dateRestocked}
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  })}
+                </Table.Body>
+              );
             })}
           </Table>
         </div>
