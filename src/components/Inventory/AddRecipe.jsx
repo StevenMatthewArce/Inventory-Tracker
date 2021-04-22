@@ -60,7 +60,7 @@ class AddRecipe extends React.Component {
       .add({ name, items, description })
       .then(() => {
         this.setState({ message: 'Recipe has been submitted. ' });
-        handleRedirect();
+        this.handleRedirect();
       })
       .catch((error) => {
         this.setState({ error: error });
