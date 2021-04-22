@@ -263,5 +263,4 @@ class Correction extends Component {
     );
   }
 }
-
 export default Correction;

@@ -30,27 +30,22 @@ const AddItem = () => {
 
   const handleNameChange = e => {
     setName(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleDescChange = e => {
     setDescription(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleCostChange = e => {
     setCost(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleQuantityChange = e => {
     setQuantity(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleDateChange = (name, value) => {
     setDate(value);
-    console.log(typeof value);
   };
 
   async function handleSubmit(e) {
@@ -81,9 +76,9 @@ const AddItem = () => {
 
   const handleRedirect = () => {
     setTimeout(() => {
-      history.push('/inventory');
-    }, 3000)
-  }
+      history.push("/inventory");
+    }, 3000);
+  };
 
   const handleImageAsFile = e => {
     const image = e.target.files[0];
@@ -194,6 +189,7 @@ const AddItem = () => {
               />
               <DateInput
                 required
+                dateFormat={"MM/DD/YYYY"}
                 label="Date Restocked"
                 name="dateRestocked"
                 value={dateRestocked}
