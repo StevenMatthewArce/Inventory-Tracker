@@ -184,13 +184,6 @@ export class RawMaterials extends Component {
                     as={Link}
                     to="/addItem"
                   />
-                  <Dropdown.Item
-                    content="Recipe"
-                    icon=""
-                    labelPosition="right"
-                    as={Link}
-                    to="/addRecipe"
-                  />
                 </Dropdown.Menu>
               </Dropdown>
             </Grid.Column>
