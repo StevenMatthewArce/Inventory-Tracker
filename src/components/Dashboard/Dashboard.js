@@ -1,8 +1,6 @@
 import React from "react";
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
 
-import { Button, Tab } from "semantic-ui-react";
-
 const profit = [
     {quarter: 1, earnings: 1500},
     {quarter: 2, earnings: 4500},
