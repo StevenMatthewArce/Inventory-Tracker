@@ -85,20 +85,22 @@ export class RawMaterials extends Component {
     // this.setState({ data: catagories });
   }
 
+  //! SORTING DOESNT WORK WITH DICTIONARIES
   handleSort = clickedColumn => () => {
     const { column, data, direction } = this.state;
 
+    const keys = Object.keys(data);
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        categoryNames: _.sortBy(data, [clickedColumn]),
+        categoryNames: _.sortBy(keys, [clickedColumn]),
         direction: "ascending"
       });
       return;
     }
 
     this.setState({
-      categoryNames: data.slice().reverse(),
+      categoryNames: keys.slice().reverse(),
       direction: direction === "ascending" ? "descending" : "ascending"
     });
   };
@@ -214,7 +216,8 @@ export class RawMaterials extends Component {
         </div>
         <br />
         <div>
-          <Table sortable celled selectable structured>
+          {/*FIXME: ADD SORTABLE TO MAKE SORTABLE */}
+          <Table celled selectable structured>
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
