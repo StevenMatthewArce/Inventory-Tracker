@@ -210,7 +210,7 @@ export class RawMaterials extends Component {
         <br />
         <div>
           {/*FIXME: ADD SORTABLE TO MAKE SORTABLE */}
-          <Table celled selectable structured>
+          <Table id = "table" celled selectable structured>
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
@@ -261,6 +261,7 @@ export class RawMaterials extends Component {
               return (
                 <Table.Body>
                   <Table.Row
+                  id = "raw"
                     key={value}
                     onClick={() => this.handleToggle(index)}
                   >
@@ -269,7 +270,7 @@ export class RawMaterials extends Component {
                       {value}
                     </Table.Cell>
                     <Table.Cell textAlign="center">{}</Table.Cell>
-                    <Table.Cell textAlign="center">{totalQty}</Table.Cell>
+                    <Table.Cell id = "quantity" textAlign="center">{totalQty}</Table.Cell>
                     <Table.Cell textAlign="center">${totalCost}</Table.Cell>
                     <Table.Cell textAlign="center">
                       {restockedDatesSorted[0]}
@@ -300,10 +301,16 @@ export class RawMaterials extends Component {
                   </Table.Row> */}
 
                   {items.map(items => {
+                    function getColor(quantity){
+                      if(quantity < 2) alert("ahh"); return 'red';
+                    }
                     return (
+                    
                       <Table.Row
+                      id = "workpls"
                         key={items.id}
                         style={
+                          {color: getColor(items.quantity)},
                           isOpen[index]
                             ? { display: "table-row" }
                             : { display: "none" }
@@ -313,8 +320,8 @@ export class RawMaterials extends Component {
                         <Table.Cell textAlign="center">
                           {items.description}
                         </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          {items.quantity}
+                        <Table.Cell id={"alert"} textAlign="center">
+                          {items.quantity} 
                         </Table.Cell>
                         <Table.Cell textAlign="center">
                           ${items.cost}
@@ -332,6 +339,13 @@ export class RawMaterials extends Component {
         </div>
       </div>
     );
+    function highlight(anyitem){
+      document.getElementbyId("alert")
+      
+      if(anyitem.quantity<2){
+      alert("low on stock")
+      }
+    }
   }
 }
 

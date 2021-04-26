@@ -1,6 +1,17 @@
 import React from "react";
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
 
+function selectingData(){
+  firebase.database().ref('items').on('value',
+  function(AllRecords){
+    AllRecords.forEach(
+      function(CurrentRecord){
+        var quantity = CurrentRecord.val().quantity;
+      }
+    )
+  })
+}
+
 const profit = [
     {quarter: 1, earnings: 1500},
     {quarter: 2, earnings: 4500},
