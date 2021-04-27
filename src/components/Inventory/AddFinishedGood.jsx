@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { db } from '../Firebase';
 
-import { useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import {
   Form,
   Button,
@@ -19,7 +19,6 @@ const AddFinishedGood = () => {
   const [recipes, setRecipes] = useState([]);
   const [selected, setSelected] = useState(null);
 
-  let history = useHistory();
   
   useEffect(() => {
     let docs = [];
@@ -64,6 +63,7 @@ const AddFinishedGood = () => {
       })
     return null;
   }
+
   const handleSelectedChange = (e, { name, value }) => {
     e.preventDefault();
     setSelected(value);
@@ -71,7 +71,7 @@ const AddFinishedGood = () => {
   
   const handleRedirect = () => {
     setTimeout(() => {
-      history.push('/inventory');
+      return <Redirect to='/inventory' />
     }, 3000);
   }
 
@@ -90,7 +90,7 @@ const AddFinishedGood = () => {
   return (
     <div style={{ height: '100vh' }}>
       <div>
-        <Button labelPosition='left' icon secondary onClick={history.push('/inventory')}>
+        <Button labelPosition='left' icon secondary as={Link} to='/inventory'>
           Back
           <Icon name='left arrow' />
         </Button>
@@ -113,6 +113,33 @@ const AddFinishedGood = () => {
           </Grid.Column>
         </Grid>
       </div>
+      <Divider />
+      <Form>
+        <Form.Group>
+          <b>Add Finished Good:</b>
+          <Dropdown 
+            required
+            placeholder='Finished Goods'
+            labeled='Add Finished Good'
+            fluid
+            selection
+            search
+            scrolling
+            options={recipes}
+            value={selected}
+            onChange={handleSelectedChange}
+            width={6}
+          />
+          <Form.Input 
+            required
+            width={4}
+            label='Quantity'
+            name='quantity'
+            value={quantity}
+            onChange={e => setQuantity(e.target.value)}
+          />
+        </Form.Group>
+      </Form>
     </div>
   )
 }
