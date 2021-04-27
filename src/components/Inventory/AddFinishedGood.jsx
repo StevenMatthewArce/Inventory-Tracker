@@ -11,13 +11,18 @@ import {
   Header,
   Divider,
   Grid,
-  Dropdown
+  Dropdown, 
+  Card
 } from 'semantic-ui-react';
 
 const AddFinishedGood = () => {
   const [quantity, setQuantity] = useState(0);
+  const [laborRate, setLaborRate] = useState(0);
+  const [timeSpent, setTimeSpent] = useState(0);
   const [recipes, setRecipes] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("None");
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
   
   useEffect(() => {
@@ -27,7 +32,6 @@ const AddFinishedGood = () => {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           docs.push({ id: doc.id, ...doc.data() });
-          console.log(doc.id, '=>', doc.data());
         })
       })
       .then(() => {
@@ -38,7 +42,7 @@ const AddFinishedGood = () => {
         }
         setRecipes(newDoc);
       })
-  }, [recipes]);
+  }, []);
 
   const getFinishedGoods = () => {
     let docs = [];
@@ -66,8 +70,10 @@ const AddFinishedGood = () => {
 
   const handleSelectedChange = (e, { name, value }) => {
     e.preventDefault();
-    setSelected(value);
+    setSelected(recipes.filter(element => element.name === value));
   }
+  
+
   
   const handleRedirect = () => {
     setTimeout(() => {
@@ -87,60 +93,105 @@ const AddFinishedGood = () => {
     }
   }
 
+  console.log(selected)
+  console.log(recipes)
   return (
-    <div style={{ height: '100vh' }}>
-      <div>
-        <Button labelPosition='left' icon secondary as={Link} to='/inventory'>
-          Back
-          <Icon name='left arrow' />
+    <div className="add-item" style={{ height: "100vh" }}>
+    <div>
+      <Button labelPosition="left" icon secondary as={Link} to="/inventory">
+        Back
+        <Icon name="left arrow"></Icon>
+      </Button>
+    </div>
+    <br></br>
+    <div>
+      <Grid>
+        <Grid.Column width={9}>
+          <Grid.Row>
+            <Header as="h1" textAlign="left">
+              Add a Finished Good
+            </Header>
+            <Grid.Row>Please select a recipe and add your new finished goods.</Grid.Row>
+          </Grid.Row>
+        </Grid.Column>
+        <Grid.Column width={7} textAlign="right">
+        <Button labelPosition="right" icon primary onClick={handleSubmit}>
+          Submit
+          <Icon name="send" />
         </Button>
-      </div>
-      <br />
-      <div>
-        <Grid>
-          <Grid.Column width={9}>
-            <Grid.Row>
-              <Header as='h1' textAlign='left'>
-                Add a Finished Good
-              </Header>
-            </Grid.Row>
-          </Grid.Column>
-          <Grid.Column width={7} textAlign='right'>
-            <Button labelPosition='right' icon primary onClick={handleSubmit}>
-              Submit
-              <Icon name='send' />
-            </Button>
-          </Grid.Column>
-        </Grid>
-      </div>
-      <Divider />
-      <Form>
-        <Form.Group>
-          <b>Add Finished Good:</b>
-          <Dropdown 
-            required
-            placeholder='Finished Goods'
-            labeled='Add Finished Good'
-            fluid
-            selection
-            search
-            scrolling
-            options={recipes}
-            value={selected}
-            onChange={handleSelectedChange}
-            width={6}
-          />
-          <Form.Input 
-            required
-            width={4}
-            label='Quantity'
-            name='quantity'
-            value={quantity}
-            onChange={e => setQuantity(e.target.value)}
-          />
-        </Form.Group>
+        </Grid.Column>
+        <Grid.Row>
+        <Card
+                centered
+                header= {selected[0].name}
+                meta = {(selected[0].items != undefined) ? ("Ingredients: " + selected[0].items.join(", ")) : ("") }
+                description= {selected[0].description}
+                extra={
+                  (selected[0].items != undefined) ? (<p>
+                    <Icon name="dollar sign" />
+                  </p>) : ("Select a Recipe") 
+                }
+              />
+        </Grid.Row>
+      </Grid>
+    </div>
+    <Divider />
+    <div>
+      {error && (
+        <Message icon="frown" negative>
+          {error}
+        </Message>
+      )}
+      {message && (
+        <Message icon="smile" positive>
+          {message}
+        </Message>
+      )}
+      <Form onSubmit={handleSubmit}>
+      <b>Select Recipe:</b>
+      <Dropdown
+        required
+        fluid
+        placeholder="Finished Goods"
+        labeled="Finished Good"
+        selection
+        search
+        scrolling
+        options={recipes}
+        // value={selected}
+        onChange={handleSelectedChange}
+      /> 
+      <br/>
+      <Form.Group widths="equal">
+      <Form.Input
+        required
+        width={5}
+        label="Quantity"
+        name="quantity"
+        value={quantity}
+        onChange={e => setQuantity(e.target.value)}
+      />   
+        <Form.Input
+        required
+        width={5}
+        label="Time Spent"
+        name="timeSpent"
+        value={quantity}
+        onChange={e => setTimeSpent(e.target.value)}
+      />   
+      <Form.Input
+        required
+        width={5}
+        label="Labor Rate"
+        name="laborRate"
+        value={laborRate}
+        onChange={e => setLaborRate(e.target.value)}
+      />  
+      </Form.Group>
+   
       </Form>
     </div>
+  </div>
   )
 }
 
