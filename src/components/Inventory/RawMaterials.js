@@ -258,9 +258,15 @@ export class RawMaterials extends Component {
                   return Date.parse(a) - Date.parse(b);
                 });
 
+                function getColor(quantity){
+                  if(quantity>3) return 'white';
+                  if(quantity < 3) return '#ff6666';
+                }
               return (
+               
                 <Table.Body>
                   <Table.Row
+                  style = {{backgroundColor: getColor(totalQty)}}
                   id = "raw"
                     key={value}
                     onClick={() => this.handleToggle(index)}
@@ -301,16 +307,16 @@ export class RawMaterials extends Component {
                   </Table.Row> */}
 
                   {items.map(items => {
-                    function getColor(quantity){
-                      if(quantity < 2) alert("ahh"); return 'red';
-                    }
+                    //function getColor(quantity){
+                      //if(quantity < 3) alert("ahh"); return 'red';
+                    //}
                     return (
                     
                       <Table.Row
                       id = "workpls"
                         key={items.id}
                         style={
-                          {color: getColor(items.quantity)},
+                          //{color: getColor(items.quantity)},
                           isOpen[index]
                             ? { display: "table-row" }
                             : { display: "none" }
