@@ -67,11 +67,11 @@ export class FinishedGoods extends Component {
               >
                 <Dropdown.Menu>
                   <Dropdown.Item
-                    content="Item"
-                    icon=""
+                    content="Finished Good"
+                    icon="clipboard check"
                     labelPosition="right"
                     as={Link}
-                    to="/addItem"
+                    to="/addFinishedGood"
                   />
                 </Dropdown.Menu>
               </Dropdown>
@@ -84,6 +84,7 @@ export class FinishedGoods extends Component {
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
+                  rowSpan="2"
                   width={6}
                   sorted={column === "name" ? direction : null}
                   onClick={this.handleSort("name")}
@@ -91,21 +92,22 @@ export class FinishedGoods extends Component {
                   Item Name
                 </Table.HeaderCell>
                 <Table.HeaderCell
+                  rowSpan="1"
                   width={6}
                   sorted={column === "description" ? direction : null}
                   onClick={this.handleSort("description")}
                 >
-                  Description
+                  Ingredients
                 </Table.HeaderCell>
-                <Table.HeaderCell
-                  width={2}
-                  sorted={column === "dateRestocked" ? direction : null}
-                  onClick={this.handleSort("dateRestocked")}
-                >
-                  Composed Of
+                <Table.HeaderCell rowSpan="2" width={1}>
+                  Quantity
                 </Table.HeaderCell>
-                <Table.HeaderCell width={1}>Quantity</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Cost</Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2" width={1}>
+                  Time (hours)
+                </Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2" width={1}>
+                  Total Cost
+                </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {
@@ -114,12 +116,14 @@ export class FinishedGoods extends Component {
                   <Table.Row key={items.id}>
                     <Table.Cell textAlign="center">{items.name}</Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.description}
+                      {items.items.map(element => element.name).join(", ")}
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
-                    <Table.Cell textAlign="center">${items.cost}</Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.dateRestocked}
+                      {items.timeSpent}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.finishedGoodCost}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>

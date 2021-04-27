@@ -82,25 +82,32 @@ export class Recipes extends Component {
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
-                  width={6}
+                  width={4}
                   sorted={column === "name" ? direction : null}
                   onClick={this.handleSort("name")}
                 >
                   Recipe Name
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={6}
+                  width={4}
                   sorted={column === "description" ? direction : null}
                   onClick={this.handleSort("description")}
                 >
                   Description
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={2}
+                  width={8}
                   sorted={column === "dateRestocked" ? direction : null}
                   onClick={this.handleSort("dateRestocked")}
                 >
                   Ingredients
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  width={2}
+                  sorted={column === "dateRestocked" ? direction : null}
+                  onClick={this.handleSort("dateRestocked")}
+                >
+                  Cost
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -113,7 +120,10 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.ingredient}
+                    {items.items.map(element => element.name).join(", ")}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.receipeCost}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
