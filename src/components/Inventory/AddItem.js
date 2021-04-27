@@ -76,9 +76,9 @@ const AddItem = () => {
 
   const handleRedirect = () => {
     setTimeout(() => {
-      history.push('/inventory');
-    }, 3000)
-  }
+      history.push("/inventory");
+    }, 3000);
+  };
 
   const handleImageAsFile = e => {
     const image = e.target.files[0];
@@ -189,6 +189,7 @@ const AddItem = () => {
               />
               <DateInput
                 required
+                dateFormat={"MM/DD/YYYY"}
                 label="Date Restocked"
                 name="dateRestocked"
                 value={dateRestocked}

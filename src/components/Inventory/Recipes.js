@@ -65,11 +65,11 @@ export class Recipes extends Component {
               >
                 <Dropdown.Menu>
                   <Dropdown.Item
-                    content="Item"
-                    icon=""
+                    content="Recipe"
+                    icon="list alternate outline"
                     labelPosition="right"
                     as={Link}
-                    to="/addItem"
+                    to="/addRecipe"
                   />
                 </Dropdown.Menu>
               </Dropdown>
