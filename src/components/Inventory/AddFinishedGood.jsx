@@ -44,29 +44,6 @@ const AddFinishedGood = () => {
       })
   }, []);
 
-  const getFinishedGoods = () => {
-    let docs = [];
-    db.collection('finishedGoods')
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          docs.push({ id: doc.id, ...doc.data() });
-          console.log(doc.id, '=>', ...doc.data());
-        })
-        .then(() => {
-          const newDoc = [];
-          for (let i = 0; i < docs.length; i++) {
-            const { name } = docs[i];
-            newDoc.push({ text: name, value: name, key: name, ...docs[i] });
-          }
-          return newDoc;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-      })
-    return null;
-  }
 
   const handleSelectedChange = (e, { name, value }) => {
     e.preventDefault();
@@ -84,17 +61,24 @@ const AddFinishedGood = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    let goods = getFinishedGoods();
+    let finishedGoodCost = 0;
+    finishedGoodCost = (parseFloat(selected[0].receipeCost) + (laborRate*timeSpent))
+    finishedGoodCost = finishedGoodCost.toFixed(2)
+    
+    const {name, receipeCost, items} = selected[0]
 
-    if (goods) {
-      for (let i = 0; i < goods.length; i++) {
-        console.log(goods[i].id, '=>', ...goods[i])
-      }
-    }
+
+    db.collection('finishedgoods')
+      .add({ name, receipeCost, items, finishedGoodCost, laborRate, timeSpent, quantity  })
+      .then(() => {
+        setMessage("Item has been submitted. ");
+        // handleRedirect();
+      })
+      .catch(err => {
+        setError(err);
+      });
   }
 
-  console.log(selected)
-  console.log(recipes)
   return (
     <div className="add-item" style={{ height: "100vh" }}>
     <div>
@@ -122,16 +106,18 @@ const AddFinishedGood = () => {
         </Grid.Column>
         <Grid.Row>
         <Card
-                centered
-                header= {selected[0].name}
-                meta = {(selected[0].items != undefined) ? ("Ingredients: " + selected[0].items.join(", ")) : ("") }
-                description= {selected[0].description}
-                extra={
-                  (selected[0].items != undefined) ? (<p>
-                    <Icon name="dollar sign" />
-                  </p>) : ("Select a Recipe") 
-                }
-              />
+          centered
+          header= {selected[0].name}
+          meta = {(selected[0].items != undefined) ? ("Ingredients: " + selected[0].items.map(element => element.name)) : ("") }
+          description= {selected[0].description}
+          extra={
+            (selected[0].items != undefined) ?
+              (<p>
+                  <Icon name="dollar sign" />
+                  {selected[0].receipeCost}               
+            </p>) : ("Select a Recipe") 
+          }
+        />
         </Grid.Row>
       </Grid>
     </div>
@@ -148,7 +134,7 @@ const AddFinishedGood = () => {
         </Message>
       )}
       <Form onSubmit={handleSubmit}>
-      <b>Select Recipe:</b>
+      <b>Select a Recipe:</b>
       <Dropdown
         required
         fluid
@@ -158,7 +144,6 @@ const AddFinishedGood = () => {
         search
         scrolling
         options={recipes}
-        // value={selected}
         onChange={handleSelectedChange}
       /> 
       <br/>
@@ -174,15 +159,15 @@ const AddFinishedGood = () => {
         <Form.Input
         required
         width={5}
-        label="Time Spent"
+        label="Time Spent (hours)"
         name="timeSpent"
-        value={quantity}
+        value={timeSpent}
         onChange={e => setTimeSpent(e.target.value)}
       />   
       <Form.Input
         required
         width={5}
-        label="Labor Rate"
+        label="Labor Rate (per hour)"
         name="laborRate"
         value={laborRate}
         onChange={e => setLaborRate(e.target.value)}
