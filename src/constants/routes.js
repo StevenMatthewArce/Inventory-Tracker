@@ -1,10 +1,9 @@
-
 export const DASHBOARD = "/";
 export const INVENTORY = "/inventory";
 export const BUDGET = "/budget";
 export const ORDERS = "/orders";
-export const ADDITEM = "/addItem";
+export const ADDITEM = "/addItem";  
 export const ADDRECEIPT = "/addReceipt";
 export const ADDORDER = "/addOrder";
-export const ADDRECIPE = '/addRecipe';
-export const ADDFINISHEDGOOD = '/addFinishedGood';
+export const ADDRECIPE = "/addRecipe";
+export const ADDFINISHEDGOOD = "/addFinishedGood";

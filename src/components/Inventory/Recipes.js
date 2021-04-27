@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Table, Dropdown, Grid, Header, Divider } from "semantic-ui-react";
+import {
+  Table,
+  Dropdown,
+  Grid,
+  Header,
+  Divider,
+  Search
+} from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
@@ -11,7 +18,10 @@ export class Recipes extends Component {
     this.state = {
       data: [],
       column: null,
-      direction: null
+      direction: null,
+      isLoading: false,
+      results: [],
+      value: ""
     };
   }
 
@@ -45,9 +55,42 @@ export class Recipes extends Component {
     });
   }
 
+  handleResultSelect = (e, { result }) => this.setState({ value: result.name });
+
+  handleSearchChange = (e, { value }) => {
+    const { data } = this.state;
+    const { name } = data;
+
+    console.log(data);
+    this.setState({ isLoading: true, value });
+
+    setTimeout(() => {
+      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
+      const isMatch = result => re.test(result.name);
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(data, isMatch)
+      });
+    }, 300);
+  };
+
   render() {
-    const { data, column, direction } = this.state;
+    const { data, column, direction, isLoading, value, results } = this.state;
     console.log(this.state);
+    const resRender = ({ name, receipeCost, items }) => {
+      return (
+        <div key="name">
+          <Grid>
+            <Grid.Column width={5}>Recipe Name: {name}</Grid.Column>
+            <Grid.Column width={5}>
+              Ingredients: {items.map(element => element.name).join(", ")}{" "}
+            </Grid.Column>
+            <Grid.Column width={2}>Cost: ${receipeCost}</Grid.Column>
+          </Grid>
+        </div>
+      );
+    };
     return (
       <div>
         <div>
@@ -78,29 +121,54 @@ export class Recipes extends Component {
         </div>
         <Divider />
         <div>
+          <Grid>
+            <Grid.Column>
+              <Search
+                className="search-area"
+                loading={isLoading}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                  leading: true
+                })}
+                results={results}
+                value={value}
+                resultRenderer={resRender}
+              />
+            </Grid.Column>
+          </Grid>
+        </div>
+        <br />
+        <div>
           <Table sortable celled>
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
-                  width={6}
+                  width={4}
                   sorted={column === "name" ? direction : null}
                   onClick={this.handleSort("name")}
                 >
                   Recipe Name
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={6}
+                  width={4}
                   sorted={column === "description" ? direction : null}
                   onClick={this.handleSort("description")}
                 >
                   Description
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={2}
+                  width={8}
                   sorted={column === "dateRestocked" ? direction : null}
                   onClick={this.handleSort("dateRestocked")}
                 >
                   Ingredients
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  width={2}
+                  sorted={column === "dateRestocked" ? direction : null}
+                  onClick={this.handleSort("dateRestocked")}
+                >
+                  Cost
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -113,7 +181,10 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.ingredient}
+                      {items.items.map(element => element.name).join(", ")}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.receipeCost}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>

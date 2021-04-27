@@ -184,21 +184,6 @@ export class RawMaterials extends Component {
                     as={Link}
                     to="/addItem"
                   />
-                  <Dropdown.Item 
-                    content='Recipe'
-                    icon=''
-                    labelPosition='right'
-                    as={Link}
-                    to='/addRecipe'
-                  />
-                  <Dropdown.Item 
-                    content='Finished Good'
-                    icon=''
-                    labelPosition='right'
-                    as={Link} 
-                    to='/addFinishedGood'
-                  />
-
                 </Dropdown.Menu>
               </Dropdown>
             </Grid.Column>
@@ -297,30 +282,6 @@ export class RawMaterials extends Component {
                       {restockedDatesSorted[0]}
                     </Table.Cell>
                   </Table.Row>
-
-                  {/* <Table.Row
-                    style={
-                      isOpen[index]
-                        ? { display: "table-row" }
-                        : { display: "none" }
-                    }
-                  >
-                    <Table.HeaderCell textAlign="center">
-                      Material Name
-                    </Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">
-                      Description
-                    </Table.HeaderCell>
-
-                    <Table.HeaderCell textAlign="center">
-                      Quantity
-                    </Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">Cost</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">
-                      Date Restocked
-                    </Table.HeaderCell>
-                  </Table.Row> */}
-
                   {items.map(items => {
                     //function getColor(quantity){
                       //if(quantity < 3) alert("ahh"); return 'red';
