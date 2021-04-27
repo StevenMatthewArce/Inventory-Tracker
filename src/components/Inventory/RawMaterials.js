@@ -275,30 +275,6 @@ export class RawMaterials extends Component {
                       {restockedDatesSorted[0]}
                     </Table.Cell>
                   </Table.Row>
-
-                  {/* <Table.Row
-                    style={
-                      isOpen[index]
-                        ? { display: "table-row" }
-                        : { display: "none" }
-                    }
-                  >
-                    <Table.HeaderCell textAlign="center">
-                      Material Name
-                    </Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">
-                      Description
-                    </Table.HeaderCell>
-
-                    <Table.HeaderCell textAlign="center">
-                      Quantity
-                    </Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">Cost</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">
-                      Date Restocked
-                    </Table.HeaderCell>
-                  </Table.Row> */}
-
                   {items.map(items => {
                     return (
                       <Table.Row
