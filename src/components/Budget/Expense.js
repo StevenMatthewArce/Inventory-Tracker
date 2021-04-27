@@ -68,7 +68,6 @@ export class Expense extends Component {
   };
 
   calculateExpenseMonth = () => {
-    //TODO: Add code to calculate monlth expenses
     const { data } = this.state;
 
     let totalExpenseMonth = 0;
@@ -89,6 +88,7 @@ export class Expense extends Component {
     });
 
     let expenseMonthPercentage = (totalExpenseMonth / totalExpenseYear) * 100;
+
     this.setState({
       totalExpenseMonth: totalExpenseMonth,
       totalExpenseYear: totalExpenseYear,
@@ -101,12 +101,9 @@ export class Expense extends Component {
 
     //! This is only for testing
     let totalSalesYear = "90000";
-    this.setState(
-      {
-        totalSalesYear: totalSalesYear
-      }
-      // console.log(this.state)
-    );
+    this.setState({
+      totalSalesYear: totalSalesYear
+    });
 
     let expenseYearPercentage =
       (this.state.totalExpenseYear / totalSalesYear) * 100;
