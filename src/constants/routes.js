@@ -1,3 +1,4 @@
+
 export const DASHBOARD = "/";
 export const INVENTORY = "/inventory";
 export const BUDGET = "/budget";

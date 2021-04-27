@@ -10,7 +10,7 @@ import {
 } from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 //TODO: Add OCR Recognition for Store Name
 //TODO: Add OCR Recognition for Total
@@ -150,15 +150,15 @@ export class Ocr extends Component {
     }
 
     var splitArray = [];
-    for (var j = 0; j < filteredText.length; j++) {
-      splitArray.push(filteredText[j].toString().split("$"));
+    for (var i = 0; i < filteredText.length; i++) {
+      splitArray.push(filteredText[i].toString().split("$"));
     }
     var name = [];
     var cost = [];
     var quantity = [];
-    for (var k = 0; k < splitArray.length; k++) {
-      name.push(splitArray[k][0]);
-      cost.push(splitArray[k][1]);
+    for (var i = 0; i < splitArray.length; i++) {
+      name.push(splitArray[i][0]);
+      cost.push(splitArray[i][1]);
       quantity.push("1");
     }
     this.updateName(name);
