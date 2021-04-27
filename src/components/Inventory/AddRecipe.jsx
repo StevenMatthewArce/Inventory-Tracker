@@ -27,7 +27,6 @@ class AddRecipe extends React.Component {
   }
 
   componentDidMount() {
-
     let docs = [];
     db.collection('items')
       .get()
