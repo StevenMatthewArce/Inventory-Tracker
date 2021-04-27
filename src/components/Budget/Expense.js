@@ -71,30 +71,29 @@ export class Expense extends Component {
     //TODO: Add code to calculate monlth expenses
     const { data } = this.state;
 
-    let currentMonth = new Date().getMonth() + 1;
     let totalExpenseMonth = 0;
-    data.forEach(element => {
-      totalExpenseMonth += parseFloat(element.totalCost);
+    let totalExpenseYear = 0;
+    var currentdate = new Date();
+    var cur_month = currentdate.getMonth() + 1;
+    var cur_year = currentdate.getFullYear();
+    data.filter(element => {
+      let parts = element.date.split(/[/ :]/);
+      let month = parts[0];
+      let year = parts[2];
+      if (cur_month == month && year == cur_year) {
+        totalExpenseMonth += parseFloat(element.totalCost);
+      }
+      if (year == cur_year) {
+        totalExpenseYear += parseFloat(element.totalCost);
+      }
     });
 
-    console.log(currentMonth);
-    console.log(this.state.data[0]);
-    console.log(this.state.data[1]);
-    console.log(this.state.data[3]);
-
-    //! This is only for testing
-    // let totalExpenseMonth = "1652";
-    let totalExpenseYear = "10000";
-    this.setState(
-      {
-        totalExpenseMonth: totalExpenseMonth,
-        totalExpenseYear: totalExpenseYear
-      }
-      // console.log(this.state)
-    );
-
     let expenseMonthPercentage = (totalExpenseMonth / totalExpenseYear) * 100;
-    this.setState({ expenseMonthPercentage: expenseMonthPercentage });
+    this.setState({
+      totalExpenseMonth: totalExpenseMonth,
+      totalExpenseYear: totalExpenseYear,
+      expenseMonthPercentage: expenseMonthPercentage
+    });
   };
 
   calculateExpenseYear = () => {
