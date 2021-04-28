@@ -1,5 +1,7 @@
 import React from "react";
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
+import { RawMaterials, FinishedGoods, Recipes } from "../Inventory";
+
 
 function selectingData(){
   firebase.database().ref('items').on('value',
@@ -27,6 +29,30 @@ const inventory = [
   ];
   
   class expenseVisual extends React.Component {
+    componentDidMount() {
+      //!Uncomment this when firebase is back up
+      db.collection("items")
+        .onSnapshot(snap => {
+          let documents = [];
+          snap.forEach(doc => {
+            documents.push({ ...doc.data(), id: doc.id });
+          });
+          var catagories = _.groupBy(documents, items => {
+            return items.name;
+          });
+          this.setState({
+            data: catagories
+          });
+        });
+      //!Uncomment this when firebase is back up
+      // var catagories = _.groupBy(data, items => {
+      //   return items.name;
+      // });
+      // // console.log(catagories);
+      // this.setState({ data: catagories });
+    }
+
+
     render() {
       return (
         <div style={{ height: '100vh' }}>
