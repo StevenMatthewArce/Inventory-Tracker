@@ -6,11 +6,14 @@ import {
   Header,
   Divider,
   Search,
-  Icon
+  Icon,
+  Modal,
+  Button,
+  Form
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
-import _, { floor } from "lodash";
+import _, { flatMap, floor, negate } from "lodash";
 import "./style.css";
 
 //! ONLY FOR TESTING W/Out Firebase
@@ -55,7 +58,9 @@ export class RawMaterials extends Component {
       isLoading: false,
       results: [],
       value: "",
-      isOpen: [false]
+      isOpen: [false],
+      modalOpen: false,
+      settings: []
     };
 
     this.handleToggle = this.handleToggle.bind(this);
@@ -77,6 +82,15 @@ export class RawMaterials extends Component {
           data: catagories
         });
       });
+
+    db.collection("settings").onSnapshot(snap => {
+      let documents = [];
+      snap.forEach(doc => {
+        documents = { ...doc.data(), id: doc.id };
+      });
+      this.setState({ settings: documents });
+    });
+
     //!Uncomment this when firebase is back up
     // var catagories = _.groupBy(data, items => {
     //   return items.name;
@@ -131,6 +145,26 @@ export class RawMaterials extends Component {
     this.setState({ isOpen: isOpen });
   };
 
+  handleModal = () => {
+    const { modalOpen } = this.state;
+    this.setState({ modalOpen: !modalOpen }, console.log(this.state.modalOpen));
+  };
+
+  handleChange = (e, { value }) => {
+    e.preventDefault();
+    let { settings } = this.state;
+    settings = { id: settings.id, alertQty: value };
+    this.setState({ settings: settings });
+  };
+
+  updateAlertSetting = () => {
+    let { settings } = this.state;
+    db.collection("settings")
+      .doc(settings.id)
+      .update({ alertQty: settings.alertQty })
+      .then(this.setState({ modalOpen: false }));
+  };
+
   render() {
     const {
       data,
@@ -161,6 +195,7 @@ export class RawMaterials extends Component {
       );
     };
 
+    console.log(this.state);
     return (
       <div>
         <div>
@@ -169,23 +204,31 @@ export class RawMaterials extends Component {
               <Header as="h1">Raw Materials</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
-              <Dropdown
-                text="Add"
-                icon="plus square outline"
-                labeled
-                button
-                className="icon"
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    content="Item"
-                    icon="tags"
-                    labelPosition="right"
-                    as={Link}
-                    to="/addItem"
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
+              <Grid.Row>
+                <Dropdown
+                  text="Add"
+                  icon="plus square outline"
+                  labeled
+                  button
+                  className="icon"
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      content="Item"
+                      icon="tags"
+                      labelPosition="right"
+                      as={Link}
+                      to="/addItem"
+                    />
+                    <Dropdown.Item
+                      content="Alert"
+                      icon="exclamation"
+                      labelPosition="right"
+                      onClick={this.handleModal}
+                    />
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Grid.Row>
             </Grid.Column>
           </Grid>
         </div>
@@ -210,7 +253,7 @@ export class RawMaterials extends Component {
         <br />
         <div>
           {/*FIXME: ADD SORTABLE TO MAKE SORTABLE */}
-          <Table id = "table" celled selectable structured>
+          <Table id="table" celled selectable structured>
             <Table.Header>
               <Table.Row textAlign="center">
                 <Table.HeaderCell
@@ -250,24 +293,19 @@ export class RawMaterials extends Component {
                 totalCost += parseFloat(element.cost);
                 totalQty += parseFloat(element.quantity);
               });
-              totalCost = floor(totalCost / items.length);
-
+              totalCost = totalCost / items.length;
+              totalCost = totalCost.toFixed(2);
               const restockedDatesSorted = items
                 .map(element => element.dateRestocked)
                 .sort((a, b) => {
                   return Date.parse(a) - Date.parse(b);
                 });
-
-                function getColor(quantity){
-                  if(quantity>3) return 'white';
-                  if(quantity < 3) return '#ff6666';
-                }
               return (
-               
                 <Table.Body>
                   <Table.Row
-                  style = {{backgroundColor: getColor(totalQty)}}
-                  id = "raw"
+                    negative={
+                      totalQty >= this.state.settings.alertQty ? false : true
+                    }
                     key={value}
                     onClick={() => this.handleToggle(index)}
                   >
@@ -276,26 +314,27 @@ export class RawMaterials extends Component {
                       {value}
                     </Table.Cell>
                     <Table.Cell textAlign="center">{}</Table.Cell>
-                    <Table.Cell id = "quantity" textAlign="center">{totalQty}</Table.Cell>
+                    <Table.Cell id="quantity" textAlign="center">
+                      {totalQty}
+                    </Table.Cell>
                     <Table.Cell textAlign="center">${totalCost}</Table.Cell>
                     <Table.Cell textAlign="center">
                       {restockedDatesSorted[0]}
                     </Table.Cell>
                   </Table.Row>
                   {items.map(items => {
-                    //function getColor(quantity){
-                      //if(quantity < 3) alert("ahh"); return 'red';
-                    //}
                     return (
-                    
                       <Table.Row
-                      id = "workpls"
                         key={items.id}
                         style={
-                          //{color: getColor(items.quantity)},
                           isOpen[index]
                             ? { display: "table-row" }
                             : { display: "none" }
+                        }
+                        negative={
+                          totalQty >= this.state.settings.alertQty
+                            ? false
+                            : true
                         }
                       >
                         <Table.Cell textAlign="left">{items.name}</Table.Cell>
@@ -303,7 +342,7 @@ export class RawMaterials extends Component {
                           {items.description}
                         </Table.Cell>
                         <Table.Cell id={"alert"} textAlign="center">
-                          {items.quantity} 
+                          {items.quantity}
                         </Table.Cell>
                         <Table.Cell textAlign="center">
                           ${items.cost}
@@ -319,15 +358,38 @@ export class RawMaterials extends Component {
             })}
           </Table>
         </div>
+        <Modal open={this.state.modalOpen} size={"small"}>
+          <Modal.Header>Change Alert Setting</Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+              <Header>Raw Material Alert</Header>
+              <p>
+                The raw material row will get highlighted when it falls below a
+                certain quantity.
+              </p>
+              <p>Please select the minimum quantity before sending an alert.</p>
+              <Form>
+                <Form.Input
+                  label="Alert Minimum Quantity:"
+                  name="alertQty"
+                  value={this.state.settings.alertQty}
+                  onChange={this.handleChange}
+                />
+              </Form>
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              content="Ok"
+              labelPosition="right"
+              icon="checkmark"
+              onClick={this.updateAlertSetting}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
       </div>
     );
-    function highlight(anyitem){
-      document.getElementbyId("alert")
-      
-      if(anyitem.quantity<2){
-      alert("low on stock")
-      }
-    }
   }
 }
 
