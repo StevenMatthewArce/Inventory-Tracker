@@ -24,7 +24,6 @@ const AddFinishedGood = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
 
-  
   useEffect(() => {
     let docs = [];
     db.collection('recipes')
@@ -50,8 +49,6 @@ const AddFinishedGood = () => {
     setSelected(recipes.filter(element => element.name === value));
   }
   
-
-  
   const handleRedirect = () => {
     setTimeout(() => {
       return <Redirect to='/inventory' />
@@ -72,7 +69,7 @@ const AddFinishedGood = () => {
       .add({ name, receipeCost, items, finishedGoodCost, laborRate, timeSpent, quantity  })
       .then(() => {
         setMessage("Item has been submitted. ");
-        // handleRedirect();
+        handleRedirect();
       })
       .catch(err => {
         setError(err);
@@ -148,32 +145,31 @@ const AddFinishedGood = () => {
       /> 
       <br/>
       <Form.Group widths="equal">
-      <Form.Input
-        required
-        width={5}
-        label="Quantity"
-        name="quantity"
-        value={quantity}
-        onChange={e => setQuantity(e.target.value)}
-      />   
         <Form.Input
-        required
-        width={5}
-        label="Time Spent (hours)"
-        name="timeSpent"
-        value={timeSpent}
-        onChange={e => setTimeSpent(e.target.value)}
-      />   
-      <Form.Input
-        required
-        width={5}
-        label="Labor Rate (per hour)"
-        name="laborRate"
-        value={laborRate}
-        onChange={e => setLaborRate(e.target.value)}
-      />  
-      </Form.Group>
-   
+          required
+          width={5}
+          label="Quantity"
+          name="quantity"
+          value={quantity}
+          onChange={e => setQuantity(e.target.value)}
+        />   
+          <Form.Input
+          required
+          width={5}
+          label="Time Spent (hours)"
+          name="timeSpent"
+          value={timeSpent}
+          onChange={e => setTimeSpent(e.target.value)}
+        />   
+        <Form.Input
+          required
+          width={5}
+          label="Labor Rate (per hour)"
+          name="laborRate"
+          value={laborRate}
+          onChange={e => setLaborRate(e.target.value)}
+        />  
+        </Form.Group>
       </Form>
     </div>
   </div>

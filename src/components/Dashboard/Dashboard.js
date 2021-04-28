@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
+import { Redirect } from 'react-router-dom';
+
+import { AuthContext } from '../Auth';
 
 const profit = [
     {quarter: 1, earnings: 1500},
@@ -17,6 +21,10 @@ const inventory = [
   
   class Dashboard extends React.Component {
     render() {
+      const { currentUser } = useContext(AuthContext);
+      if (!currentUser) {
+        return <Redirect to='/signIn' />
+      }
       return (
         <div style={{ height: '100vh' }}>
           <h1>Dashboard</h1>

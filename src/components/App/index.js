@@ -12,6 +12,8 @@ import { Dashboard } from "../Dashboard";
 import { Inventory, AddItem, AddRecipe, AddFinishedGood } from "../Inventory";
 import { Orders, AddOrder } from "../Orders";
 import { Budget, AddReceipt } from "../Budget";
+import { SignIn } from '../SignIn';
+import { SignUp } from '../SignUp';
 
 class App extends React.Component {
   constructor(props) {
@@ -47,6 +49,8 @@ class App extends React.Component {
                         <Route path={ROUTES.ADDORDER} component={AddOrder} />
                         <Route path={ROUTES.ADDRECIPE} component={AddRecipe} />
                         <Route path={ROUTES.ADDFINISHEDGOOD} component={AddFinishedGood} />
+                        <Route path={ROUTES.SIGNUP} component={SignUp} />
+                        <Route path={ROUTES.SIGNIN} component={SignIn} />
                       </Switch>
                     </Segment>
                   </Sidebar.Pusher>

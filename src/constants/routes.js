@@ -7,3 +7,5 @@ export const ADDRECEIPT = "/addReceipt";
 export const ADDORDER = "/addOrder";
 export const ADDRECIPE = "/addRecipe";
 export const ADDFINISHEDGOOD = "/addFinishedGood";
+export const SIGNIN = 'signIn';
+export const SIGNUP = 'signUp';
