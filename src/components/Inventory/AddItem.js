@@ -11,7 +11,8 @@ import {
   Header,
   Divider,
   Grid,
-  TextArea
+  TextArea,
+  Segment
 } from "semantic-ui-react";
 import { Link, useHistory } from "react-router-dom";
 
@@ -120,15 +121,14 @@ const AddItem = () => {
         }
       );
     });
-  }
+  };
 
   const isInvalid =
     name === "" || dateRestocked === null || quantity === 0 || cost === 0;
 
   return (
-    <div className="add-item" style={{ height: "100vh" }}>
+    <Segment style={{ height: "90vh" }}>
       <div>
-        {console.log(imageAsUrl)}
         <Button labelPosition="left" icon secondary as={Link} to="/inventory">
           Back
           <Icon name="left arrow"></Icon>
@@ -216,16 +216,16 @@ const AddItem = () => {
               disabled={isInvalid}
               type="submit"
               onClick={handleSubmit}
-              labelPosition='right'
+              labelPosition="right"
               icon
             >
               Submit
-              <Icon name='send' />
+              <Icon name="send" />
             </Button>
           </Form>
         </Form>
       </div>
-    </div>
+    </Segment>
   );
 };
 
