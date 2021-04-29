@@ -3,20 +3,6 @@ import { db } from "../Firebase";
 import { VictoryLine, VictoryChart, VictoryTheme } from "victory";
 import _, { flatMap, floor, negate } from "lodash";
 
-function getData(){
-let data = {};
-db.collection('receipts')//.get().then(querySnapshot => {
-    .onSnapshot(snap=>{
-      let documents = [];
-      snap.forEach(doc=>{
-        documents.push({...doc.data(),id:doc.id});
-        //renderTable(doc);
-      })
-      data = renderTable(documents);
-      //data: catagories
-    })
-    return data;
-};
 
 function renderTable(documents){
   //var month = new Date();
@@ -56,11 +42,48 @@ function renderTable(documents){
 
       this.state = {
         data : data
+        categories 
         //data: [{x: Object.keys(idk),y:Object.values(idk)} ],
         //data: [{x:"sunday", y: 3},{x:"mon", y:4}]
       }
     }
+    componentDidMount(){
+        db.collection('receipts')//.get().then(querySnapshot => {
+            .onSnapshot(snap=>{
+              let documents = [];
+              snap.forEach(doc=>{
+                documents.push({...doc.data(),id:doc.id});
+                //renderTable(doc);
+              }).then(()=>this.setState({data:documents}))
+              //data = renderTable(documents);
+              //data: catagories
+            })
+        };
 
+        calculateExpenseMonth=()=>{
+          const{data} = this.state;
+          var catagories = _.groupBy(data, items =>{
+            let parts = items.date.split(/[/ :]/);
+            let month = parts[0];
+            return month;
+          });
+          let data = catagories;
+          var idk = {};
+          //for(var value in data){
+          {Object.keys(data).map((value,index)=>{
+            const items = data[value];
+            let totalExpense = 0;
+        
+            items.forEach(element => {
+              totalExpense += parseFloat(element.totalCost);
+            })
+            totalExpense = totalExpense.toFixed(2);
+            idk[value] = totalExpense;
+           //Insert Graph
+          //render() {
+          })}
+        }
+    
     render(){
       return(
         <div>
