@@ -16,7 +16,11 @@ const LogIn = () => {
   };
   const { currentUser } = useContext(AuthContext);
   if (currentUser) {
-    return <Redirect to="/dashboard" />;
+    return (
+      <>
+        <Redirect to="/dashboard" />
+      </>
+    );
   }
   return (
     <div

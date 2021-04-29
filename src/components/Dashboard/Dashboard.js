@@ -7,6 +7,7 @@ const Dashboard = () => {
   if (!currentUser) {
     return <Redirect to="/" />;
   }
+
   return (
     <div style={{ height: "100vh" }}>
       <h1>Dashboard</h1>

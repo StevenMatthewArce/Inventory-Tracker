@@ -15,7 +15,7 @@ import { Budget, AddReceipt } from "../Budget";
 
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
-import { AuthProvider } from "./Auth";
+import { AuthProvider, AuthContext } from "./Auth";
 
 class App extends React.Component {
   constructor(props) {
@@ -43,7 +43,13 @@ class App extends React.Component {
                     <Sidebar.Pusher>
                       <Segment padded>
                         <Switch>
-                          {/* <Route
+                          <Route exact path={ROUTES.LOGIN} component={LogIn} />
+                          <Route
+                            exact
+                            path={ROUTES.SIGNUP}
+                            component={SignUp}
+                          />
+                          <Route
                             exact
                             path={ROUTES.DASHBOARD}
                             component={Dashboard}
@@ -67,14 +73,7 @@ class App extends React.Component {
                           <Route
                             path={ROUTES.ADDFINISHEDGOOD}
                             component={AddFinishedGood}
-                          /> */}
-                          <Route exact path="/" component={LogIn} />
-                          <Route
-                            exact
-                            path="/dashboard"
-                            component={Dashboard}
                           />
-                          <Route exact path="/signup" component={SignUp} />
                         </Switch>
                       </Segment>
                     </Sidebar.Pusher>
