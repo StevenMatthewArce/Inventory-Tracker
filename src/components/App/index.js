@@ -15,8 +15,7 @@ import { Budget, AddReceipt } from "../Budget";
 
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
-import { AuthProvider, AuthContext } from "./Auth";
-
+import { AuthProvider } from "./Auth";
 
 class App extends React.Component {
   constructor(props) {

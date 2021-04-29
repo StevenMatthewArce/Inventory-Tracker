@@ -15,7 +15,7 @@ const Sidenav = props => {
       visible={props.toggleMenu}
       width="thin"
     >
-      <Menu.Item as={Link} to="/">
+      <Menu.Item as={Link} to="/dashboard">
         <Icon name="server" />
         Dashboard
       </Menu.Item>
@@ -31,7 +31,7 @@ const Sidenav = props => {
         <Icon name="sticky note" />
         Budget
       </Menu.Item>
-      <Menu.Item onClick={() => auth.signOut()}>
+      <Menu.Item onClick={() => auth.signOut()} to="/">
         <Icon name="sign out" />
         Sign Out
       </Menu.Item>
