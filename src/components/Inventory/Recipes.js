@@ -5,7 +5,10 @@ import {
   Grid,
   Header,
   Divider,
-  Search
+  Search,
+  Checkbox,
+  Button,
+  Tab
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -21,7 +24,8 @@ export class Recipes extends Component {
       direction: null,
       isLoading: false,
       results: [],
-      value: ""
+      value: "",
+      checked: []
     };
   }
 
@@ -75,6 +79,28 @@ export class Recipes extends Component {
     }, 300);
   };
 
+  toggleCheck = (e, { id }) => {
+    let { checked } = this.state;
+    checked.push(id);
+    this.setState({ checked: checked }, console.log(this.state.checked));
+  };
+
+  removeItem = () => {
+    let { checked } = this.state;
+
+    checked.map(element => {
+      db.collection("recipes")
+        .doc(element)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+        });
+    });
+  };
+
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
     console.log(this.state);
@@ -99,6 +125,9 @@ export class Recipes extends Component {
               <Header as="h1">Recipes</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
+              <Button color="red" size="small" onClick={this.removeItem}>
+                Remove Selected
+              </Button>
               <Dropdown
                 text="Add"
                 icon="plus square outline"
@@ -139,9 +168,10 @@ export class Recipes extends Component {
         </div>
         <br />
         <div>
-          <Table sortable celled>
+          <Table sortable celled definition structured>
             <Table.Header>
               <Table.Row textAlign="center">
+                <Table.HeaderCell />
                 <Table.HeaderCell
                   width={4}
                   sorted={column === "name" ? direction : null}
@@ -176,6 +206,9 @@ export class Recipes extends Component {
               return (
                 <Table.Body>
                   <Table.Row key={items.id}>
+                    <Table.Cell collapsing>
+                      <Checkbox id={items.id} onClick={this.toggleCheck} />
+                    </Table.Cell>
                     <Table.Cell textAlign="center">{items.name}</Table.Cell>
                     <Table.Cell textAlign="center">
                       {items.description}
