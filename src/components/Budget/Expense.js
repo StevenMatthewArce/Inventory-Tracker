@@ -6,7 +6,9 @@ import {
   Header,
   Divider,
   Progress,
-  Statistic
+  Statistic,
+  Button,
+  Checkbox
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -28,7 +30,8 @@ export class Expense extends Component {
       totalExpenseYear: null,
       totalSalesYear: null,
       expenseMonthPercentage: null,
-      expenseYearPercentage: null
+      expenseYearPercentage: null,
+      checked: []
     };
   }
 
@@ -110,6 +113,28 @@ export class Expense extends Component {
     this.setState({ expenseYearPercentage: expenseYearPercentage });
   };
 
+  toggleCheck = (e, { id }) => {
+    let { checked } = this.state;
+    checked.push(id);
+    this.setState({ checked: checked }, console.log(this.state.checked));
+  };
+
+  removeItem = () => {
+    let { checked } = this.state;
+
+    checked.map(element => {
+      db.collection("receipts")
+        .doc(element)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+        });
+    });
+  };
+
   render() {
     const { data, column, direction } = this.state;
     // console.log(this.state.data);
@@ -175,6 +200,9 @@ export class Expense extends Component {
               <Header as="h1">Expense Tracking</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
+              <Button color="red" size="small" onClick={this.removeItem}>
+                Remove Selected
+              </Button>
               <Dropdown
                 text="Add"
                 icon="plus square outline"
@@ -204,18 +232,19 @@ export class Expense extends Component {
         </div>
         <Divider />
         <div>
-          <Table sortable celled>
+          <Table sortable celled definition structured>
             <Table.Header>
               <Table.Row textAlign="center">
+                <Table.HeaderCell collapsing />
                 <Table.HeaderCell
-                  width={1}
+                  width={2}
                   sorted={column === "Date" ? direction : null}
                   onClick={this.handleSort("Date")}
                 >
                   Date
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={1}
+                  width={3}
                   sorted={column === "Type" ? direction : null}
                   onClick={this.handleSort("Type")}
                 >
@@ -224,7 +253,7 @@ export class Expense extends Component {
                 <Table.HeaderCell width={3}>Store</Table.HeaderCell>
                 <Table.HeaderCell width={6}>Description</Table.HeaderCell>
                 <Table.HeaderCell
-                  width={1}
+                  width={2}
                   sorted={column === "Total" ? direction : null}
                   onClick={this.handleSort("Total")}
                 >
@@ -237,6 +266,9 @@ export class Expense extends Component {
               return (
                 <Table.Body>
                   <Table.Row key={items.id}>
+                    <Table.Cell collapsing>
+                      <Checkbox id={items.id} onClick={this.toggleCheck} />
+                    </Table.Cell>
                     <Table.Cell textAlign="center">{items.date}</Table.Cell>
                     <Table.Cell textAlign="center">{items.type}</Table.Cell>
                     <Table.Cell textAlign="center">{items.store}</Table.Cell>
