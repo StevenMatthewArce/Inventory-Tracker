@@ -10,7 +10,7 @@ const Dashboard = () => {
   }
 
   return (
-    <Segment style={{ height: "100vh" }}>
+    <Segment style={{ height: "90vh" }}>
       <h1>Dashboard</h1>
       <h1>Welcome</h1>
       <p>This is the dashboard, if you can see this you're logged in.</p>

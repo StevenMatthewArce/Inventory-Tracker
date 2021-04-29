@@ -24,7 +24,7 @@ const SignUp = () => {
   return (
     <div
       style={{
-        height: "100vh",
+        height: "90vh",
         backgroundColor: "#2185d0",
         margin: 0,
         padding: 0

@@ -31,7 +31,7 @@ const panes = [
 
 const Inventory = () => {
   return (
-    <Segment style={{ height: "100vh" }}>
+    <Segment style={{ height: "90vh" }}>
       <Tab panes={panes} />
     </Segment>
   );

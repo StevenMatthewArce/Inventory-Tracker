@@ -25,7 +25,7 @@ const LogIn = () => {
   return (
     <div
       style={{
-        height: "100vh",
+        height: "90vh",
         backgroundColor: "#2185d0",
         margin: 0,
         padding: 0
@@ -45,23 +45,20 @@ const LogIn = () => {
         <Grid>
           <Grid.Column width={6}>
             <div>
-              <Header as="h1" color="blue" style={{ margin: 0, padding: 0 }}>
-                Welcome
+              <Header
+                as="h1"
+                color="blue"
+                style={{ marginTop: 100, padding: 0, fontSize: 50 }}
+              >
+                Welcome Back
               </Header>
-              <Header as="h3" color="blue" style={{ margin: 0, padding: 0 }}>
+              <Header
+                as="h3"
+                color="blue"
+                style={{ margin: 0, padding: 0, fontSize: 30 }}
+              >
                 to inventory tracker
               </Header>
-              <br />
-              <Icon name="check circle outline" />
-              <b>Inventory Tracker</b>
-              <br />
-              <br />
-              <Icon name="check circle outline" />
-              <b>Order Organizer</b>
-              <br />
-              <br />
-              <Icon name="check circle outline" />
-              <b>Budget Helper</b>
             </div>
           </Grid.Column>
 
