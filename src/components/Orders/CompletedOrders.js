@@ -5,7 +5,9 @@ import {
   Grid,
   Header,
   Divider,
-  Search
+  Search,
+  Button,
+  Checkbox
 } from "semantic-ui-react";
 import { db } from "../Firebase";
 import _ from "lodash";
@@ -20,7 +22,8 @@ export class CompletedOrders extends Component {
       direction: null,
       isLoading: false,
       results: [],
-      value: ""
+      value: "",
+      checked: []
     };
   }
 
@@ -84,6 +87,28 @@ export class CompletedOrders extends Component {
     }, 300);
   };
 
+  toggleCheck = (e, { id }) => {
+    let { checked } = this.state;
+    checked.push(id);
+    this.setState({ checked: checked }, console.log(this.state.checked));
+  };
+
+  removeItem = () => {
+    let { checked } = this.state;
+
+    checked.map(element => {
+      db.collection("orders")
+        .doc(element)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+        });
+    });
+  };
+
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
     const resRender = ({
@@ -115,6 +140,9 @@ export class CompletedOrders extends Component {
               <Header as="h1">Completed Orders</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
+              <Button color="red" size="small" onClick={this.removeItem}>
+                Remove Selected
+              </Button>
               <Dropdown
                 text="Add"
                 icon="plus square outline"
@@ -147,38 +175,42 @@ export class CompletedOrders extends Component {
         </div>
         <br />
         <div>
-          <Table sortable celled>
+          <Table sortable celled definition structured>
             <Table.Header>
               <Table.Row textAlign="center">
+                <Table.HeaderCell />
                 <Table.HeaderCell
-                  width={1}
+                  width={2}
                   sorted={column === "DateReceived" ? direction : null}
                   onClick={this.handleSort("DateReceived")}
                 >
                   Date Received
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={1}
+                  width={2}
                   sorted={column === "DateNeedBy" ? direction : null}
                   onClick={this.handleSort("DateNeedBy")}
                 >
                   Date Needed By
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={2}
+                  width={3}
                   sorted={column === "Customer" ? direction : null}
                   onClick={this.handleSort("Customer")}
                 >
                   Customer
                 </Table.HeaderCell>
-                <Table.HeaderCell width={3}>Item</Table.HeaderCell>
-                <Table.HeaderCell width={6}>Comments</Table.HeaderCell>
+                <Table.HeaderCell width={4}>Item</Table.HeaderCell>
+                <Table.HeaderCell width={5}>Comments</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {
               return (
                 <Table.Body>
                   <Table.Row key={items.id}>
+                    <Table.Cell collapsing>
+                      <Checkbox id={items.id} onClick={this.toggleCheck} />
+                    </Table.Cell>
                     <Table.Cell textAlign="center">
                       {items.dateReceived}
                     </Table.Cell>

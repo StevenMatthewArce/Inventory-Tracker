@@ -5,7 +5,9 @@ import {
   Grid,
   Header,
   Divider,
-  Search
+  Search,
+  Button,
+  Checkbox
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -24,7 +26,8 @@ export class CurrentOrders extends Component {
       direction: null,
       isLoading: false,
       results: [],
-      value: ""
+      value: "",
+      checked: []
     };
   }
 
@@ -89,6 +92,28 @@ export class CurrentOrders extends Component {
     }, 300);
   };
 
+  toggleCheck = (e, { id }) => {
+    let { checked } = this.state;
+    checked.push(id);
+    this.setState({ checked: checked }, console.log(this.state.checked));
+  };
+
+  removeItem = () => {
+    let { checked } = this.state;
+
+    checked.map(element => {
+      db.collection("items")
+        .doc(element)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+        });
+    });
+  }
+
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
     const resRender = ({
@@ -121,6 +146,9 @@ export class CurrentOrders extends Component {
               <Header as="h1">Current Orders</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
+              <Button color="red" size="small" onClick={this.removeItem}>
+                Remove Selected
+              </Button>
               <Dropdown
                 text="Add"
                 icon="plus square outline"
@@ -161,25 +189,26 @@ export class CurrentOrders extends Component {
         </div>
         <br />
         <div>
-          <Table sortable celled>
+          <Table sortable celled structured definition>
             <Table.Header>
               <Table.Row textAlign="center">
+                <Table.HeaderCell />
                 <Table.HeaderCell
-                  width={1}
+                  width={2}
                   sorted={column === "DateReceived" ? direction : null}
                   onClick={this.handleSort("DateReceived")}
                 >
                   Date Received
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={1}
+                  width={2}
                   sorted={column === "DateNeedBy" ? direction : null}
                   onClick={this.handleSort("DateNeedBy")}
                 >
                   Date Needed By
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={2}
+                  width={3}
                   sorted={column === "Customer" ? direction : null}
                   onClick={this.handleSort("Customer")}
                 >
@@ -193,6 +222,9 @@ export class CurrentOrders extends Component {
               return (
                 <Table.Body>
                   <Table.Row key={items.id}>
+                    <Table.Cell collapsing>
+                      <Checkbox id={items.id} onClick={this.toggleCheck} />
+                    </Table.Cell>
                     <Table.Cell textAlign="center">
                       {items.dateReceived}
                     </Table.Cell>
