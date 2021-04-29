@@ -9,7 +9,9 @@ import {
   Icon,
   Modal,
   Button,
-  Form
+  Form,
+  Checkbox,
+  ItemDescription
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -60,7 +62,8 @@ export class RawMaterials extends Component {
       value: "",
       isOpen: [false],
       modalOpen: false,
-      settings: []
+      settings: [],
+      checked: []
     };
 
     this.handleToggle = this.handleToggle.bind(this);
@@ -165,6 +168,28 @@ export class RawMaterials extends Component {
       .then(this.setState({ modalOpen: false }));
   };
 
+  toggleCheck = (e, { id }) => {
+    let { checked } = this.state;
+    checked.push(id);
+    this.setState({ checked: checked }, console.log(this.state.checked));
+  };
+
+  removeItem = () => {
+    let { checked } = this.state;
+
+    checked.map(element => {
+      db.collection("items")
+        .doc(element)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+        });
+    });
+  };
+
   render() {
     const {
       data,
@@ -205,6 +230,9 @@ export class RawMaterials extends Component {
             </Grid.Column>
             <Grid.Column textAlign="right">
               <Grid.Row>
+                <Button color="red" size="small" onClick={this.removeItem}>
+                  Remove Selected
+                </Button>
                 <Dropdown
                   text="Add"
                   icon="plus square outline"
@@ -253,9 +281,10 @@ export class RawMaterials extends Component {
         <br />
         <div>
           {/*FIXME: ADD SORTABLE TO MAKE SORTABLE */}
-          <Table id="table" celled selectable structured>
+          <Table id="table" celled selectable structured definition>
             <Table.Header>
               <Table.Row textAlign="center">
+                <Table.HeaderCell />
                 <Table.HeaderCell
                   width={6}
                   sorted={column === "name" ? direction : null}
@@ -309,6 +338,9 @@ export class RawMaterials extends Component {
                     key={value}
                     onClick={() => this.handleToggle(index)}
                   >
+                    <Table.Cell collapsing>
+                      <Checkbox />
+                    </Table.Cell>
                     <Table.Cell textAlign="center">
                       <Icon name="dropdown" />
                       {value}
@@ -337,6 +369,9 @@ export class RawMaterials extends Component {
                             : true
                         }
                       >
+                        <Table.Cell collapsing>
+                          <Checkbox id={items.id} onClick={this.toggleCheck} />
+                        </Table.Cell>
                         <Table.Cell textAlign="left">{items.name}</Table.Cell>
                         <Table.Cell textAlign="center">
                           {items.description}
