@@ -102,7 +102,7 @@ export class CurrentOrders extends Component {
     let { checked } = this.state;
 
     checked.map(element => {
-      db.collection("items")
+      db.collection("orders")
         .doc(element)
         .delete()
         .then(() => {
@@ -112,8 +112,22 @@ export class CurrentOrders extends Component {
           console.error("Error removing document: ", error);
         });
     });
-  }
+  };
 
+  markCompleted = () => {
+    let { checked } = this.state;
+    checked.map(element => {
+      db.collection("orders")
+        .doc(element)
+        .update({ finished: "1" })
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+        });
+    });
+  };
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
     const resRender = ({
@@ -163,6 +177,12 @@ export class CurrentOrders extends Component {
                     text="Order"
                     as={Link}
                     to="/addOrder"
+                  />
+                  <Dropdown.Item
+                    icon="check"
+                    iconPosition="left"
+                    text="Completed"
+                    onClick={this.markCompleted}
                   />
                 </Dropdown.Menu>
               </Dropdown>
