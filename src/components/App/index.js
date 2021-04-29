@@ -17,6 +17,7 @@ import LogIn from "./LogIn";
 import SignUp from "./SignUp";
 import { AuthProvider, AuthContext } from "./Auth";
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +34,6 @@ class App extends React.Component {
     return (
       <div className="App">
         <Header onToggleMenu={this.toggleMenu} />
-
         <AuthProvider>
           <Router>
             <Grid columns={1}>
