@@ -88,7 +88,7 @@ export class FinishedGoods extends Component {
     }) => {
       return (
         <div key="name">
-          <Grid >
+          <Grid>
             <Grid.Column width={5}>Recipe Name: {name}</Grid.Column>
             <Grid.Column width={5}>
               Ingredients: {items.map(element => element.name).join(", ")}{" "}

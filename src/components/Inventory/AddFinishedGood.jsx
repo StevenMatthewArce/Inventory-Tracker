@@ -12,7 +12,8 @@ import {
   Divider,
   Grid,
   Dropdown, 
-  Card
+  Card,
+  Segment
 } from 'semantic-ui-react';
 
 const AddFinishedGood = () => {
@@ -80,7 +81,7 @@ const AddFinishedGood = () => {
   }
 
   return (
-    <div className="add-item" style={{ height: "100vh" }}>
+    <Segment style={{ height: "90vh" }}>
     <div>
       <Button labelPosition="left" icon secondary as={Link} to="/inventory">
         Back
@@ -176,7 +177,7 @@ const AddFinishedGood = () => {
    
       </Form>
     </div>
-  </div>
+  </Segment>
   )
 }
 

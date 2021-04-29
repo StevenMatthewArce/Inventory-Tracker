@@ -8,8 +8,7 @@ import {
   Header,
   Divider,
   Grid,
-  Dropdown,
-  FormInput
+  Segment
 } from 'semantic-ui-react';
 import { db } from '../Firebase';
 import { Link, Redirect } from 'react-router-dom';
@@ -158,9 +157,8 @@ class AddRecipe extends React.Component {
   };
 
   render() {
-    console.log(this.state)
     return (
-      <div style={{ height: '100vh' }}>
+      <Segment style={{ height: "90vh" }}>
         <div>
           <Button labelPosition='left' icon secondary as={Link} to='/inventory'>
             Back
@@ -262,7 +260,7 @@ class AddRecipe extends React.Component {
         </Form>
         {this.state.message && <Message positive>{this.state.message}</Message>}
         {this.state.error && <Message negative>{this.state.error}</Message>}
-      </div>
+      </Segment>
     )
   }
 }

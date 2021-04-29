@@ -5,6 +5,7 @@ import {
   Grid,
   Header,
   Divider,
+  Search
 } from "semantic-ui-react";
 import { db } from "../Firebase";
 import _ from "lodash";
@@ -16,7 +17,10 @@ export class CompletedOrders extends Component {
     this.state = {
       data: [],
       column: null,
-      direction: null
+      direction: null,
+      isLoading: false,
+      results: [],
+      value: ""
     };
   }
 
@@ -60,9 +64,49 @@ export class CompletedOrders extends Component {
     });
   };
 
+  handleResultSelect = (e, { result }) => this.setState({ value: result.name });
+
+  handleSearchChange = (e, { value }) => {
+    const { data } = this.state;
+    const { name } = data;
+
+    console.log(data);
+    this.setState({ isLoading: true, value });
+
+    setTimeout(() => {
+      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
+      const isMatch = result => re.test(result.name);
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(data, isMatch)
+      });
+    }, 300);
+  };
+
   render() {
-    const { data, column, direction } = this.state;
-    console.log(this.state);
+    const { data, column, direction, isLoading, value, results } = this.state;
+    const resRender = ({
+      name,
+      dateNeededBy,
+      dateReceived,
+      comment,
+      items
+    }) => {
+      return (
+        <div key="name">
+          <Grid>
+            <Grid.Column width={2}>Date Ordered: {dateReceived}</Grid.Column>
+            <Grid.Column width={3}>Customer Name: {name}</Grid.Column>
+            <Grid.Column width={5}>
+              Items: {items.map(element => element).join(", ")}
+            </Grid.Column>
+            <Grid.Column width={4}>Comments: {comment}</Grid.Column>
+            <Grid.Column width={2}>Date Needed: {dateNeededBy}</Grid.Column>
+          </Grid>
+        </div>
+      );
+    };
     return (
       <div>
         <div>
@@ -84,7 +128,24 @@ export class CompletedOrders extends Component {
           </Grid>
         </div>
         <Divider />
-
+        <div>
+          <Grid>
+            <Grid.Column>
+              <Search
+                className="search-area"
+                loading={isLoading}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                  leading: true
+                })}
+                results={results}
+                value={value}
+                resultRenderer={resRender}
+              />
+            </Grid.Column>
+          </Grid>
+        </div>
+        <br />
         <div>
           <Table sortable celled>
             <Table.Header>
@@ -125,7 +186,7 @@ export class CompletedOrders extends Component {
                       {items.dateNeededBy}
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.name}</Table.Cell>
-                    <Table.Cell>{items.item}</Table.Cell>
+                    <Table.Cell>{items.items}</Table.Cell>
                     <Table.Cell textAlign="center">{items.comment}</Table.Cell>
                   </Table.Row>
                 </Table.Body>
