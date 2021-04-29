@@ -30,9 +30,7 @@ function renderTable(documents){
       totalCost += parseFloat(element.cost);
     })
     totalCost = totalCost.toFixed(2);
-  })};
-
-  //Insert Graph
+   //Insert Graph
   //render() {
     return (
       <div style={{ height: '100vh' }}>
@@ -101,10 +99,14 @@ function renderTable(documents){
               </VictoryChart>
         </div>
       )
+  
+  })};
+
+ 
     }
 
 
-}
+//}
 
 // function selectingData(){
 //   firebase.database().ref('items').on('value',
