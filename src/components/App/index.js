@@ -13,7 +13,6 @@ import { Inventory, AddItem, AddRecipe, AddFinishedGood } from "../Inventory";
 import { Orders, AddOrder } from "../Orders";
 import { Budget, AddReceipt } from "../Budget";
 
-import Home from "./Home";
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
 import { AuthProvider } from "./Auth";
@@ -69,13 +68,12 @@ class App extends React.Component {
                             path={ROUTES.ADDFINISHEDGOOD}
                             component={AddFinishedGood}
                           /> */}
-                          <Route exact path="/" component={Home} />
+                          <Route exact path="/" component={LogIn} />
                           <Route
                             exact
                             path="/dashboard"
                             component={Dashboard}
                           />
-                          <Route exact path="/login" component={LogIn} />
                           <Route exact path="/signup" component={SignUp} />
                         </Switch>
                       </Segment>
