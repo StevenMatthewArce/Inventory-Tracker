@@ -1,5 +1,5 @@
 import React from "react";
-import { Tab } from "semantic-ui-react";
+import { Tab, Segment } from "semantic-ui-react";
 import { Expense, Sales } from "../Budget";
 
 const panes = [
@@ -23,9 +23,9 @@ const panes = [
 
 const Budget = () => {
   return (
-    <div style={{ height: "100vh" }}>
+    <Segment style={{ height: "100vh" }}>
       <Tab panes={panes} />
-    </div>
+    </Segment>
   );
 };
 
