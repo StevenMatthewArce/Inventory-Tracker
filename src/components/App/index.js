@@ -33,56 +33,40 @@ class App extends React.Component {
     return (
       <div className="App">
         <Header onToggleMenu={this.toggleMenu} />
-        <div sideBar="ui attached pushable">
-          <AuthProvider>
-            <Router>
-              <Grid columns={1}>
-                <Grid.Column>
-                  <Sidebar.Pushable as={Segment}>
-                    <Sidenav toggleMenu={this.state.toggle} />
-                    <Sidebar.Pusher>
-                      <Segment padded>
-                        <Switch>
-                          <Route exact path={ROUTES.LOGIN} component={LogIn} />
-                          <Route
-                            exact
-                            path={ROUTES.SIGNUP}
-                            component={SignUp}
-                          />
-                          <Route
-                            exact
-                            path={ROUTES.DASHBOARD}
-                            component={Dashboard}
-                          />
-                          <Route
-                            path={ROUTES.INVENTORY}
-                            component={Inventory}
-                          />
-                          <Route path={ROUTES.BUDGET} component={Budget} />
-                          <Route path={ROUTES.ORDERS} component={Orders} />
-                          <Route path={ROUTES.ADDITEM} component={AddItem} />
-                          <Route
-                            path={ROUTES.ADDRECEIPT}
-                            component={AddReceipt}
-                          />
-                          <Route path={ROUTES.ADDORDER} component={AddOrder} />
-                          <Route
-                            path={ROUTES.ADDRECIPE}
-                            component={AddRecipe}
-                          />
-                          <Route
-                            path={ROUTES.ADDFINISHEDGOOD}
-                            component={AddFinishedGood}
-                          />
-                        </Switch>
-                      </Segment>
-                    </Sidebar.Pusher>
-                  </Sidebar.Pushable>
-                </Grid.Column>
-              </Grid>
-            </Router>
-          </AuthProvider>
-        </div>
+
+        <AuthProvider>
+          <Router>
+            <Grid columns={1}>
+              <Grid.Column>
+                <Sidebar.Pushable as={Segment}>
+                  <Sidenav toggleMenu={this.state.toggle} />
+                  <Sidebar.Pusher>
+                    <Switch>
+                      <Route exact path={ROUTES.LOGIN} component={LogIn} />
+                      <Route exact path={ROUTES.SIGNUP} component={SignUp} />
+                      <Route
+                        exact
+                        path={ROUTES.DASHBOARD}
+                        component={Dashboard}
+                      />
+                      <Route path={ROUTES.INVENTORY} component={Inventory} />
+                      <Route path={ROUTES.BUDGET} component={Budget} />
+                      <Route path={ROUTES.ORDERS} component={Orders} />
+                      <Route path={ROUTES.ADDITEM} component={AddItem} />
+                      <Route path={ROUTES.ADDRECEIPT} component={AddReceipt} />
+                      <Route path={ROUTES.ADDORDER} component={AddOrder} />
+                      <Route path={ROUTES.ADDRECIPE} component={AddRecipe} />
+                      <Route
+                        path={ROUTES.ADDFINISHEDGOOD}
+                        component={AddFinishedGood}
+                      />
+                    </Switch>
+                  </Sidebar.Pusher>
+                </Sidebar.Pushable>
+              </Grid.Column>
+            </Grid>
+          </Router>
+        </AuthProvider>
       </div>
     );
   }

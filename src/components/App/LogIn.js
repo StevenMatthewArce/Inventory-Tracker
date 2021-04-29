@@ -26,7 +26,7 @@ const LogIn = () => {
     <div
       style={{
         height: "100vh",
-        backgroundColor: "#00396e",
+        backgroundColor: "#2185d0",
         margin: 0,
         padding: 0
       }}
