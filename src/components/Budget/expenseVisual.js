@@ -1,11 +1,32 @@
+import { forEach, orderBy } from "lodash";
 import React from "react";
-import { VictoryAxis, VictoryBar, VictoryChart, VictoryTheme, VictoryContainer } from 'victory';
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryTheme, VictoryContainer, VictoryLine } from 'victory';
 import { db } from "../Firebase";
 import { RawMaterials, FinishedGoods, Recipes } from "../Inventory";
 
+function ytGetData(){
+  this.ref = db.collection('receipts').get().then((snapshot)=>{
+    let documents = [];
+    snapshot.docs.forEach(doc=>{
+      documents.push({...doc.data()})
+    })
+    documents = sortByMonth(documents);
+  })
+  
+};
+
+  function sortByMonth(documents){
+    documents.sort((a,b)=>{
+      let monthA = a.date.getMonth();
+      let monthB = b.date.getMonth();
+      return monthA - monthB;
+    })
+  return documents}
+
+
 function getData(){
   //let datas = null;
-  db.collection('items')
+  db.collection('receipts')
     .onSnapshot(snap=>{
       let documents = [];
       snap.forEach(doc=>{
@@ -15,25 +36,66 @@ function getData(){
       renderTable(documents);
       //data: catagories
     })
-}
+};
 
 function renderTable(documents){
   var catagories = _.groupBy(documents, items =>{
-    return items.name;
+    return items.date.getMonth();
   });
-  let data = catagories
+  let data = catagories;
+  var idk = {};
+  //for(var value in data){
   {Object.keys(data).map((value,index)=>{
     const items = data[value];
-    let totalCost = 0;
+    let totalExpense = 0;
 
     items.forEach(element => {
-      totalCost += parseFloat(element.cost);
+      totalCost += parseFloat(element.totalCost);
     })
-    totalCost = totalCost.toFixed(2);
+    totalExpense = totalExpense.toFixed(2);
+    idk[value] = totalExpense;
    //Insert Graph
   //render() {
+  })}}
+
+  export default class expenseVisual extends Component{
+    constructor(){
+      super();
+
+    var data= [];
+    for(let k in idk){
+      data=[...data,{x:k, y:idk[k]}]
+    }
+
+      this.state = {
+        data : data
+        //}
+        //data: [{x: Object.keys(idk),y:Object.values(idk)} ],
+        //huuh: [{x:"sunday", y: 3},{x:"mon", y:4}]
+      }
+    }
+    render(){
+      return(
+        <div>
+          <h1>Expense Line Chart</h1>
+          <VictoryChart>
+            <VictoryLine data = {this.state.data}
+            style={{
+              data: {
+                stroke: "#02B875"
+              }
+            }}/>
+          </VictoryChart>
+        </div>
+      )
+    }
+  }
+
+    
+/*     render(){
     return (
-      <div style={{ height: '100vh' }}>
+      //<div style={{ height: '100vh' }}>
+      <div>
         <h1>Visualization</h1>
           <VictoryChart
             //adding the material theme provided with victory
@@ -226,5 +288,5 @@ const inventory = [
           </div>
         )
       }
-   }
+   } */
 export default expenseVisual;
