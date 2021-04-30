@@ -173,33 +173,23 @@ export class Recipes extends Component {
               <Table.Row textAlign="center">
                 <Table.HeaderCell />
                 <Table.HeaderCell
-                  width={4}
+                  width={2}
                   sorted={column === "name" ? direction : null}
                   onClick={this.handleSort("name")}
                 >
                   Recipe Name
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={4}
+                  width={5}
                   sorted={column === "description" ? direction : null}
                   onClick={this.handleSort("description")}
                 >
                   Description
                 </Table.HeaderCell>
-                <Table.HeaderCell
-                  width={8}
-                  sorted={column === "dateRestocked" ? direction : null}
-                  onClick={this.handleSort("dateRestocked")}
-                >
-                  Ingredients
-                </Table.HeaderCell>
-                <Table.HeaderCell
-                  width={2}
-                  sorted={column === "dateRestocked" ? direction : null}
-                  onClick={this.handleSort("dateRestocked")}
-                >
-                  Unit Cost
-                </Table.HeaderCell>
+                <Table.HeaderCell width={5}>Ingredients</Table.HeaderCell>
+                <Table.HeaderCell width={2}>Qty Produced</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Labor (hrs)</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Unit Cost</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {
@@ -215,6 +205,12 @@ export class Recipes extends Component {
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       {items.items.map(element => element.name).join(", ")}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.qtyProduced}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.totalLabor}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       ${items.receipeCost}

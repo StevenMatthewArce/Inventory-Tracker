@@ -24,6 +24,8 @@ class AddRecipe extends React.Component {
       error: null,
       documents: [],
       description: null,
+      qtyProduced: 0,
+      totalLabor: 0,
     }
   }
 
@@ -63,7 +65,7 @@ class AddRecipe extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     
-    let { name, items, description } = this.state;
+    let { name, items, description, qtyProduced, totalLabor } = this.state;
     
     var catagories = _.groupBy(this.state.documents, items => items.name);
     let totalCostArry = [];
@@ -93,7 +95,7 @@ class AddRecipe extends React.Component {
         
 
     db.collection('recipes')
-      .add({ name, items, description, receipeCost })
+      .add({ name, items, description, receipeCost,qtyProduced, totalLabor  })
       .then(() => {
         this.setState({ message: 'Recipe has been submitted. ' });
         this.handleRedirect();
@@ -202,11 +204,36 @@ class AddRecipe extends React.Component {
               required
               label='Name:'
               name='name'
+              icon="tag"
+              iconPosition="left"
               placeholder ="Recipe Name"
-              width ={16}
+              width ={12}
               value={this.state.name}
               onChange={this.handleNameChange}
             />
+             <Form.Input
+              required
+              label='Qty Produced'
+              name='qtyProduced'
+              icon="shopping cart"
+              iconPosition="left"
+              placeholder ="1"
+              width ={2}
+              value={this.state.qtyProduced}
+              onChange={this.handleNameChange}
+            />
+             <Form.Input
+              required
+              icon="time"
+              iconPosition="left"
+              label='Labor (hrs)'
+              name='totalLabor'
+              placeholder ="1"
+              width ={2}
+              value={this.state.totalLabor}
+              onChange={this.handleNameChange}
+            />
+            
           </Form.Group>
           <Form.TextArea
             width={20}

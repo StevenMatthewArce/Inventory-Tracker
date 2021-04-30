@@ -21,9 +21,12 @@ export class AddOrder extends Component {
     super(props);
 
     this.state = {
-      finishedGoods: [],
+      recipes: [],
       name: "",
       orderCost: 0,
+      laborRate: 0,
+      totalLabor: 0,
+      markUp: 0,
       dateReceived: "",
       dateNeededBy: "",
       comment: "",
@@ -35,7 +38,7 @@ export class AddOrder extends Component {
 
   componentDidMount() {
     let documents = [];
-    db.collection("finishedgoods")
+    db.collection("recipes")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -56,7 +59,7 @@ export class AddOrder extends Component {
           });
         }
 
-        this.setState({ finishedGoods: newDoc });
+        this.setState({ recipes: newDoc });
       });
   }
 
@@ -65,16 +68,31 @@ export class AddOrder extends Component {
     this.setState({ [name]: value });
   };
 
+  handleChange2 = (e, { name, value }) => {
+    e.preventDefault();
+    this.setState({ [name]: value }, this.updateItemFields);
+  };
+
   handleItemNameChange = (e, { name, id, value }) => {
     e.preventDefault();
-    let { items, finishedGoods } = this.state;
+    let { items, recipes } = this.state;
 
-    const filterdGoods = finishedGoods.filter(element => element.name == value);
+    const filterdGoods = recipes.filter(element => element.name == value);
 
-    const unitCost = parseFloat(filterdGoods[0].finishedGoodCost);
-    items[id] = { ...items[id], [name]: value, unitCost: unitCost };
+    const unitCost = parseFloat(filterdGoods[0].receipeCost);
 
-    this.setState({ items: items }, this.updateTotalCost);
+    const unitLabor =
+      parseFloat(filterdGoods[0].totalLabor) /
+      parseFloat(filterdGoods[0].qtyProduced);
+    items[id] = {
+      ...items[id],
+      [name]: value,
+      unitCost: unitCost.toFixed(2),
+      timeSpent: unitLabor.toFixed(2)
+    };
+
+    // console.log(items);
+    this.setState({ items: items }, this.updateItemFields);
   };
 
   handleItemQtyChange = (e, { name, id, value }) => {
@@ -83,10 +101,13 @@ export class AddOrder extends Component {
 
     items[id] = { ...items[id], [name]: value };
 
-    this.setState({ items: items }, this.updateTotalCost);
+    this.setState({ items: items }, this.updateItemFields);
   };
 
   updateTotalCost = () => {
+    // let finishedGoodCost = 0;
+    // finishedGoodCost = ((parseFloat(selected[0].receipeCost) + ((laborRate*timeSpent)/quantity))*(1+(markUp/100)))
+    // finishedGoodCost = finishedGoodCost.toFixed(2)
     let { orderCost, items } = this.state;
 
     if (items.length > 1) {
@@ -95,31 +116,78 @@ export class AddOrder extends Component {
           parseFloat(a.unitCost) * parseInt(a.quantity) +
           parseFloat(b.unitCost) * parseInt(b.quantity)
       );
+    } else if (items.length == 0) {
+      orderCost = 0;
     } else {
       orderCost = parseFloat(items[0].unitCost) * parseInt(items[0].quantity);
     }
 
-    this.setState({ orderCost: orderCost });
+    return orderCost;
+  };
+
+  updateTotalLabor = () => {
+    let { totalLabor, items } = this.state;
+
+    if (items.length > 1) {
+      totalLabor = items.reduce(
+        (a, b) => parseFloat(a.timeSpent) + parseFloat(b.timeSpent)
+      );
+    } else if (items.length == 0) {
+      totalLabor = 0;
+    } else {
+      totalLabor = parseFloat(items[0].timeSpent);
+    }
+
+    return totalLabor;
+  };
+
+  updateItemFields = () => {
+    let { totalLabor, orderCost, laborRate, markUp } = this.state;
+
+    const cost = this.updateTotalCost();
+    const labor = this.updateTotalLabor();
+    // console.log(1 + parseInt(markUp) / 100);
+
+    orderCost = (cost + totalLabor * laborRate) * (1 + parseInt(markUp) / 100);
+
+    this.setState({ orderCost: orderCost.toFixed(2), totalLabor: labor });
   };
 
   submit = e => {
     e.preventDefault();
 
-    let { name, dateReceived, dateNeededBy, comment, items } = this.state;
+    let {
+      name,
+      dateReceived,
+      dateNeededBy,
+      comment,
+      items,
+      orderCost,
+      laborRate,
+      totalLabor,
+      markUp
+    } = this.state;
     let finished = "0";
 
-    // Get item doc id,
-    // Subtract qty from doc id
-    //
-
-    // db.collection("orders")
-    //   .add({ name, dateReceived, dateNeededBy, comment, items, finished })
-    //   .then(() => {
-    //     this.setState({ message: "Items has been submitted. " });
-    //   })
-    //   .catch(err => {
-    //     this.setState({ error: err });
-    //   });
+    db.collection("orders")
+      .add({
+        name,
+        dateReceived,
+        dateNeededBy,
+        comment,
+        items,
+        finished,
+        orderCost,
+        laborRate,
+        totalLabor,
+        markUp
+      })
+      .then(() => {
+        this.setState({ message: "Order has been submitted. " });
+      })
+      .catch(err => {
+        this.setState({ error: err });
+      });
   };
 
   addItem = () => {
@@ -127,6 +195,7 @@ export class AddOrder extends Component {
     let newItem = {
       id: items.length,
       name: items.name,
+      timeSpent: 0,
       unitCost: 0,
       quantity: "1"
     };
@@ -181,14 +250,14 @@ export class AddOrder extends Component {
               iconPosition="left"
               width={8}
               //   id={items.id}
-              label="Name"
+              label="Customer Name"
               name="name"
               value={this.state.name}
               onChange={this.handleChange}
             />
             <DateInput
               required
-              width={3}
+              width={4}
               dateFormat={"MM/DD/YYYY"}
               label="Date Received"
               name="dateReceived"
@@ -198,7 +267,7 @@ export class AddOrder extends Component {
             />
             <DateInput
               required
-              width={3}
+              width={4}
               dateFormat={"MM/DD/YYYY"}
               label="Date Needed By"
               name="dateNeededBy"
@@ -206,12 +275,42 @@ export class AddOrder extends Component {
               iconPosition="left"
               onChange={this.handleChange}
             />
+          </Form.Group>
+          <Form.Group>
             <Form.Input
-              width={2}
+              required
+              width={4}
+              icon="dollar"
+              iconPosition="left"
+              label="Labor Rate"
+              name="laborRate"
+              onChange={this.handleChange2}
+              value={this.state.laborRate}
+            />
+            <Form.Input
+              width={4}
+              readOnly
+              icon="time"
+              iconPosition="left"
+              label="Total Labor"
+              name="totalLabor"
+              value={this.state.totalLabor}
+            />
+            <Form.Input
+              required
+              width={4}
+              icon="percent"
+              iconPosition="right"
+              label="Mark Up"
+              name="markUp"
+              onChange={this.handleChange2}
+              value={this.state.markUp}
+            />
+            <Form.Input
+              width={4}
               readOnly
               icon="dollar"
               iconPosition="left"
-              //   id={items.id}
               label="Total Cost"
               name="orderCost"
               value={this.state.orderCost}
@@ -232,22 +331,33 @@ export class AddOrder extends Component {
                 <Form.Group centered>
                   <Form.Select
                     required
-                    width={5}
-                    label="Finished Good"
+                    width={8}
+                    label="Recipe"
                     name="name"
-                    placeholder="Finished Good"
+                    placeholder="Recipe"
                     id={items.id}
-                    options={this.state.finishedGoods}
+                    options={this.state.recipes}
                     value={items.name}
                     onChange={this.handleItemNameChange}
                   />
                   <Form.Input
                     required
+                    width={2}
                     label="Quantity"
                     name="quantity"
                     id={items.id}
                     value={items.quantity}
                     onChange={this.handleItemQtyChange}
+                  />
+                  <Form.Input
+                    width={2}
+                    readOnly
+                    icon="clock"
+                    iconPosition="left"
+                    id={items.id}
+                    value={items.timeSpent}
+                    label="Time per Unit"
+                    name="timeSpent"
                   />
                   <Form.Input
                     width={2}
