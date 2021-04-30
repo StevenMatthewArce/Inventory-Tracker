@@ -104,13 +104,7 @@ export class FinishedGoods extends Component {
 
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
-    const resRender = ({
-      name,
-      receipeCost,
-      quantity,
-      timeSpent,
-      items
-    }) => {
+    const resRender = ({ name, receipeCost, quantity, timeSpent, items }) => {
       return (
         <div key="name">
           <Grid>
@@ -198,10 +192,16 @@ export class FinishedGoods extends Component {
                   Ingredients
                 </Table.HeaderCell>
                 <Table.HeaderCell rowSpan="2" width={1}>
-                  Quantity
+                  Quantity Per Recipe
                 </Table.HeaderCell>
                 <Table.HeaderCell rowSpan="2" width={1}>
-                  Labor
+                  Total Quantity
+                </Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2" width={1}>
+                  Labor Per Recipe
+                </Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2" width={1}>
+                  Total Labor
                 </Table.HeaderCell>
                 {/* <Table.HeaderCell rowSpan="2" width={1}>
                   Labor Rate
@@ -225,9 +225,17 @@ export class FinishedGoods extends Component {
                     <Table.Cell textAlign="center">
                       {items.items.map(element => element.name).join(", ")}
                     </Table.Cell>
-                    <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.timeSpent} hr
+                      {items.qtyProduced}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.quantity * items.qtyProduced}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.totalLabor} hr
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.totalLabor * items.quantity} hr
                     </Table.Cell>
                     {/* <Table.Cell textAlign="center">
                       ${items.laborRate} /hr

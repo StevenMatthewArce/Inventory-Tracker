@@ -25,6 +25,7 @@ const AddFinishedGood = () => {
   const [selected, setSelected] = useState("None");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  
 
   
   useEffect(() => {
@@ -43,7 +44,7 @@ const AddFinishedGood = () => {
           newDoc.push({ text: name, value: name, key: name, ...docs[i] });
         }
         setRecipes(newDoc);
-       
+        
       })
   }, []);
 
@@ -51,6 +52,7 @@ const AddFinishedGood = () => {
   const handleSelectedChange = (e, { name, value }) => {
     e.preventDefault();
     setSelected(recipes.filter(element => element.name === value));
+
   }
   
 
@@ -68,7 +70,8 @@ const AddFinishedGood = () => {
     // finishedGoodCost = ((parseFloat(selected[0].receipeCost) + ((laborRate*timeSpent)/quantity))*(1+(markUp/100)))
     // finishedGoodCost = finishedGoodCost.toFixed(2)
     
-    const {name, receipeCost, items} = selected[0]
+    const {name, receipeCost, items, qtyProduced, totalLabor} = selected[0]
+ 
    
     items.some(element => {
       let qty = quantity*element.quantity;
@@ -126,7 +129,7 @@ const AddFinishedGood = () => {
     
 
     db.collection('finishedgoods')
-      .add({ name, receipeCost, items, timeSpent, quantity })
+      .add({ name, receipeCost, items, quantity,qtyProduced, totalLabor })
       .then(() => {
         setMessage("Item has been submitted. ");
         handleRedirect();
@@ -151,7 +154,7 @@ const AddFinishedGood = () => {
             <Header as="h1" textAlign="left">
               Add a Finished Good
             </Header>
-            <Grid.Row>Please select a recipe and add your new finished goods.</Grid.Row>
+            <Grid.Row>Please select a recipe and add your total amount of finished goods.</Grid.Row>
           </Grid.Row>
         </Grid.Column>
         <Grid.Column width={7} textAlign="right">
@@ -190,31 +193,64 @@ const AddFinishedGood = () => {
         </Message>
       )}
       <Form onSubmit={handleSubmit}>
-      <b>Select a Recipe:</b>
-      <Dropdown
+        <Form.Group>
+        <Form.Select
         required
-        fluid
+        width={12}
         placeholder="Finished Goods"
-        labeled="Finished Good"
+        label="Select a Recipe"
         selection
         search
         scrolling
         options={recipes}
         onChange={handleSelectedChange}
-      /> 
-      <br/>
+        />
+        <Form.Input
+          width={4}
+          icon="shopping cart"
+        iconPosition="left"
+          label="Quantity per Recipe"
+          name="quantityRecipe"
+          placeholder="Select a Recipe"
+          value ={selected[0].qtyProduced}
+          readOnly  
+        />
+         <Form.Input
+          width={4}
+          icon="time"
+          iconPosition="left"
+          label="Labor per Recipe"
+          name="laborRecipe"
+          placeholder="Select a Recipe"
+          value ={selected[0].totalLabor}
+          readOnly  
+        />
+         <Form.Input
+          width={4}
+          icon="time"
+          iconPosition="left"
+          label="Total Labor"
+          name="timeSpent"
+          placeholder="Select a Recipe"
+          value ={timeSpent}
+          readOnly  
+        />
+        </Form.Group>
+
       <Form.Group widths="equal">
       <Form.Input
         required
-        width={2}
+        width={16}
+        
         icon="shopping cart"
         iconPosition="left"
-        label="Quantity"
+        label="Total Quantity"
         name="quantity"
         value={quantity}
-        onChange={e => setQuantity(e.target.value)}
+        onChange={(selected[0].items == undefined) ? " ": e => {setQuantity(e.target.value); setTimeSpent(e.target.value*selected[0].totalLabor)}}
       />   
-        <Form.Input
+      
+        {/* <Form.Input
         required
         width={2}
         icon="time"
@@ -223,7 +259,7 @@ const AddFinishedGood = () => {
         name="timeSpent"
         value={timeSpent}
         onChange={e => setTimeSpent(e.target.value)}
-      />   
+      />    */}
       {/* <Form.Input
         required
         width={2}

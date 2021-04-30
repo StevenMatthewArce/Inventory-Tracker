@@ -334,8 +334,7 @@ export class CurrentOrders extends Component {
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.markUp} %</Table.Cell>
                     <Table.Cell textAlign="center">
-                      {" "}
-                      {items.orderCost}
+                      $ {items.orderCost}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
