@@ -301,7 +301,7 @@ export class RawMaterials extends Component {
                 </Table.HeaderCell>
 
                 <Table.HeaderCell width={1}>Quantity</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Cost</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Unit Cost</Table.HeaderCell>
                 <Table.HeaderCell
                   width={2}
                   sorted={column === "dateRestocked" ? direction : null}

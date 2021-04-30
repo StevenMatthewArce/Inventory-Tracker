@@ -198,7 +198,7 @@ export class Recipes extends Component {
                   sorted={column === "dateRestocked" ? direction : null}
                   onClick={this.handleSort("dateRestocked")}
                 >
-                  Cost
+                  Unit Cost
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>

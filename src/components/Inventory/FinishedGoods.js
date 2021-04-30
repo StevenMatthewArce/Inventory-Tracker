@@ -204,7 +204,10 @@ export class FinishedGoods extends Component {
                   Time (hours)
                 </Table.HeaderCell>
                 <Table.HeaderCell rowSpan="2" width={1}>
-                  Total Cost
+                  Mark Up
+                </Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2" width={1}>
+                  Unit Cost
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -223,6 +226,7 @@ export class FinishedGoods extends Component {
                     <Table.Cell textAlign="center">
                       {items.timeSpent}
                     </Table.Cell>
+                    <Table.Cell textAlign="center">{items.markUp}%</Table.Cell>
                     <Table.Cell textAlign="center">
                       ${items.finishedGoodCost}
                     </Table.Cell>

@@ -126,6 +126,8 @@ const AddItem = () => {
   const isInvalid =
     name === "" || dateRestocked === null || quantity === 0 || cost === 0;
 
+  const fileInputRef = React.createRef();
+
   return (
     <Segment style={{ height: "90vh" }}>
       <div>
@@ -145,7 +147,19 @@ const AddItem = () => {
               <Grid.Row>Please add your new item.</Grid.Row>
             </Grid.Row>
           </Grid.Column>
-          <Grid.Column width={7} textAlign="right"></Grid.Column>
+          <Grid.Column width={7} textAlign="right">
+            <Button
+              primary
+              disabled={isInvalid}
+              type="submit"
+              onClick={handleSubmit}
+              labelPosition="right"
+              icon
+            >
+              Submit
+              <Icon name="send" />
+            </Button>
+          </Grid.Column>
         </Grid>
       </div>
       <Divider />
@@ -164,6 +178,8 @@ const AddItem = () => {
           <Form onSubmit={handleSubmit}>
             <Form.Group widths="equal">
               <Form.Input
+                icon="tag"
+                iconPosition="left"
                 placeholder="Name"
                 name="name"
                 value={name}
@@ -172,6 +188,8 @@ const AddItem = () => {
                 required
               />
               <Form.Input
+                icon="dollar sign"
+                iconPosition="left"
                 placeholder="Cost"
                 name="cost"
                 value={cost}
@@ -180,6 +198,8 @@ const AddItem = () => {
                 required
               />
               <Form.Input
+                icon="shopping cart"
+                iconPosition="left"
                 placeholder="Quantity"
                 name="quantity"
                 value={quantity}
@@ -206,22 +226,22 @@ const AddItem = () => {
                 label="Description"
                 control={TextArea}
               />
-              <Form.Field>
-                <label>Choose photo</label>
-                <input type="file" onChange={handleImageAsFile} />
-              </Form.Field>
             </Form.Group>
-            <Button
-              primary
-              disabled={isInvalid}
-              type="submit"
-              onClick={handleSubmit}
-              labelPosition="right"
-              icon
-            >
-              Submit
-              <Icon name="send" />
-            </Button>
+            <Form.Field>
+              <Button
+                primary
+                content="Upload Image"
+                labelPosition="left"
+                icon="cloud upload"
+                onClick={() => fileInputRef.current.click()}
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                hidden
+                onChange={handleImageAsFile}
+              />
+            </Form.Field>
           </Form>
         </Form>
       </div>

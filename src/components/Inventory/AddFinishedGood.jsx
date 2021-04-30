@@ -19,6 +19,7 @@ import {
 const AddFinishedGood = () => {
   const [quantity, setQuantity] = useState(0);
   const [laborRate, setLaborRate] = useState(0);
+  const [markUp, setMarkUp] = useState(0);
   const [timeSpent, setTimeSpent] = useState(0);
   const [recipes, setRecipes] = useState([]);
   const [selected, setSelected] = useState("None");
@@ -63,17 +64,18 @@ const AddFinishedGood = () => {
     event.preventDefault();
 
     let finishedGoodCost = 0;
-    finishedGoodCost = (parseFloat(selected[0].receipeCost) + (laborRate*timeSpent))
+    finishedGoodCost = ((parseFloat(selected[0].receipeCost) + (laborRate*timeSpent))*(1+(markUp/100)))
     finishedGoodCost = finishedGoodCost.toFixed(2)
     
     const {name, receipeCost, items} = selected[0]
 
+    console.log(finishedGoodCost)
 
     db.collection('finishedgoods')
-      .add({ name, receipeCost, items, finishedGoodCost, laborRate, timeSpent, quantity  })
+      .add({ name, receipeCost, items, finishedGoodCost, laborRate, timeSpent, quantity, markUp })
       .then(() => {
         setMessage("Item has been submitted. ");
-        // handleRedirect();
+        handleRedirect();
       })
       .catch(err => {
         setError(err);
@@ -151,7 +153,9 @@ const AddFinishedGood = () => {
       <Form.Group widths="equal">
       <Form.Input
         required
-        width={5}
+        width={2}
+        icon="shopping cart"
+        iconPosition="left"
         label="Quantity"
         name="quantity"
         value={quantity}
@@ -159,7 +163,9 @@ const AddFinishedGood = () => {
       />   
         <Form.Input
         required
-        width={5}
+        width={2}
+        icon="time"
+        iconPosition="left"
         label="Time Spent (hours)"
         name="timeSpent"
         value={timeSpent}
@@ -167,11 +173,23 @@ const AddFinishedGood = () => {
       />   
       <Form.Input
         required
-        width={5}
+        width={2}
+        icon="user"
+        iconPosition="left"
         label="Labor Rate (per hour)"
         name="laborRate"
         value={laborRate}
         onChange={e => setLaborRate(e.target.value)}
+      />  
+        <Form.Input
+        required
+        width={2}
+        icon="percent"
+        iconPosition="right"
+        label="Percentage Markup"
+        name="markUp"
+        value= {markUp}
+        onChange={e => setMarkUp(e.target.value)}
       />  
       </Form.Group>
    
