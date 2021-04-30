@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 import {
   Form,
   Button,
@@ -12,7 +12,7 @@ import {
   Card
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
-import { db } from "../Firebase";
+import { db, storage } from "../Firebase";
 
 //TODO: Stylze Card - add picture/logo
 //TODO: Link back to Expense after submiting item
@@ -23,7 +23,8 @@ class Correction extends Component {
     const initialState = {
       store: this.props.store,
       totalCost: this.props.totalCost,
-      description: this.props.description
+      description: this.props.description,
+      imageAsFile: this.props.imageAsFile
     };
 
     let initialItems = {
@@ -48,8 +49,9 @@ class Correction extends Component {
       ...initialItems,
       ...initialState,
       message: null,
-      error: null, 
-      redirect: false
+      error: null,
+      redirect: false,
+      imgUrl: ""
     };
     this.addItem = this.addItem.bind(this);
     this.removeItem = this.removeItem.bind(this);
@@ -61,8 +63,15 @@ class Correction extends Component {
     this.props.prevStep();
   };
 
-  submit = e => {
+  submit = async e => {
     e.preventDefault();
+
+    const { imageAsFile } = this.state;
+    let imageAsUrl = "";
+    if (imageAsFile) {
+      imageAsUrl = await this.getImgFirebaseUrl();
+    }
+
     let items = this.state.items;
     let { store, totalCost, description } = this.state;
     let date = this.state.items[0].dateRestocked;
@@ -85,11 +94,46 @@ class Correction extends Component {
       totalCost,
       description,
       date,
-      type
+      type,
+      imageAsUrl
     });
     setTimeout(() => {
       this.setState({ redirect: true });
-    }, 3000)
+    }, 3000);
+  };
+
+  getImgFirebaseUrl = async () => {
+    console.log("start of upload");
+    const { imageAsFile } = this.state;
+
+    const uploadTask = storage
+      .ref(`/images/${imageAsFile.name}`)
+      .put(imageAsFile);
+
+    //initiates the firebase side uploading
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        snapShot => {
+          console.log(snapShot);
+        },
+        err => {
+          reject(err);
+          console.log(err);
+        },
+        () => {
+          storage
+            .ref("images")
+            .child(imageAsFile.name)
+            .getDownloadURL()
+            .then(fireBaseUrl => {
+              this.setState({ imgUrl: fireBaseUrl });
+              resolve(fireBaseUrl);
+            });
+        }
+      );
+    });
   };
 
   addItem = () => {
@@ -123,7 +167,7 @@ class Correction extends Component {
     let date = this.state.items[0].dateRestocked;
 
     if (this.state.redirect) {
-      return <Redirect to='/budget' />
+      return <Redirect to="/budget" />;
     }
 
     return (

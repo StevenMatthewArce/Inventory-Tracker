@@ -8,6 +8,7 @@ const AddReceipt = () => {
   const [store, setStore] = useState(null);
   const [totalCost, setTotalCost] = useState(null);
   const [description, setDescription] = useState(null);
+  const [imageAsFile, setImageAsFile] = useState("");
 
   const handleNextStep = () => {
     setStep(step + 1);
@@ -17,7 +18,8 @@ const AddReceipt = () => {
     setStep(step - 1);
   };
 
-  const onSubmit = (items, store, totalCost, description) => {
+  const onSubmit = (imageAsFile, items, store, totalCost, description) => {
+    setImageAsFile(imageAsFile);
     setItems([...items]);
     setStore(store);
     setTotalCost(totalCost);
@@ -31,6 +33,7 @@ const AddReceipt = () => {
       return (
         <Correction
           prevStep={handlePrevStep}
+          imageAsFile={imageAsFile}
           items={items}
           store={store}
           totalCost={totalCost}

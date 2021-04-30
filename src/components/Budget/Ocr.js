@@ -6,11 +6,12 @@ import {
   Message,
   Divider,
   Grid,
-  Form
+  Form,
+  Segment
 } from "semantic-ui-react";
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //TODO: Add OCR Recognition for Store Name
 //TODO: Add OCR Recognition for Total
@@ -18,7 +19,7 @@ import { Link, useHistory } from "react-router-dom";
 //!: Remove Debug Button
 
 export class Ocr extends Component {
-  constructor(props) {    
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -28,6 +29,7 @@ export class Ocr extends Component {
       quantity: [],
       dateRestocked: [],
       items: [],
+      imageAsFile: "",
       uploadedImageUrl: "",
       ocrText: [],
       status: null,
@@ -83,13 +85,19 @@ export class Ocr extends Component {
     this.setState({ dateRestocked: extractedDate });
   };
 
-  saveAndContinue = e => {
+  saveAndContinue = async e => {
     e.preventDefault();
+    const { imageAsFile } = this.state;
 
     if (this.state.store === "" || this.state.totalCost === "") {
       this.setState({ errorMessage: "Please add a Store and Total Cost" });
     } else {
+      // let imageAsUrl = "";
+      // if (imageAsFile) {
+      //   imageAsUrl = await this.getImgFirebaseUrl();
+      // }
       this.props.getChildOnSubmit(
+        this.state.imageAsFile,
         this.state.items,
         this.state.store,
         this.state.totalCost,
@@ -99,16 +107,54 @@ export class Ocr extends Component {
     }
   };
 
+  // getImgFirebaseUrl = async () => {
+  //   console.log("start of upload");
+  //   const {imageAsFile} = this.state
+
+  //   const uploadTask = storage
+  //     .ref(`/images/${imageAsFile.name}`)
+  //     .put(imageAsFile);
+
+  //   //initiates the firebase side uploading
+
+  //   return new Promise((resolve, reject) => {
+  //     uploadTask.on(
+  //       "state_changed",
+  //       snapShot => {
+  //         console.log(snapShot);
+  //       },
+  //       err => {
+  //         reject(err);
+  //         console.log(err);
+  //       },
+  //       () => {
+  //         storage
+  //           .ref("images")
+  //           .child(imageAsFile.name)
+  //           .getDownloadURL()
+  //           .then(fireBaseUrl => {
+  //             this.setState({imgUrl: fireBaseUrl})
+  //             resolve(fireBaseUrl);
+  //           });
+  //       }
+  //     );
+  //   });
+  // };
+
   onDrop = (pictureFiles, pictureDataURLs) => {
-    console.log(pictureFiles.length);
     if (pictureFiles.length === 1) {
-      this.setState({ imageUploadedStatus: "1", errorMessage: null });
+      this.setState(
+        {
+          imageUploadedStatus: "1",
+          errorMessage: null,
+          uploadedImageUrl: pictureDataURLs,
+          imageAsFile: pictureFiles[0]
+        },
+        console.log(this.state.imageAsFile)
+      );
     } else {
       this.setState({ imageUploaded: "0" });
     }
-    this.setState({
-      uploadedImageUrl: pictureDataURLs
-    });
     console.log("Image Uploaded");
   };
 
@@ -192,7 +238,7 @@ export class Ocr extends Component {
 
   render() {
     return (
-      <div style={{ height: "100vh" }}>
+      <Segment style={{ height: "90vh" }}>
         <div>
           <Button labelPosition="left" icon secondary as={Link} to="/budget">
             Back
@@ -239,6 +285,7 @@ export class Ocr extends Component {
           <Grid.Column width={10}>
             <ImageUploader
               withIcon={true}
+              buttonClassName="ui icon primary center button"
               buttonText="Upload Receipt"
               onChange={this.onDrop}
               withPreview={true}
@@ -285,11 +332,11 @@ export class Ocr extends Component {
           <Message negative>{this.state.errorMessage}</Message>
         )}
         <div>
-          <Button icon labelPosition="left" secondary onClick={this.debug}>
+          {/* <Button icon labelPosition="left" secondary onClick={this.debug}>
             Debug <Icon name="eye" />
-          </Button>
+          </Button> */}
         </div>
-      </div>
+      </Segment>
     );
   }
 }
