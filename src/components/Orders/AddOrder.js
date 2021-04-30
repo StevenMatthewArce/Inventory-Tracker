@@ -108,14 +108,18 @@ export class AddOrder extends Component {
     let { name, dateReceived, dateNeededBy, comment, items } = this.state;
     let finished = "0";
 
-    db.collection("orders")
-      .add({ name, dateReceived, dateNeededBy, comment, items, finished })
-      .then(() => {
-        this.setState({ message: "Items has been submitted. " });
-      })
-      .catch(err => {
-        this.setState({ error: err });
-      });
+    // Get item doc id,
+    // Subtract qty from doc id
+    //
+
+    // db.collection("orders")
+    //   .add({ name, dateReceived, dateNeededBy, comment, items, finished })
+    //   .then(() => {
+    //     this.setState({ message: "Items has been submitted. " });
+    //   })
+    //   .catch(err => {
+    //     this.setState({ error: err });
+    //   });
   };
 
   addItem = () => {
