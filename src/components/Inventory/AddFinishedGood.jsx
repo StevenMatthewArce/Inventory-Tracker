@@ -65,7 +65,7 @@ const AddFinishedGood = () => {
     event.preventDefault();
 
     let finishedGoodCost = 0;
-    finishedGoodCost = ((parseFloat(selected[0].receipeCost) + (laborRate*timeSpent))*(1+(markUp/100)))
+    finishedGoodCost = ((parseFloat(selected[0].receipeCost) + ((laborRate*timeSpent)/quantity))*(1+(markUp/100)))
     finishedGoodCost = finishedGoodCost.toFixed(2)
     
     const {name, receipeCost, items} = selected[0]
@@ -123,6 +123,8 @@ const AddFinishedGood = () => {
     });
     })
     
+    
+
     db.collection('finishedgoods')
       .add({ name, receipeCost, items, finishedGoodCost, laborRate, timeSpent, quantity, markUp })
       .then(() => {

@@ -7,7 +7,8 @@ import {
   Header,
   Divider,
   Grid,
-  Dropdown
+  Dropdown,
+  Segment
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { db } from "../Firebase";
@@ -20,8 +21,9 @@ export class AddOrder extends Component {
     super(props);
 
     this.state = {
-      recipes: [],
+      finishedGoods: [],
       name: "",
+      orderCost: 0,
       dateReceived: "",
       dateNeededBy: "",
       comment: "",
@@ -33,29 +35,71 @@ export class AddOrder extends Component {
 
   componentDidMount() {
     let documents = [];
-    db.collection("recipes")
+    db.collection("finishedgoods")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           documents.push({ ...doc.data(), id: doc.id });
-          console.log(doc.id, " => ", doc.data());
+          // console.log(doc.id, " => ", doc.data());
         });
-        console.log(documents);
       })
       .then(() => {
         const newDoc = [];
         for (var i = 0; i < documents.length; i++) {
-          const { name } = documents[i];
-          newDoc.push({ text: name, value: name, key: name, ...documents[i] });
+          const { name, items } = documents[i];
+          newDoc.push({
+            text: name,
+            value: name,
+            description: items.map(element => element.name).join(", "),
+            key: name,
+            ...documents[i]
+          });
         }
 
-        this.setState({ recipes: newDoc });
+        this.setState({ finishedGoods: newDoc });
       });
   }
 
   handleChange = (e, { name, value }) => {
     e.preventDefault();
-    this.setState({ [name]: value }, console.log(this.state));
+    this.setState({ [name]: value });
+  };
+
+  handleItemNameChange = (e, { name, id, value }) => {
+    e.preventDefault();
+    let { items, finishedGoods } = this.state;
+
+    const filterdGoods = finishedGoods.filter(element => element.name == value);
+
+    const unitCost = parseFloat(filterdGoods[0].finishedGoodCost);
+    items[id] = { ...items[id], [name]: value, unitCost: unitCost };
+
+    this.setState({ items: items }, this.updateTotalCost);
+  };
+
+  handleItemQtyChange = (e, { name, id, value }) => {
+    e.preventDefault();
+    let { items } = this.state;
+
+    items[id] = { ...items[id], [name]: value };
+
+    this.setState({ items: items }, this.updateTotalCost);
+  };
+
+  updateTotalCost = () => {
+    let { orderCost, items } = this.state;
+
+    if (items.length > 1) {
+      orderCost = items.reduce(
+        (a, b) =>
+          parseFloat(a.unitCost) * parseInt(a.quantity) +
+          parseFloat(b.unitCost) * parseInt(b.quantity)
+      );
+    } else {
+      orderCost = parseFloat(items[0].unitCost) * parseInt(items[0].quantity);
+    }
+
+    this.setState({ orderCost: orderCost });
   };
 
   submit = e => {
@@ -74,9 +118,27 @@ export class AddOrder extends Component {
       });
   };
 
+  addItem = () => {
+    let items = this.state.items;
+    let newItem = {
+      id: items.length,
+      name: items.name,
+      unitCost: 0,
+      quantity: "1"
+    };
+    items.push(newItem);
+    this.setState({ items: items });
+  };
+
+  removeItem = id => {
+    let items = this.state.items;
+    items = items.filter(x => x.id != id);
+    this.setState({ items: items });
+  };
+
   render() {
     return (
-      <div style={{ height: "100vh" }}>
+      <Segment style={{ height: "90vh" }}>
         <div>
           <Button labelPosition="left" icon secondary as={Link} to="/orders">
             Back
@@ -95,6 +157,10 @@ export class AddOrder extends Component {
               </Grid.Row>
             </Grid.Column>
             <Grid.Column width={7} textAlign="right">
+              <Button labelPosition="left" icon positive onClick={this.addItem}>
+                Add
+                <Icon name="plus"></Icon>
+              </Button>
               <Button labelPosition="right" icon primary onClick={this.submit}>
                 Submit
                 <Icon name="send" />
@@ -109,7 +175,7 @@ export class AddOrder extends Component {
               required
               icon="tag"
               iconPosition="left"
-              width={12}
+              width={8}
               //   id={items.id}
               label="Name"
               name="name"
@@ -118,7 +184,7 @@ export class AddOrder extends Component {
             />
             <DateInput
               required
-              width={2}
+              width={3}
               dateFormat={"MM/DD/YYYY"}
               label="Date Received"
               name="dateReceived"
@@ -128,7 +194,7 @@ export class AddOrder extends Component {
             />
             <DateInput
               required
-              width={2}
+              width={3}
               dateFormat={"MM/DD/YYYY"}
               label="Date Needed By"
               name="dateNeededBy"
@@ -136,32 +202,78 @@ export class AddOrder extends Component {
               iconPosition="left"
               onChange={this.handleChange}
             />
+            <Form.Input
+              width={2}
+              readOnly
+              icon="dollar"
+              iconPosition="left"
+              //   id={items.id}
+              label="Total Cost"
+              name="orderCost"
+              value={this.state.orderCost}
+            />
           </Form.Group>
-          <b>Add Recipe:</b>
-          <Dropdown
-            required
-            labeled="Add Recipe"
-            name="items"
-            placeholder="Recipes"
-            fluid
-            multiple
-            selection
-            options={this.state.recipes}
-            onChange={this.handleChange}
-          ></Dropdown>
-          <br />
+
           <Form.TextArea
-            width={20}
+            width={16}
             name="comment"
             style={{ minHeight: 100 }}
             label="Description:"
             placeholder="This is some comment about the order"
             onChange={this.handleChange}
           />
+          {this.state.items.map(items => {
+            return (
+              <div key={items.id}>
+                <Form.Group centered>
+                  <Form.Select
+                    required
+                    width={5}
+                    label="Finished Good"
+                    name="name"
+                    placeholder="Finished Good"
+                    id={items.id}
+                    options={this.state.finishedGoods}
+                    value={items.name}
+                    onChange={this.handleItemNameChange}
+                  />
+                  <Form.Input
+                    required
+                    label="Quantity"
+                    name="quantity"
+                    id={items.id}
+                    value={items.quantity}
+                    onChange={this.handleItemQtyChange}
+                  />
+                  <Form.Input
+                    width={2}
+                    readOnly
+                    icon="dollar"
+                    iconPosition="left"
+                    id={items.id}
+                    value={items.unitCost}
+                    label="Unit Cost"
+                    name="unitCost"
+                  />
+                  <Button
+                    style={{ height: 37.8, top: 25 }}
+                    labelPosition="left"
+                    size="tiny"
+                    icon
+                    negative
+                    onClick={() => this.removeItem(items.id)}
+                  >
+                    Remove
+                    <Icon name="minus"></Icon>
+                  </Button>
+                </Form.Group>
+              </div>
+            );
+          })}
         </Form>
         {this.state.message && <Message positive>{this.state.message}</Message>}
         {this.state.error && <Message negative>{this.state.error}</Message>}
-      </div>
+      </Segment>
     );
   }
 }
