@@ -27,7 +27,9 @@ export class CurrentOrders extends Component {
       isLoading: false,
       results: [],
       value: "",
-      checked: []
+      checked: [],
+      error: null,
+      message: ""
     };
   }
 
@@ -44,11 +46,11 @@ export class CurrentOrders extends Component {
       })
       .then(() => {
         let unfinished = [];
-        for (var i = 0; i < documents.length; i++) {
-          if (documents[i].finished === "0") {
-            unfinished.push(documents[i]);
+        documents.map(element => {
+          if (element.finished == 0) {
+            unfinished.push(element);
           }
-        }
+        });
         this.setState({ data: unfinished }, console.log(unfinished));
       });
   }
@@ -115,19 +117,77 @@ export class CurrentOrders extends Component {
   };
 
   markCompleted = () => {
-    let { checked } = this.state;
-    checked.map(element => {
-      db.collection("orders")
-        .doc(element)
-        .update({ finished: "1" })
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
-        .catch(error => {
-          console.error("Error removing document: ", error);
-        });
+    let { checked, data, error, message } = this.state;
+
+    checked.map(checkedElement => {
+      const checkedGoods = data.filter(data => data.id == checkedElement);
+      const item = checkedGoods.map(element => element.items);
+      item[0].map(element => {
+        let itemsToRemove = [];
+        db.collection("finishedgoods")
+          .where("name", "==", element.name)
+          .get()
+          .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+              itemsToRemove.push({ id: doc.id, ...doc.data() });
+            });
+          })
+          .then(() => {
+            if (itemsToRemove[0].quantity > element.quantity) {
+              let newQty = itemsToRemove[0].quantity - element.quantity;
+              db.collection("finishedgoods")
+                .doc(itemsToRemove[0].id)
+                .update({ quantity: newQty });
+              console.log("First");
+            } else if (itemsToRemove[0].quantity === element.quantity) {
+              db.collection("finishedgoods")
+                .doc(itemsToRemove[0].id)
+                .delete()
+                .then(() => {
+                  console.log("Document successfully deleted!");
+                });
+              console.log("Second");
+            } else {
+              //!! If the second item doesnt have enough materials there is no check
+              //!! If the second item doesnt have enough but the first one does it will still go through
+              let remainingItems = itemsToRemove[0].quantity - element.quantity;
+              if (itemsToRemove.length == 1) {
+                console.log(itemsToRemove.length);
+                let error = "Not enough raw materials";
+                this.setState({ error: true, message: error });
+                return;
+              } else {
+                db.collection("finishedgoods")
+                  .doc(itemsToRemove[1].id)
+                  .delete();
+                itemsToRemove[1].quantity =
+                  itemsToRemove[1].quantity - remainingItems;
+                db.collection("items")
+                  .doc(itemsToRemove[1].id)
+                  .update({ quantity: itemsToRemove[1].quantity });
+                console.log("Third");
+              }
+            }
+          });
+      });
+
+      console.log(this.state);
+      if (error != true) {
+        console.log("Error");
+        db.collection("orders")
+          .doc(checkedElement)
+          .update({ finished: "1" })
+          .then(() => {
+            console.log("Document successfully deleted!");
+          })
+          .then(() => this.setState({ error: false }))
+          .catch(error => {
+            console.error("Error removing document: ", error);
+          });
+      }
     });
   };
+
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
     const resRender = ({

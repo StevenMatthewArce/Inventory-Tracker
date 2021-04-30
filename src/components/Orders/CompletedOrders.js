@@ -40,11 +40,11 @@ export class CompletedOrders extends Component {
       })
       .then(() => {
         let unfinished = [];
-        for (var i = 0; i < documents.length; i++) {
-          if (documents[i].finished === "1") {
-            unfinished.push(documents[i]);
+        documents.map(element => {
+          if (element.finished == 1) {
+            unfinished.push(element);
           }
-        }
+        });
         this.setState({ data: unfinished }, console.log(unfinished));
       });
   }
@@ -180,28 +180,33 @@ export class CompletedOrders extends Component {
               <Table.Row textAlign="center">
                 <Table.HeaderCell />
                 <Table.HeaderCell
-                  width={2}
+                  width={1}
                   sorted={column === "DateReceived" ? direction : null}
                   onClick={this.handleSort("DateReceived")}
                 >
                   Date Received
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={2}
+                  width={1}
                   sorted={column === "DateNeedBy" ? direction : null}
                   onClick={this.handleSort("DateNeedBy")}
                 >
                   Date Needed By
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={3}
+                  width={2}
                   sorted={column === "Customer" ? direction : null}
                   onClick={this.handleSort("Customer")}
                 >
                   Customer
                 </Table.HeaderCell>
-                <Table.HeaderCell width={4}>Item</Table.HeaderCell>
-                <Table.HeaderCell width={5}>Comments</Table.HeaderCell>
+                <Table.HeaderCell width={4}>Items</Table.HeaderCell>
+                <Table.HeaderCell width={4}>Comments</Table.HeaderCell>
+
+                <Table.HeaderCell width={1}>Labor Rate</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Labor (hrs)</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Mark Up</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Total Cost</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {
@@ -218,8 +223,23 @@ export class CompletedOrders extends Component {
                       {items.dateNeededBy}
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.name}</Table.Cell>
-                    <Table.Cell>{items.items}</Table.Cell>
+                    <Table.Cell>
+                      {items.items
+                        .map(element => element.quantity + " " + element.name)
+                        .join(", ")}
+                    </Table.Cell>
                     <Table.Cell textAlign="center">{items.comment}</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.laborRate}/hr
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.totalLabor}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">{items.markUp} %</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {" "}
+                      {items.orderCost}
+                    </Table.Cell>
                   </Table.Row>
                 </Table.Body>
               );
