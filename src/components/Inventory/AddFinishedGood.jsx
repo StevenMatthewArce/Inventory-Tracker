@@ -43,6 +43,7 @@ const AddFinishedGood = () => {
           newDoc.push({ text: name, value: name, key: name, ...docs[i] });
         }
         setRecipes(newDoc);
+       
       })
   }, []);
 
@@ -68,9 +69,60 @@ const AddFinishedGood = () => {
     finishedGoodCost = finishedGoodCost.toFixed(2)
     
     const {name, receipeCost, items} = selected[0]
-
-    console.log(finishedGoodCost)
-
+   
+    items.some(element => {
+      let qty = quantity*element.quantity;
+      let itemsToRemove = [];
+      db.collection("items").where("name", "==", element.name )
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            itemsToRemove.push({ id: doc.id, ...doc.data() });
+        });
+    }).then(()=>{
+      if (itemsToRemove[0].quantity > qty){
+        itemsToRemove[0].quantity = itemsToRemove[0].quantity - qty
+        db.collection("items")
+        .doc(itemsToRemove[0].id)
+        .update({ quantity: itemsToRemove[0].quantity })
+        console.log("First")
+      } else if (itemsToRemove[0].quantity == qty){
+        db.collection("items")
+        .doc(itemsToRemove[0].id)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+        });
+        console.log("Second")
+      } else {
+        //!! If the second item doesnt have enough materials there is no check
+        //!! If the second item doesnt have enough but the first one does it will still go through
+        let remainingItems = itemsToRemove[0].quantity - qty
+        if(itemsToRemove.length < 1){
+          console.log(itemsToRemove.length)
+          console.log("Not enough raw materials")
+          return true
+        }else {
+          db.collection("items")
+          .doc(itemsToRemove[1].id)
+          .delete()
+          itemsToRemove[1].quantity = itemsToRemove[1].quantity - remainingItems;
+          db.collection("items")
+          .doc(itemsToRemove[1].id)
+          .update({ quantity: itemsToRemove[1].quantity })
+          console.log("Third")
+         }
+      }
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+    })
+    
     db.collection('finishedgoods')
       .add({ name, receipeCost, items, finishedGoodCost, laborRate, timeSpent, quantity, markUp })
       .then(() => {
@@ -81,7 +133,6 @@ const AddFinishedGood = () => {
         setError(err);
       });
   }
-
   return (
     <Segment style={{ height: "90vh" }}>
     <div>
