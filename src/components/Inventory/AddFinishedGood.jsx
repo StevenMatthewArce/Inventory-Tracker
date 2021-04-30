@@ -18,8 +18,8 @@ import {
 
 const AddFinishedGood = () => {
   const [quantity, setQuantity] = useState(0);
-  const [laborRate, setLaborRate] = useState(0);
-  const [markUp, setMarkUp] = useState(0);
+  // const [laborRate, setLaborRate] = useState(0);
+  // const [markUp, setMarkUp] = useState(0);
   const [timeSpent, setTimeSpent] = useState(0);
   const [recipes, setRecipes] = useState([]);
   const [selected, setSelected] = useState("None");
@@ -64,9 +64,9 @@ const AddFinishedGood = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    let finishedGoodCost = 0;
-    finishedGoodCost = ((parseFloat(selected[0].receipeCost) + ((laborRate*timeSpent)/quantity))*(1+(markUp/100)))
-    finishedGoodCost = finishedGoodCost.toFixed(2)
+    // let finishedGoodCost = 0;
+    // finishedGoodCost = ((parseFloat(selected[0].receipeCost) + ((laborRate*timeSpent)/quantity))*(1+(markUp/100)))
+    // finishedGoodCost = finishedGoodCost.toFixed(2)
     
     const {name, receipeCost, items} = selected[0]
    
@@ -126,7 +126,7 @@ const AddFinishedGood = () => {
     
 
     db.collection('finishedgoods')
-      .add({ name, receipeCost, items, finishedGoodCost, laborRate, timeSpent, quantity, markUp })
+      .add({ name, receipeCost, items, timeSpent, quantity })
       .then(() => {
         setMessage("Item has been submitted. ");
         handleRedirect();
@@ -224,7 +224,7 @@ const AddFinishedGood = () => {
         value={timeSpent}
         onChange={e => setTimeSpent(e.target.value)}
       />   
-      <Form.Input
+      {/* <Form.Input
         required
         width={2}
         icon="user"
@@ -233,8 +233,8 @@ const AddFinishedGood = () => {
         name="laborRate"
         value={laborRate}
         onChange={e => setLaborRate(e.target.value)}
-      />  
-        <Form.Input
+      />   */}
+        {/* <Form.Input
         required
         width={2}
         icon="percent"
@@ -243,7 +243,7 @@ const AddFinishedGood = () => {
         name="markUp"
         value= {markUp}
         onChange={e => setMarkUp(e.target.value)}
-      />  
+      />   */}
       </Form.Group>
    
       </Form>

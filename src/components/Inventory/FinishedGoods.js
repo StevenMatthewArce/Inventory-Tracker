@@ -106,7 +106,7 @@ export class FinishedGoods extends Component {
     const { data, column, direction, isLoading, value, results } = this.state;
     const resRender = ({
       name,
-      finishedGoodCost,
+      receipeCost,
       quantity,
       timeSpent,
       items
@@ -120,7 +120,7 @@ export class FinishedGoods extends Component {
             </Grid.Column>
             <Grid.Column width={2}>Quantity: {quantity}</Grid.Column>
             <Grid.Column width={2}>Time: {timeSpent} hours</Grid.Column>
-            <Grid.Column width={2}>Cost: ${finishedGoodCost}</Grid.Column>
+            <Grid.Column width={2}>Cost: ${receipeCost}</Grid.Column>
           </Grid>
         </div>
       );
@@ -201,14 +201,14 @@ export class FinishedGoods extends Component {
                   Quantity
                 </Table.HeaderCell>
                 <Table.HeaderCell rowSpan="2" width={1}>
-                  Time (hours)
+                  Labor
                 </Table.HeaderCell>
-                <Table.HeaderCell rowSpan="2" width={1}>
+                {/* <Table.HeaderCell rowSpan="2" width={1}>
                   Labor Rate
                 </Table.HeaderCell>
                 <Table.HeaderCell rowSpan="2" width={1}>
                   Mark Up
-                </Table.HeaderCell>
+                </Table.HeaderCell> */}
                 <Table.HeaderCell rowSpan="2" width={1}>
                   Unit Cost
                 </Table.HeaderCell>
@@ -227,14 +227,14 @@ export class FinishedGoods extends Component {
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.quantity}</Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.timeSpent}
+                      {items.timeSpent} hr
                     </Table.Cell>
-                    <Table.Cell textAlign="center">
+                    {/* <Table.Cell textAlign="center">
                       ${items.laborRate} /hr
                     </Table.Cell>
-                    <Table.Cell textAlign="center">{items.markUp}%</Table.Cell>
+                    <Table.Cell textAlign="center">{items.markUp}%</Table.Cell> */}
                     <Table.Cell textAlign="center">
-                      ${items.finishedGoodCost}
+                      ${items.receipeCost}
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
