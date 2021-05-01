@@ -12,7 +12,8 @@ import {
   Icon,
   Modal,
   Image,
-  Segment
+  Segment,
+  Message
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -37,7 +38,9 @@ export class Expense extends Component {
       expenseYearPercentage: null,
       checked: [],
       modalOpen: false,
-      receiptInformation: ""
+      receiptInformation: "",
+      error: null,
+      message: ""
     };
   }
 
@@ -121,8 +124,16 @@ export class Expense extends Component {
 
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
-    checked.push(id);
-    this.setState({ checked: checked }, console.log(this.state.checked));
+
+    if (checked.includes(id)) {
+      console.log("it already in arry");
+      const updatedArray = checked.filter(s => s !== id);
+      this.setState({ checked: updatedArray });
+    } else {
+      console.log(" not in arry");
+      checked.push(id);
+      this.setState({ checked: checked });
+    }
   };
 
   removeItem = () => {
@@ -144,21 +155,24 @@ export class Expense extends Component {
   handleModal = () => {
     let { checked, data, modalOpen } = this.state;
 
-    if (checked.length > 1) {
-      console.log("TOO many checked");
+    if (checked.length != 1) {
+      this.setState({ error: "Please Check a Receipt Box" });
     } else {
       let receipt = data.filter(element => element.id == checked[0]);
-      console.log(receipt, receipt[0].imageAsUrl);
       this.setState({
-        modalOpen: !modalOpen,
-        receiptInformation: receipt[0]
+        modalOpen: true,
+        receiptInformation: receipt[0],
+        error: null
       });
     }
   };
 
+  closeModal = () => {
+    this.setState({ modalOpen: false });
+  };
   render() {
     const { data, column, direction } = this.state;
-    // console.log(this.state.data);
+    // console.log(this.state.checked);
     return (
       <Segment style={{ height: "100vh" }}>
         <div>
@@ -216,6 +230,14 @@ export class Expense extends Component {
           </Grid>
         </div>
         <div>
+          <div>
+            {this.state.error && (
+              <Message icon="frown" negative>
+                {this.state.error}
+              </Message>
+            )}
+          </div>
+          <br />
           <Grid columns="equal">
             <Grid.Column width={8}>
               <Header as="h1">Expense Tracking</Header>
@@ -240,7 +262,7 @@ export class Expense extends Component {
                   onClick={this.handleModal}
                 >
                   <Icon name="image"></Icon>
-                  View Image
+                  View Receipt
                 </Button>
                 <Dropdown
                   className="ui small icon black left labeled button"
@@ -269,7 +291,9 @@ export class Expense extends Component {
             </Grid.Column>
           </Grid>
         </div>
+
         <Divider />
+
         <div>
           <Table sortable celled definition structured>
             <Table.Header>
@@ -324,7 +348,6 @@ export class Expense extends Component {
         <Modal open={this.state.modalOpen} size={"small"}>
           <Modal.Header>View Receipt</Modal.Header>
           <Modal.Content image>
-            {console.log(this.state.receiptInformation)}
             <Image
               size="medium"
               src={this.state.receiptInformation.imageAsUrl}
@@ -350,7 +373,7 @@ export class Expense extends Component {
               content="Ok"
               labelPosition="right"
               icon="checkmark"
-              onClick={this.handleModal}
+              onClick={this.closeModal}
               positive
             />
           </Modal.Actions>
