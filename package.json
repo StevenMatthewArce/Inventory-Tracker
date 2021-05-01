@@ -32,7 +32,7 @@
     "semantic-ui-react-input-file": "^1.0.3",
     "tesseract.js": "^2.1.4",
     "tslib": "^2.1.0",
-    "victory": "^35.4.9",
+    "victory": "^35.5.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
