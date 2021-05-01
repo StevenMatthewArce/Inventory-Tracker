@@ -7,7 +7,9 @@ import {
   Divider,
   Search,
   Button,
-  Checkbox
+  Checkbox,
+  Icon,
+  Message
 } from "semantic-ui-react";
 import { db } from "../Firebase";
 import _ from "lodash";
@@ -23,7 +25,9 @@ export class CompletedOrders extends Component {
       isLoading: false,
       results: [],
       value: "",
-      checked: []
+      checked: [],
+      error: null,
+      message: null
     };
   }
 
@@ -40,11 +44,11 @@ export class CompletedOrders extends Component {
       })
       .then(() => {
         let unfinished = [];
-        for (var i = 0; i < documents.length; i++) {
-          if (documents[i].finished === "1") {
-            unfinished.push(documents[i]);
+        documents.map(element => {
+          if (element.finished == 1) {
+            unfinished.push(element);
           }
-        }
+        });
         this.setState({ data: unfinished }, console.log(unfinished));
       });
   }
@@ -90,23 +94,31 @@ export class CompletedOrders extends Component {
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
     checked.push(id);
-    this.setState({ checked: checked }, console.log(this.state.checked));
+    this.setState(
+      { checked: checked, error: null, message: null },
+      console.log(this.state.checked)
+    );
   };
 
   removeItem = () => {
     let { checked } = this.state;
-
-    checked.map(element => {
-      db.collection("orders")
-        .doc(element)
-        .delete()
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
-        .catch(error => {
-          console.error("Error removing document: ", error);
-        });
-    });
+    if (checked.length < 1) {
+      this.setState({ error: "Please Check an Order" });
+    } else {
+      checked.map(element => {
+        db.collection("orders")
+          .doc(element)
+          .delete()
+          .then(() => {
+            console.log("Document successfully deleted!");
+            this.setState({ message: "Sucessfully removed Order" });
+          })
+          .catch(error => {
+            console.error("Error removing document: ", error);
+            this.setState({ error: "Error removing doucment" });
+          });
+      });
+    }
   };
 
   render() {
@@ -135,23 +147,36 @@ export class CompletedOrders extends Component {
     return (
       <div>
         <div>
+          <div>
+            {this.state.error && (
+              <Message icon="frown" negative>
+                {this.state.error}
+              </Message>
+            )}
+            {this.state.message && (
+              <Message icon="smile" positive>
+                {this.state.message}
+              </Message>
+            )}
+          </div>
+          <br />
           <Grid columns="equal">
-            <Grid.Column width={12}>
+            <Grid.Column width={8}>
               <Header as="h1">Completed Orders</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
-              <Button color="red" size="small" onClick={this.removeItem}>
-                Remove Selected
-              </Button>
-              <Dropdown
-                text="Add"
-                icon="plus square outline"
-                labeled
-                button
-                className="icon"
-              >
-                <Dropdown.Menu></Dropdown.Menu>
-              </Dropdown>
+              <Button.Group>
+                <Button
+                  icon
+                  labelPosition="left"
+                  negative
+                  size="small"
+                  onClick={this.removeItem}
+                >
+                  <Icon name="close"></Icon>
+                  Remove
+                </Button>
+              </Button.Group>
             </Grid.Column>
           </Grid>
         </div>
@@ -180,28 +205,33 @@ export class CompletedOrders extends Component {
               <Table.Row textAlign="center">
                 <Table.HeaderCell />
                 <Table.HeaderCell
-                  width={2}
+                  width={1}
                   sorted={column === "DateReceived" ? direction : null}
                   onClick={this.handleSort("DateReceived")}
                 >
                   Date Received
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={2}
+                  width={1}
                   sorted={column === "DateNeedBy" ? direction : null}
                   onClick={this.handleSort("DateNeedBy")}
                 >
                   Date Needed By
                 </Table.HeaderCell>
                 <Table.HeaderCell
-                  width={3}
+                  width={2}
                   sorted={column === "Customer" ? direction : null}
                   onClick={this.handleSort("Customer")}
                 >
                   Customer
                 </Table.HeaderCell>
-                <Table.HeaderCell width={4}>Item</Table.HeaderCell>
-                <Table.HeaderCell width={5}>Comments</Table.HeaderCell>
+                <Table.HeaderCell width={4}>Items</Table.HeaderCell>
+                <Table.HeaderCell width={4}>Comments</Table.HeaderCell>
+
+                <Table.HeaderCell width={1}>Labor Rate</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Labor (hrs)</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Mark Up</Table.HeaderCell>
+                <Table.HeaderCell width={1}>Total Cost</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {
@@ -218,8 +248,22 @@ export class CompletedOrders extends Component {
                       {items.dateNeededBy}
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.name}</Table.Cell>
-                    <Table.Cell>{items.items}</Table.Cell>
+                    <Table.Cell>
+                      {items.items
+                        .map(element => element.quantity + " " + element.name)
+                        .join(", ")}
+                    </Table.Cell>
                     <Table.Cell textAlign="center">{items.comment}</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.laborRate}/hr
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      {items.totalLabor}
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">{items.markUp} %</Table.Cell>
+                    <Table.Cell textAlign="center">
+                      ${items.orderCost}
+                    </Table.Cell>
                   </Table.Row>
                 </Table.Body>
               );

@@ -8,7 +8,12 @@ import {
   Progress,
   Statistic,
   Button,
-  Checkbox
+  Checkbox,
+  Icon,
+  Modal,
+  Image,
+  Segment,
+  Message
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -31,7 +36,11 @@ export class Expense extends Component {
       totalSalesYear: null,
       expenseMonthPercentage: null,
       expenseYearPercentage: null,
-      checked: []
+      checked: [],
+      modalOpen: false,
+      receiptInformation: "",
+      error: null,
+      message: ""
     };
   }
 
@@ -115,8 +124,16 @@ export class Expense extends Component {
 
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
-    checked.push(id);
-    this.setState({ checked: checked }, console.log(this.state.checked));
+
+    if (checked.includes(id)) {
+      console.log("it already in arry");
+      const updatedArray = checked.filter(s => s !== id);
+      this.setState({ checked: updatedArray, error: null, message: null });
+    } else {
+      console.log(" not in arry");
+      checked.push(id);
+      this.setState({ checked: checked, error: null, message: null });
+    }
   };
 
   removeItem = () => {
@@ -135,11 +152,29 @@ export class Expense extends Component {
     });
   };
 
+  handleModal = () => {
+    let { checked, data, modalOpen } = this.state;
+
+    if (checked.length != 1) {
+      this.setState({ error: "Please Check a Receipt" });
+    } else {
+      let receipt = data.filter(element => element.id == checked[0]);
+      this.setState({
+        modalOpen: true,
+        receiptInformation: receipt[0],
+        error: null
+      });
+    }
+  };
+
+  closeModal = () => {
+    this.setState({ modalOpen: false });
+  };
   render() {
     const { data, column, direction } = this.state;
-    // console.log(this.state.data);
+    // console.log(this.state.checked);
     return (
-      <div style={{ height: "100vh" }}>
+      <Segment style={{ height: "100vh" }}>
         <div>
           <Grid centered columns={2}>
             <Grid.Column>
@@ -195,42 +230,70 @@ export class Expense extends Component {
           </Grid>
         </div>
         <div>
+          <div>
+            {this.state.error && (
+              <Message icon="frown" negative>
+                {this.state.error}
+              </Message>
+            )}
+          </div>
+          <br />
           <Grid columns="equal">
-            <Grid.Column width={12}>
+            <Grid.Column width={8}>
               <Header as="h1">Expense Tracking</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
-              <Button color="red" size="small" onClick={this.removeItem}>
-                Remove Selected
-              </Button>
-              <Dropdown
-                text="Add"
-                icon="plus square outline"
-                labeled
-                button
-                className="icon"
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    icon="tasks"
-                    iconPosition="left"
-                    text="Receipts"
-                    as={Link}
-                    to="/addReceipt"
-                  />
-                  <Dropdown.Item
-                    icon="tags"
-                    iconPosition="left"
-                    text="Items"
-                    as={Link}
-                    to="/addItem"
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
+              <Button.Group>
+                <Button
+                  icon
+                  labelPosition="left"
+                  negative
+                  size="small"
+                  onClick={this.removeItem}
+                >
+                  <Icon name="close"></Icon>
+                  Remove
+                </Button>
+                <Button
+                  color={"blue"}
+                  icon
+                  labelPosition="left"
+                  size="small"
+                  onClick={this.handleModal}
+                >
+                  <Icon name="image"></Icon>
+                  View Receipt
+                </Button>
+                <Dropdown
+                  className="ui small icon black left labeled button"
+                  text="Add"
+                  labeled
+                  button
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      icon="tasks"
+                      iconPosition="left"
+                      text="Receipts"
+                      as={Link}
+                      to="/addReceipt"
+                    />
+                    <Dropdown.Item
+                      icon="tags"
+                      iconPosition="left"
+                      text="Items"
+                      as={Link}
+                      to="/addItem"
+                    />
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Button.Group>
             </Grid.Column>
           </Grid>
         </div>
+
         <Divider />
+
         <div>
           <Table sortable celled definition structured>
             <Table.Header>
@@ -282,7 +345,40 @@ export class Expense extends Component {
             })}
           </Table>
         </div>
-      </div>
+        <Modal open={this.state.modalOpen} size={"small"}>
+          <Modal.Header>View Receipt</Modal.Header>
+          <Modal.Content image>
+            <Image
+              size="medium"
+              src={this.state.receiptInformation.imageAsUrl}
+              wrapped
+            />
+            <Modal.Description>
+              <Header as="h1">
+                {this.state.receiptInformation.store +
+                  " on " +
+                  this.state.receiptInformation.date}
+              </Header>
+              <p>
+                <b>Total Cost: </b>${this.state.receiptInformation.totalCost}
+              </p>
+              <p>
+                <b>Description: </b>
+                {this.state.receiptInformation.description}
+              </p>
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              content="Ok"
+              labelPosition="right"
+              icon="checkmark"
+              onClick={this.closeModal}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
+      </Segment>
     );
   }
 }
