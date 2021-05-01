@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../App/Auth";
 import { Tab, Segment } from "semantic-ui-react";
+import Sales from "../Budget/Sales";
 
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
