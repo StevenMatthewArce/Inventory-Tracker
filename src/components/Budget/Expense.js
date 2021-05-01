@@ -128,11 +128,11 @@ export class Expense extends Component {
     if (checked.includes(id)) {
       console.log("it already in arry");
       const updatedArray = checked.filter(s => s !== id);
-      this.setState({ checked: updatedArray });
+      this.setState({ checked: updatedArray, error: null, message: null });
     } else {
       console.log(" not in arry");
       checked.push(id);
-      this.setState({ checked: checked });
+      this.setState({ checked: checked, error: null, message: null });
     }
   };
 
@@ -156,7 +156,7 @@ export class Expense extends Component {
     let { checked, data, modalOpen } = this.state;
 
     if (checked.length != 1) {
-      this.setState({ error: "Please Check a Receipt Box" });
+      this.setState({ error: "Please Check a Receipt" });
     } else {
       let receipt = data.filter(element => element.id == checked[0]);
       this.setState({
@@ -266,7 +266,7 @@ export class Expense extends Component {
                 </Button>
                 <Dropdown
                   className="ui small icon black left labeled button"
-                  text="Options"
+                  text="Add"
                   labeled
                   button
                 >

@@ -7,7 +7,9 @@ import {
   Divider,
   Search,
   Button,
-  Checkbox
+  Checkbox,
+  Icon,
+  Message
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -29,7 +31,7 @@ export class CurrentOrders extends Component {
       value: "",
       checked: [],
       error: null,
-      message: ""
+      message: null
     };
   }
 
@@ -97,95 +99,105 @@ export class CurrentOrders extends Component {
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
     checked.push(id);
-    this.setState({ checked: checked }, console.log(this.state.checked));
+    this.setState({ checked: checked, error: null, message: null }, console.log(this.state.checked));
   };
 
   removeItem = () => {
     let { checked } = this.state;
-
-    checked.map(element => {
-      db.collection("orders")
-        .doc(element)
-        .delete()
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
-        .catch(error => {
-          console.error("Error removing document: ", error);
-        });
-    });
+    if (checked.length < 1) {
+      this.setState({ error: "Please Check an Order" });
+    } else {
+      checked.map(element => {
+        db.collection("orders")
+          .doc(element)
+          .delete()
+          .then(() => {
+            console.log("Document successfully deleted!");
+            this.setState({ message: "Sucessfully removed Order" });
+          })
+          .catch(error => {
+            console.error("Error removing document: ", error);
+            this.setState({ error: "Error removing doucment" });
+          });
+      });
+    }
   };
 
   markCompleted = () => {
     let { checked, data, error, message } = this.state;
-
-    checked.map(checkedElement => {
-      const checkedGoods = data.filter(data => data.id == checkedElement);
-      const item = checkedGoods.map(element => element.items);
-      item[0].map(element => {
-        let itemsToRemove = [];
-        db.collection("finishedgoods")
-          .where("name", "==", element.name)
-          .get()
-          .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-              itemsToRemove.push({ id: doc.id, ...doc.data() });
-            });
-          })
-          .then(() => {
-            if (itemsToRemove[0].quantity > element.quantity) {
-              let newQty = itemsToRemove[0].quantity - element.quantity;
-              db.collection("finishedgoods")
-                .doc(itemsToRemove[0].id)
-                .update({ quantity: newQty });
-              console.log("First");
-            } else if (itemsToRemove[0].quantity === element.quantity) {
-              db.collection("finishedgoods")
-                .doc(itemsToRemove[0].id)
-                .delete()
-                .then(() => {
-                  console.log("Document successfully deleted!");
-                });
-              console.log("Second");
-            } else {
-              //!! If the second item doesnt have enough materials there is no check
-              //!! If the second item doesnt have enough but the first one does it will still go through
-              let remainingItems = itemsToRemove[0].quantity - element.quantity;
-              if (itemsToRemove.length == 1) {
-                console.log(itemsToRemove.length);
-                let error = "Not enough raw materials";
-                this.setState({ error: true, message: error });
-                return;
-              } else {
+    if (checked.length < 1) {
+      this.setState({ error: "Please Check an Order Box" });
+    } else {
+      checked.map(checkedElement => {
+        const checkedGoods = data.filter(data => data.id == checkedElement);
+        const item = checkedGoods.map(element => element.items);
+        item[0].map(element => {
+          let itemsToRemove = [];
+          db.collection("finishedgoods")
+            .where("name", "==", element.name)
+            .get()
+            .then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                itemsToRemove.push({ id: doc.id, ...doc.data() });
+              });
+            })
+            .then(() => {
+              if (itemsToRemove[0].quantity > element.quantity) {
+                let newQty = itemsToRemove[0].quantity - element.quantity;
                 db.collection("finishedgoods")
-                  .doc(itemsToRemove[1].id)
-                  .delete();
-                itemsToRemove[1].quantity =
-                  itemsToRemove[1].quantity - remainingItems;
-                db.collection("items")
-                  .doc(itemsToRemove[1].id)
-                  .update({ quantity: itemsToRemove[1].quantity });
-                console.log("Third");
+                  .doc(itemsToRemove[0].id)
+                  .update({ quantity: newQty });
+                console.log("First");
+              } else if (itemsToRemove[0].quantity === element.quantity) {
+                db.collection("finishedgoods")
+                  .doc(itemsToRemove[0].id)
+                  .delete()
+                  .then(() => {
+                    console.log("Document successfully deleted!");
+                  });
+                console.log("Second");
+              } else {
+                //!! If the second item doesnt have enough materials there is no check
+                //!! If the second item doesnt have enough but the first one does it will still go through
+                let remainingItems =
+                  itemsToRemove[0].quantity - element.quantity;
+                if (itemsToRemove.length == 1) {
+                  console.log(itemsToRemove.length);
+                  let error = "Not enough raw materials";
+                  this.setState({ error: error });
+                  return;
+                } else {
+                  db.collection("finishedgoods")
+                    .doc(itemsToRemove[1].id)
+                    .delete();
+                  itemsToRemove[1].quantity =
+                    itemsToRemove[1].quantity - remainingItems;
+                  db.collection("items")
+                    .doc(itemsToRemove[1].id)
+                    .update({ quantity: itemsToRemove[1].quantity });
+                  console.log("Third");
+                }
               }
-            }
-          });
-      });
+            });
+        });
 
-      console.log(this.state);
-      if (error != true) {
-        console.log("Error");
-        db.collection("orders")
-          .doc(checkedElement)
-          .update({ finished: "1" })
-          .then(() => {
-            console.log("Document successfully deleted!");
-          })
-          .then(() => this.setState({ error: false }))
-          .catch(error => {
-            console.error("Error removing document: ", error);
-          });
-      }
-    });
+        console.log(this.state);
+        if (error != true) {
+          console.log("Error");
+          db.collection("orders")
+            .doc(checkedElement)
+            .update({ finished: "1" })
+            .then(() => {
+              console.log("Document successfully deleted!");
+              this.setState({ message: "Sucessfully marked as Finished" });
+            })
+            .then(() => this.setState({ error: false }))
+            .catch(error => {
+              this.setState({ error: "Did not mark as Finished" });
+            });
+        }
+      });
+    }
   };
 
   render() {
@@ -218,37 +230,58 @@ export class CurrentOrders extends Component {
     return (
       <div>
         <div>
+          <div>
+            {this.state.error && (
+              <Message icon="frown" negative>
+                {this.state.error}
+              </Message>
+            )}
+            {this.state.message && (
+              <Message icon="smile" positive>
+                {this.state.message}
+              </Message>
+            )}
+          </div>
+          <br />
           <Grid columns="equal">
-            <Grid.Column width={12}>
+            <Grid.Column width={8}>
               <Header as="h1">Current Orders</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
-              <Button color="red" size="small" onClick={this.removeItem}>
-                Remove Selected
-              </Button>
-              <Dropdown
-                text="Add"
-                icon="plus square outline"
-                labeled
-                button
-                className="icon"
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    icon="tasks"
-                    iconPosition="left"
-                    text="Order"
-                    as={Link}
-                    to="/addOrder"
-                  />
-                  <Dropdown.Item
-                    icon="check"
-                    iconPosition="left"
-                    text="Completed"
-                    onClick={this.markCompleted}
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
+              <Button.Group>
+                <Button
+                  icon
+                  labelPosition="left"
+                  negative
+                  size="small"
+                  onClick={this.removeItem}
+                >
+                  <Icon name="close"></Icon>
+                  Remove
+                </Button>
+                <Dropdown
+                  className="ui small icon black left labeled button"
+                  text="Add"
+                  labeled
+                  button
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      icon="tasks"
+                      iconPosition="left"
+                      text="Order"
+                      as={Link}
+                      to="/addOrder"
+                    />
+                    <Dropdown.Item
+                      icon="check"
+                      iconPosition="left"
+                      text="Completed"
+                      onClick={this.markCompleted}
+                    />
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Button.Group>
             </Grid.Column>
           </Grid>
         </div>

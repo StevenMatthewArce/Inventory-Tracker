@@ -8,7 +8,8 @@ import {
   Search,
   Checkbox,
   Button,
-  Tab
+  Message,
+  Icon
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -25,7 +26,9 @@ export class Recipes extends Component {
       isLoading: false,
       results: [],
       value: "",
-      checked: []
+      checked: [],
+      error: null,
+      message: null
     };
   }
 
@@ -82,25 +85,32 @@ export class Recipes extends Component {
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
     checked.push(id);
-    this.setState({ checked: checked }, console.log(this.state.checked));
+    this.setState(
+      { checked: checked, error: null, message: null },
+      console.log(this.state.checked)
+    );
   };
 
   removeItem = () => {
     let { checked } = this.state;
-
-    checked.map(element => {
-      db.collection("recipes")
-        .doc(element)
-        .delete()
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
-        .catch(error => {
-          console.error("Error removing document: ", error);
-        });
-    });
+    if (checked.length < 1) {
+      this.setState({ error: "Please Check a Recipe" });
+    } else {
+      checked.map(element => {
+        db.collection("recipes")
+          .doc(element)
+          .delete()
+          .then(() => {
+            console.log("Document successfully deleted!");
+            this.setState({ message: "Sucessfully removed Recipe" });
+          })
+          .catch(error => {
+            console.error("Error removing document: ", error);
+            this.setState({ error: "Error removing doucment" });
+          });
+      });
+    }
   };
-
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
     console.log(this.state);
@@ -120,31 +130,52 @@ export class Recipes extends Component {
     return (
       <div>
         <div>
+          <div>
+            {this.state.error && (
+              <Message icon="frown" negative>
+                {this.state.error}
+              </Message>
+            )}
+            {this.state.message && (
+              <Message icon="smile" positive>
+                {this.state.message}
+              </Message>
+            )}
+          </div>
+          <br />
           <Grid columns="equal">
-            <Grid.Column width={12}>
+            <Grid.Column width={8}>
               <Header as="h1">Recipes</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
-              <Button color="red" size="small" onClick={this.removeItem}>
-                Remove Selected
-              </Button>
-              <Dropdown
-                text="Add"
-                icon="plus square outline"
-                labeled
-                button
-                className="icon"
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    content="Recipe"
-                    icon="list alternate outline"
-                    labelPosition="right"
-                    as={Link}
-                    to="/addRecipe"
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
+              <Button.Group>
+                <Button
+                  icon
+                  labelPosition="left"
+                  negative
+                  size="small"
+                  onClick={this.removeItem}
+                >
+                  <Icon name="close"></Icon>
+                  Remove
+                </Button>
+                <Dropdown
+                  className="ui small icon black left labeled button"
+                  text="Add"
+                  labeled
+                  button
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      content="Recipe"
+                      icon="list alternate outline"
+                      labelPosition="right"
+                      as={Link}
+                      to="/addRecipe"
+                    />
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Button.Group>
             </Grid.Column>
           </Grid>
         </div>

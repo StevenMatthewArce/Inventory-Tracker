@@ -11,7 +11,7 @@ import {
   Button,
   Form,
   Checkbox,
-  ItemDescription
+  Message
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
@@ -63,7 +63,9 @@ export class RawMaterials extends Component {
       isOpen: [false],
       modalOpen: false,
       settings: [],
-      checked: []
+      checked: [],
+      error: null,
+      message: null
     };
 
     this.handleToggle = this.handleToggle.bind(this);
@@ -171,23 +173,31 @@ export class RawMaterials extends Component {
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
     checked.push(id);
-    this.setState({ checked: checked }, console.log(this.state.checked));
+    this.setState(
+      { checked: checked, error: null, message: null },
+      console.log(this.state.checked)
+    );
   };
 
   removeItem = () => {
     let { checked } = this.state;
-
-    checked.map(element => {
-      db.collection("items")
-        .doc(element)
-        .delete()
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
-        .catch(error => {
-          console.error("Error removing document: ", error);
-        });
-    });
+    if (checked.length < 1) {
+      this.setState({ error: "Please Check a Raw Material" });
+    } else {
+      checked.map(element => {
+        db.collection("items")
+          .doc(element)
+          .delete()
+          .then(() => {
+            console.log("Document successfully deleted!");
+            this.setState({ message: "Sucessfully removed Raw Material" });
+          })
+          .catch(error => {
+            console.error("Error removing document: ", error);
+            this.setState({ error: "Error removing doucment" });
+          });
+      });
+    }
   };
 
   render() {
@@ -224,38 +234,59 @@ export class RawMaterials extends Component {
     return (
       <div>
         <div>
+          <div>
+            {this.state.error && (
+              <Message icon="frown" negative>
+                {this.state.error}
+              </Message>
+            )}
+            {this.state.message && (
+              <Message icon="smile" positive>
+                {this.state.message}
+              </Message>
+            )}
+          </div>
+          <br />
           <Grid columns="equal">
-            <Grid.Column width={12}>
+            <Grid.Column width={8}>
               <Header as="h1">Raw Materials</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
               <Grid.Row>
-                <Button color="red" size="small" onClick={this.removeItem}>
-                  Remove Selected
-                </Button>
-                <Dropdown
-                  text="Add"
-                  icon="plus square outline"
-                  labeled
-                  button
-                  className="icon"
-                >
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      content="Item"
-                      icon="tags"
-                      labelPosition="right"
-                      as={Link}
-                      to="/addItem"
-                    />
-                    <Dropdown.Item
-                      content="Alert"
-                      icon="exclamation"
-                      labelPosition="right"
-                      onClick={this.handleModal}
-                    />
-                  </Dropdown.Menu>
-                </Dropdown>
+                <Button.Group>
+                  <Button
+                    icon
+                    labelPosition="left"
+                    negative
+                    size="small"
+                    onClick={this.removeItem}
+                  >
+                    <Icon name="close"></Icon>
+                    Remove
+                  </Button>
+                  <Dropdown
+                    className="ui small icon black left labeled button"
+                    text="Add"
+                    labeled
+                    button
+                  >
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        content="Item"
+                        icon="tags"
+                        labelPosition="right"
+                        as={Link}
+                        to="/addItem"
+                      />
+                      <Dropdown.Item
+                        content="Alert"
+                        icon="exclamation"
+                        labelPosition="right"
+                        onClick={this.handleModal}
+                      />
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Button.Group>
               </Grid.Row>
             </Grid.Column>
           </Grid>
@@ -338,9 +369,7 @@ export class RawMaterials extends Component {
                     key={value}
                     onClick={() => this.handleToggle(index)}
                   >
-                    <Table.Cell collapsing>
-                      <Checkbox />
-                    </Table.Cell>
+                    <Table.Cell collapsing></Table.Cell>
                     <Table.Cell textAlign="center">
                       <Icon name="dropdown" />
                       {value}
