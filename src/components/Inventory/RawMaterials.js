@@ -14,15 +14,14 @@ import {
   Message,
   Tab
 } from "semantic-ui-react";
-import { AuthContext } from "../App/Auth";
-import { Link, Redirect } from "react-router-dom";
+
+import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import "./style.css";
 
 import _ from "lodash";
 
 const RawMaterials = props => {
-  const { currentUser } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [alertValue, setAlertValue] = useState(0);
   const [error, setError] = useState(null);
@@ -33,16 +32,12 @@ const RawMaterials = props => {
   const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState([false]);
   const [isModalOpen, setModalOpen] = useState(false);
-
-  //!! Comment back in after testing
-  if (!currentUser) {
-    return <Redirect to="/" />;
-  }
+  const uid = props.uid;
 
   useEffect(() => {
     let docs = [];
     db.collection("users")
-      .doc(currentUser.uid)
+      .doc(uid)
       .collection("items")
       .get()
       .then(querySnapshot => {
@@ -56,7 +51,7 @@ const RawMaterials = props => {
   //!This will be for setting alert Value
   useEffect(() => {
     db.collection("users")
-      .doc(currentUser.uid)
+      .doc(uid)
       .get()
       .then(querySnapshot => {
         let { alertValue } = querySnapshot.data();
@@ -130,7 +125,7 @@ const RawMaterials = props => {
 
   const updateUserSetting = e => {
     db.collection("users")
-      .doc(currentUser.uid)
+      .doc(uid)
       .update({ alertValue: alertValue })
       .then(() => setModalOpen(!isModalOpen));
   };
