@@ -138,18 +138,22 @@ export class Expense extends Component {
 
   removeItem = () => {
     let { checked } = this.state;
-
-    checked.map(element => {
-      db.collection("receipts")
-        .doc(element)
-        .delete()
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
-        .catch(error => {
-          console.error("Error removing document: ", error);
-        });
-    });
+    if (checked.length < 1) {
+      this.setState({ error: "Please Check a Receipt" });
+    } else {
+      checked.map(element => {
+        db.collection("receipts")
+          .doc(element)
+          .delete()
+          .then(() => {
+            console.log("Document successfully deleted!");
+          })
+          .catch(error => {
+            console.error("Error removing document: ", error);
+            this.setState({ error: "Error removing doucment" });
+          });
+      });
+    }
   };
 
   handleModal = () => {

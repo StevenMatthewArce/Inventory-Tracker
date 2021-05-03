@@ -99,7 +99,10 @@ export class CurrentOrders extends Component {
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
     checked.push(id);
-    this.setState({ checked: checked, error: null, message: null }, console.log(this.state.checked));
+    this.setState(
+      { checked: checked, error: null, message: null },
+      console.log(this.state.checked)
+    );
   };
 
   removeItem = () => {
@@ -133,6 +136,7 @@ export class CurrentOrders extends Component {
         const item = checkedGoods.map(element => element.items);
         item[0].map(element => {
           let itemsToRemove = [];
+          console.log(element);
           db.collection("finishedgoods")
             .where("name", "==", element.name)
             .get()
@@ -142,6 +146,7 @@ export class CurrentOrders extends Component {
               });
             })
             .then(() => {
+              console.log(itemsToRemove);
               if (itemsToRemove[0].quantity > element.quantity) {
                 let newQty = itemsToRemove[0].quantity - element.quantity;
                 db.collection("finishedgoods")
@@ -182,7 +187,7 @@ export class CurrentOrders extends Component {
         });
 
         console.log(this.state);
-        if (error != true) {
+        if (error == null) {
           console.log("Error");
           db.collection("orders")
             .doc(checkedElement)
@@ -191,10 +196,29 @@ export class CurrentOrders extends Component {
               console.log("Document successfully deleted!");
               this.setState({ message: "Sucessfully marked as Finished" });
             })
+
             .then(() => this.setState({ error: false }))
             .catch(error => {
               this.setState({ error: "Did not mark as Finished" });
             });
+          let currentdate = new Date();
+
+          const getFormattedDate = date => {
+            let year = date.getFullYear();
+            let month = (1 + date.getMonth()).toString().padStart(2, "0");
+            let day = date
+              .getDate()
+              .toString()
+              .padStart(2, "0");
+            return month + "/" + day + "/" + year;
+          };
+
+          currentdate = getFormattedDate(currentdate);
+
+          db.collection("sales").add({
+            ...checkedGoods,
+            currentdate
+          });
         }
       });
     }
