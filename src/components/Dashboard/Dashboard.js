@@ -7,29 +7,14 @@ import { db } from "../Firebase";
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
 
+  console.log(currentUser);
   const [data, setData] = useState(null);
 
   if (!currentUser) {
     return <Redirect to="/" />;
   }
 
-  useEffect(() => {
-    let docs = [];
-    db.collection("users")
-      .doc("aRHNBBjHoC5WlghIbwYN")
-      .collection("items")
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          docs.push({ id: doc.id, ...doc.data() });
-        });
-      })
-      .then(() => {
-        setData(docs);
-      });
-  }, []);
-
-  console.log(data);
+  console.log(currentUser);
 
   return (
     <div>

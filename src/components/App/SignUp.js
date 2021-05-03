@@ -19,7 +19,8 @@ const SignUp = () => {
           userDetail = {
             email: email,
             uid: uid,
-            displayName: displayName
+            displayName: displayName,
+            alertValue: 5
           };
           db.collection("users")
             .doc(uid)
