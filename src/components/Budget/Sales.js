@@ -26,7 +26,11 @@ export class Sales extends Component {
       data: [],
       checked: [],
       error: null,
-      message: null
+      message: null,
+      totalSaleMonth: null,
+      totalSaleYear: null,
+      saleMonthPercentage: null,
+      mostPopularItem: null
     };
   }
 
@@ -48,8 +52,66 @@ export class Sales extends Component {
           element.soldDate = documents[index].currentdate;
         });
         this.setState({ data: data });
-      });
+      })
+      .then(() => this.calculateSaleMonth())
+      .then(() => this.calculateMostPopularItem());
   }
+
+  calculateSaleMonth = () => {
+    const { data } = this.state;
+
+    let totalSaleMonth = 0;
+    let totalSaleYear = 0;
+    var currentdate = new Date();
+    var cur_month = currentdate.getMonth() + 1;
+    var cur_year = currentdate.getFullYear();
+
+    data.filter(element => {
+      let parts = element.soldDate.split(/[/ :]/);
+      console.log(parts);
+      let month = parts[0];
+      let year = parts[2];
+      console.log(element);
+      if (cur_month == month && year == cur_year) {
+        totalSaleMonth += parseFloat(element.orderCost);
+      }
+      if (year == cur_year) {
+        totalSaleYear += parseFloat(element.orderCost);
+      }
+    });
+
+    let saleMonthPercentage = (totalSaleMonth / totalSaleYear) * 100;
+
+    this.setState({
+      totalSaleMonth: totalSaleMonth,
+      totalSaleYear: totalSaleYear,
+      saleMonthPercentage: saleMonthPercentage
+    });
+  };
+
+  calculateMostPopularItem = () => {
+    const { data } = this.state;
+
+    let itemsSold = [];
+    data.map(element => {
+      element.items.map(x => {
+        itemsSold.push(x.name);
+      });
+    });
+
+    let mostPopItem = itemsSold
+      .sort(
+        (a, b) =>
+          itemsSold.filter(v => v === a).length -
+          itemsSold.filter(v => v === b).length
+      )
+      .pop();
+
+    this.setState(
+      { mostPopularItem: mostPopItem },
+      console.log(this.state.mostPopularItem)
+    );
+  };
 
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
@@ -57,11 +119,17 @@ export class Sales extends Component {
     if (checked.includes(id)) {
       console.log("it already in arry");
       const updatedArray = checked.filter(s => s !== id);
-      this.setState({ checked: updatedArray, error: null, message: null });
+      this.setState(
+        { checked: updatedArray, error: null, message: null },
+        console.log(this.state.checked)
+      );
     } else {
       console.log(" not in arry");
       checked.push(id);
-      this.setState({ checked: checked, error: null, message: null });
+      this.setState(
+        { checked: checked, error: null, message: null },
+        console.log(this.state.checked)
+      );
     }
   };
 
@@ -71,6 +139,7 @@ export class Sales extends Component {
       this.setState({ error: "Please Check a Sale" });
     } else {
       checked.map(element => {
+        console.log("removing" + element);
         db.collection("sales")
           .doc(element)
           .delete()
@@ -88,8 +157,51 @@ export class Sales extends Component {
 
   render() {
     const { data } = this.state;
+    console.log(this.state.data);
     return (
       <Segment style={{ height: "100vh" }}>
+        <div>
+          <Grid centered columns={2}>
+            <Grid.Column>
+              <Grid.Row verticalAlign="top">
+                <Statistic
+                  size="mini"
+                  color="orange"
+                  value={"$" + this.state.totalSaleMonth}
+                  label="Total Sale This Month"
+                />
+
+                <Statistic
+                  floated="right"
+                  size="mini"
+                  color="grey"
+                  value={"$" + this.state.totalSaleYear}
+                  label="Total Sale This Year"
+                />
+              </Grid.Row>
+
+              <Grid.Row verticalAlign="bottom">
+                <Progress
+                  color="orange"
+                  percent={this.state.saleMonthPercentage}
+                />
+              </Grid.Row>
+            </Grid.Column>
+            <Grid.Column>
+              <Grid.Row>
+                <div style={{ textAlign: "center" }}>
+                  <Statistic
+                    size="large"
+                    inverted
+                    color="blue"
+                    value={this.state.mostPopularItem}
+                    label="Most Popular Item SOld"
+                  />
+                </div>
+              </Grid.Row>
+            </Grid.Column>
+          </Grid>
+        </div>
         <div>
           {this.state.error && (
             <Message icon="frown" negative>
@@ -141,9 +253,9 @@ export class Sales extends Component {
             {data.map(items => {
               return (
                 <Table.Body>
-                  <Table.Row key={items.SalesId}>
+                  <Table.Row key={items.SaleId}>
                     <Table.Cell collapsing>
-                      <Checkbox id={items.SalesId} onClick={this.toggleCheck} />
+                      <Checkbox id={items.SaleId} onClick={this.toggleCheck} />
                     </Table.Cell>
                     <Table.Cell textAlign="center">{items.soldDate}</Table.Cell>
                     <Table.Cell textAlign="center">{items.name}</Table.Cell>

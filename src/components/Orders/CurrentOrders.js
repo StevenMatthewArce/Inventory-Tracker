@@ -136,6 +136,7 @@ export class CurrentOrders extends Component {
         const item = checkedGoods.map(element => element.items);
         item[0].map(element => {
           let itemsToRemove = [];
+          console.log(element);
           db.collection("finishedgoods")
             .where("name", "==", element.name)
             .get()
@@ -145,6 +146,7 @@ export class CurrentOrders extends Component {
               });
             })
             .then(() => {
+              console.log(itemsToRemove);
               if (itemsToRemove[0].quantity > element.quantity) {
                 let newQty = itemsToRemove[0].quantity - element.quantity;
                 db.collection("finishedgoods")
