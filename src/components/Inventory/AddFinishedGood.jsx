@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect, useState, useContext } from 'react';
 import { db } from '../Firebase';
-
+import { AuthContext } from "../App/Auth";
 import { Link, Redirect } from 'react-router-dom';
 import {
   Form,
@@ -25,12 +24,14 @@ const AddFinishedGood = () => {
   const [selected, setSelected] = useState("None");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  
-
+  const { currentUser } = useContext(AuthContext);
+  const uid = currentUser.uid;
+  console.log(uid)
   
   useEffect(() => {
     let docs = [];
-    db.collection('recipes')
+    db.collection("users")
+    .doc(uid).collection('recipes')
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -74,24 +75,30 @@ const AddFinishedGood = () => {
  
    
     items.some(element => {
+      console.log(element.name)
       let qty = quantity*element.quantity;
       let itemsToRemove = [];
-      db.collection("items").where("name", "==", element.name )
+      db.collection("users")
+      .doc(uid).collection("items").where("name", "==", element.name )
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             itemsToRemove.push({ id: doc.id, ...doc.data() });
         });
-    }).then(()=>{
+        console.log(itemsToRemove)
+    })
+    .then(()=>{
       if (itemsToRemove[0].quantity > qty){
         itemsToRemove[0].quantity = itemsToRemove[0].quantity - qty
-        db.collection("items")
+        db.collection("users")
+        .doc(uid).collection("items")
         .doc(itemsToRemove[0].id)
         .update({ quantity: itemsToRemove[0].quantity })
         console.log("First")
       } else if (itemsToRemove[0].quantity == qty){
-        db.collection("items")
+        db.collection("users")
+      .doc(uid).collection("items")
         .doc(itemsToRemove[0].id)
         .delete()
         .then(() => {
@@ -110,11 +117,13 @@ const AddFinishedGood = () => {
           console.log("Not enough raw materials")
           return true
         }else {
-          db.collection("items")
+          db.collection("users")
+          .doc(uid).collection("items")
           .doc(itemsToRemove[1].id)
           .delete()
           itemsToRemove[1].quantity = itemsToRemove[1].quantity - remainingItems;
-          db.collection("items")
+          db.collection("users")
+      .doc(uid).collection("items")
           .doc(itemsToRemove[1].id)
           .update({ quantity: itemsToRemove[1].quantity })
           console.log("Third")
@@ -128,7 +137,8 @@ const AddFinishedGood = () => {
     
     
 
-    db.collection('finishedgoods')
+    db.collection("users")
+      .doc(uid).collection('finishedgoods')
       .add({ name, receipeCost, items, quantity,qtyProduced, totalLabor })
       .then(() => {
         setMessage("Item has been submitted. ");

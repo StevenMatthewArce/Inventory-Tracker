@@ -13,10 +13,17 @@ import {
 import { db } from '../Firebase';
 import { Link, Redirect } from 'react-router-dom';
 import _, { floor } from "lodash";
+import { AuthContext } from "../App/Auth";
 
 class AddRecipe extends React.Component {
+  static contextType = AuthContext
+  
+
   constructor(props) {
     super(props);
+
+    
+   
     this.state = {
       name: '',
       items: [],
@@ -30,8 +37,11 @@ class AddRecipe extends React.Component {
   }
 
   componentDidMount() {
+    const {currentUser} = this.context
+   
     let docs = [];
-    db.collection('items')
+    db.collection("users")
+      .doc(currentUser.uid).collection('items')
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -64,6 +74,7 @@ class AddRecipe extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
+    const {currentUser} = this.context
     
     let { name, items, description, qtyProduced, totalLabor } = this.state;
     
@@ -94,7 +105,8 @@ class AddRecipe extends React.Component {
       receipeCost = receipeCost.toFixed(2)
         
 
-    db.collection('recipes')
+      db.collection("users")
+      .doc(currentUser.uid).collection('recipes')
       .add({ name, items, description, receipeCost,qtyProduced, totalLabor  })
       .then(() => {
         this.setState({ message: 'Recipe has been submitted. ' });
@@ -159,6 +171,7 @@ class AddRecipe extends React.Component {
   };
 
   render() {
+    console.log(this.state)
     return (
       <Segment style={{ height: "90vh" }}>
         <div>
@@ -168,10 +181,14 @@ class AddRecipe extends React.Component {
           </Button>
         </div>
         <br />
+        {this.state.message && <Message positive>{this.state.message}</Message>}
+        {this.state.error && <Message negative>{this.state.error}</Message>}
         <div>
           <Grid>
             <Grid.Column width={9}>
+              
               <Grid.Row>
+                 
                 <Header as='h1' textAlign='left'>
                   Add a Recipe
                   </Header>
@@ -285,8 +302,7 @@ class AddRecipe extends React.Component {
           
                 
         </Form>
-        {this.state.message && <Message positive>{this.state.message}</Message>}
-        {this.state.error && <Message negative>{this.state.error}</Message>}
+       
       </Segment>
     )
   }

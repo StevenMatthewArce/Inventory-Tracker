@@ -26,7 +26,7 @@ const RawMaterials = props => {
   const [alertValue, setAlertValue] = useState(0);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const [checked, setChecked] = useState(null);
+  const [checked, setChecked] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [value, setValue] = useState("");
@@ -65,11 +65,15 @@ const RawMaterials = props => {
       setError("Please check a box!");
     } else {
       checked.map(element => {
-        db.collection("items")
+        db.collection("users")
+          .doc(uid)
+          .collection("items")
           .doc(element)
           .delete()
           .then(() => {
+            setError(null);
             setMessage("Item sucessfully deleted!");
+            setTimeout(() => setMessage(null), 500);
           })
           .catch(error => {
             setError("Item deletion unsucessful!");
@@ -229,7 +233,7 @@ const RawMaterials = props => {
 
             items.forEach(element => {
               totalCost += parseFloat(element.cost);
-              totalQty += parseFloat(element.qty);
+              totalQty += parseFloat(element.quantity);
             });
             totalCost = totalCost / items.length;
             totalCost = totalCost.toFixed(2);

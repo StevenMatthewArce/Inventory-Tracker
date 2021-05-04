@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-
+import React, { useState, useContext } from "react";
 import { db, storage } from "../Firebase";
-
+import { AuthContext } from "../App/Auth";
 import { DateInput } from "semantic-ui-calendar-react";
 import {
   Form,
@@ -16,7 +15,8 @@ import {
 } from "semantic-ui-react";
 import { Link, useHistory } from "react-router-dom";
 
-const AddItem = () => {
+const AddItem = props => {
+  const { currentUser } = useContext(AuthContext);
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [cost, setCost] = useState(0);
@@ -26,6 +26,7 @@ const AddItem = () => {
   const [message, setMessage] = useState(null);
   const [imageAsFile, setImageAsFile] = useState("");
   const [imageAsUrl, setImageAsUrl] = useState("");
+  const uid = currentUser.uid;
 
   let history = useHistory();
 
@@ -57,7 +58,9 @@ const AddItem = () => {
       imageAsUrl = await getImgFirebaseUrl();
     }
 
-    db.collection("items")
+    db.collection("users")
+      .doc(uid)
+      .collection("items")
       .add({
         name,
         description,
@@ -190,7 +193,7 @@ const AddItem = () => {
               <Form.Input
                 icon="dollar sign"
                 iconPosition="left"
-                placeholder="Cost"
+                placeholder="Unit Cost"
                 name="cost"
                 value={cost}
                 onChange={handleCostChange}
