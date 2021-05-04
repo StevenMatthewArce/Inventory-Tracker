@@ -6,6 +6,7 @@ import { auth } from "../Firebase/index";
 const Sidenav = props => {
   return (
     <Sidebar
+      style={{ backgroundColor: "#4c4743" }}
       as={Menu}
       animation="slide along"
       direction="left"

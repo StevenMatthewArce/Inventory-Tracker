@@ -126,11 +126,22 @@ export class Expense extends Component {
         totalExpenseYear: totalExpenseYear,
         expenseMonthPercentage: expenseMonthPercentage
       },
-      this.props.handleExpenseData(
-        totalExpenseMonth,
-        totalExpenseYear,
-        expenseMonthPercentage
-      )
+
+      () => {
+        db.collection("users")
+          .doc(this.state.uid)
+          .update({
+            totalExpenseMonth: totalExpenseMonth,
+            totalExpenseYear: totalExpenseYear
+          })
+          .then(() =>
+            this.props.handleExpenseData(
+              totalExpenseMonth,
+              totalExpenseYear,
+              expenseMonthPercentage
+            )
+          );
+      }
     );
   };
 

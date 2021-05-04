@@ -128,7 +128,15 @@ export class Sales extends Component {
       .pop();
 
     this.setState(
-      { mostPopularItem: mostPopItem }
+      { mostPopularItem: mostPopItem },
+      () => {
+        db.collection("users")
+          .doc(this.state.uid)
+          .update({
+            mostPopularItem: this.state.mostPopularItem
+          });
+      }
+
       // console.log(this.state.mostPopularItem)
     );
   };
