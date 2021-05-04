@@ -13,10 +13,20 @@ const Dashboard = () => {
   const [totalExpenseMonth, setTotalExpenseMonth] = useState(0);
   const [lateOrders, setLateOrders] = useState([]);
   const [currentOrders, setCurrentOrders] = useState([]);
+  const [sales, setSales] = useState([])
+  const [itemsSold, setItemsSold] = useState(0)
+  const [customers, setCustomers] = useState(0)
 
+  
   if (!currentUser) {
     return <Redirect to="/" />;
   }
+
+
+  const currentdate = new Date();
+  const cur_month = currentdate.getMonth() + 1;
+  const cur_year = currentdate.getFullYear();
+  const cur_date = currentdate.getDate();
 
   useEffect(() => {
     let docs = [];
@@ -47,10 +57,7 @@ const Dashboard = () => {
           docs.push({ id: doc.id, ...doc.data() });
         });
 
-        var currentdate = new Date();
-        var cur_month = currentdate.getMonth() + 1;
-        var cur_year = currentdate.getFullYear();
-        var cur_date = currentdate.getDate();
+       
 
         let currentOrders = [];
         let lateOrders = [];
@@ -73,8 +80,34 @@ const Dashboard = () => {
       });
   }, [1]);
 
-  console.log(currentOrders);
-  console.log(lateOrders);
+  useEffect(()=>{
+    let docs = [];
+    let month = cur_month.toString()
+    if((month-10)<0){
+      month = "0"+month
+  }
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("sales")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          docs.push({ id: doc.id, ...doc.data() });
+        })
+        setSales(docs)
+
+        let itemsSold = 0;
+        docs.map(element=>{
+          element[0].items.map(element=>itemsSold += parseInt(element.quantity))
+      })
+
+      setItemsSold(itemsSold)
+      setCustomers(docs.length)
+
+      })
+  },[1])
+
+
 
   const data = [
     { x: 0, y: 8 },
@@ -101,12 +134,11 @@ const Dashboard = () => {
         <Divider />
         <Grid divided>
           <Grid.Column width={12}>
-            <Grid>
-              <Grid.Row columns={2}>
-                <Grid.Column>
+            <Grid centered columns={2} textAlign= {"center"}>
+                <Grid.Column >
                   <Segment>
                     <Header
-                      icon="chart line"
+                      
                       style={{
                         textAlign: "center",
                         color: "#76c80d",
@@ -121,7 +153,6 @@ const Dashboard = () => {
                 <Grid.Column>
                   <Segment>
                     <Header
-                      icon="cart"
                       style={{
                         textAlign: "center",
                         color: "#fe5e39",
@@ -132,8 +163,7 @@ const Dashboard = () => {
                       subheader="Expenses This Month"
                     />
                   </Segment>
-                </Grid.Column>
-              </Grid.Row>
+                </Grid.Column> 
             </Grid>
             <br style={{ height: "5vh" }} />
             <Grid.Row>
@@ -147,9 +177,7 @@ const Dashboard = () => {
                         fontSize: 20
                       }}
                       size="large"
-                      // value={this.state.mostPopularItem}
-                      //FIXME: Change this
-                      content="10"
+                      content={itemsSold}
                       subheader="Products Sold This Month"
                     />
                   </Segment>
@@ -177,9 +205,7 @@ const Dashboard = () => {
                         fontSize: 20
                       }}
                       size="large"
-                      // value={this.state.mostPopularItem}
-                      //FIXME: Change this
-                      content="20"
+                      content={customers}
                       subheader="Customers This Month"
                     />
                   </Segment>
@@ -286,8 +312,35 @@ const Dashboard = () => {
                   content="LATE ORDERS"
                 />
                 <Divider />
-                {lateOrders.map(element => {
-                  return <Segment id={element.id}> {element.name} </Segment>;
+                {lateOrders.filter((element,id) => id < 5).map(element => {
+                  let parts = element.dateNeededBy.split(/[/ :]/);
+
+                  const monthName = (mon) => {
+                    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][mon - 1];
+                 }
+                  let month = monthName(parts[0])
+               
+                  return <Segment id={element.id}>
+                     <Grid verticalAlign='middle'  columns={3}>
+                      <Grid.Column width={2} textAlign={"center"}>
+                        <Grid.Row>
+                        <Header style={{fontSize: 10, color:"#fe5e39"}}content={parts[2]}/>
+                        </Grid.Row>
+                         <Grid.Row>
+                         <Header style={{fontSize: 20, color:"#fe5e39"}} content={parts[1]}/>
+                        </Grid.Row>
+                        <Grid.Row>
+                        <Header style={{fontSize: 10, color:"#fe5e39"}}content={month}/>
+                        </Grid.Row>
+                      </Grid.Column>
+                      <Grid.Column>
+                      <Header  style={{textAlign:"center", color:"#74706d"}} content={element.name}/>
+                      </Grid.Column>
+                      <Grid.Column>
+                      <Header centered as="h5" style={{color:"#74706d"}}content={element.items[0].name + ((element.items.length> 1) ? ", ..." : "")}/>
+                      </Grid.Column>
+                      </Grid>
+                  </Segment>;
                 })}
               </Segment>
             </Grid.Row>
@@ -299,8 +352,35 @@ const Dashboard = () => {
                   content="CURRENT ORDERS"
                 />
                 <Divider />
-                {currentOrders.map(element => {
-                  return <Segment id={element.id}> {element.name} </Segment>;
+                {currentOrders.filter((item,id) => id < 5).map(element => {
+                  let parts = element.dateNeededBy.split(/[/ :]/);
+
+                  const monthName = (mon) => {
+                    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][mon - 1];
+                 }
+                  let month = monthName(parts[0])
+                  return <Segment id={element.id}>
+                      <Grid verticalAlign='middle'  columns={3}>
+                      <Grid.Column width={2} textAlign={"center"}>
+                        <Grid.Row>
+                        <Header style={{fontSize: 10, color:"#74706d"}}content={parts[2]}/>
+                        </Grid.Row>
+                         <Grid.Row>
+                         <Header style={{fontSize: 20, color:"#74706d"}} content={parts[1]}/>
+                        </Grid.Row>
+                        <Grid.Row>
+                        <Header style={{fontSize: 10, color:"#74706d"}}content={month}/>
+                        </Grid.Row>
+                      </Grid.Column>
+                      <Grid.Column >
+                      <Header  style={{textAlign:"center", color:"#74706d"}} content={element.name}/>
+                      </Grid.Column>
+                      <Grid.Column>
+                      <Header as="h5" style={{color:"#74706d"}} content={element.items[0].name + ((element.items.length> 1) ? ", ..." : "")}/>
+                      </Grid.Column>
+                      </Grid>
+                    
+                     </Segment>;
                 })}
               </Segment>
             </Grid.Row>
