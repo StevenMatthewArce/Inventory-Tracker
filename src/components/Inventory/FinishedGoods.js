@@ -13,7 +13,7 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
-import _, { times } from "lodash";
+import _ from "lodash";
 
 export class FinishedGoods extends Component {
   constructor(props) {
@@ -28,7 +28,8 @@ export class FinishedGoods extends Component {
       value: "",
       checked: [],
       error: null,
-      message: null
+      message: null,
+      uid: props.uid
     };
   }
 
@@ -51,7 +52,9 @@ export class FinishedGoods extends Component {
   };
 
   componentDidMount() {
-    db.collection("finishedgoods")
+    db.collection("users")
+      .doc(this.state.uid)
+      .collection("finishedgoods")
       .orderBy("quantity", "desc")
       .onSnapshot(snap => {
         let documents = [];
@@ -99,15 +102,18 @@ export class FinishedGoods extends Component {
       this.setState({ error: "Please Check a Finished Good" });
     } else {
       checked.map(element => {
-        db.collection("finishedgoods")
-          .doc(element)
+        db.collection("users")
+          .doc(this.state.uid)
+          .collection("finishedgoods")
           .delete()
           .then(() => {
-            console.log("Document successfully deleted!");
-            this.setState({ message: "Sucessfully removed Finished Good" });
+            this.setState({
+              message: "Sucessfully removed Finished Good",
+              error: null
+            });
+            setTimeout(() => this.setState({ message: null }), 500);
           })
           .catch(error => {
-            console.error("Error removing document: ", error);
             this.setState({ error: "Error removing doucment" });
           });
       });

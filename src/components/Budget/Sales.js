@@ -30,13 +30,16 @@ export class Sales extends Component {
       totalSaleMonth: null,
       totalSaleYear: null,
       saleMonthPercentage: null,
-      mostPopularItem: null
+      mostPopularItem: null,
+      uid: props.uid
     };
   }
 
   componentDidMount() {
     let documents = [];
-    db.collection("sales")
+    db.collection("users")
+      .doc(this.state.uid)
+      .collection("sales")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -140,7 +143,9 @@ export class Sales extends Component {
     } else {
       checked.map(element => {
         console.log("removing" + element);
-        db.collection("sales")
+        db.collection("users")
+          .doc(this.state.uid)
+          .collection("sales")
           .doc(element)
           .delete()
           .then(() => {
@@ -192,7 +197,6 @@ export class Sales extends Component {
                 <div style={{ textAlign: "center" }}>
                   <Statistic
                     size="large"
-                    inverted
                     color="blue"
                     value={this.state.mostPopularItem}
                     label="Most Popular Item SOld"

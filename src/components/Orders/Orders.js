@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Tab, Segment } from "semantic-ui-react";
 import { CurrentOrders, CompletedOrders } from "../Orders";
+import { AuthContext } from "../App/Auth";
+import { Redirect } from "react-router-dom";
 
-const panes = [
+const panes = currentUser => [
   {
     menuItem: "Current Orders",
     render: () => (
       <Tab.Pane attached={false}>
-        <CurrentOrders />
+        <CurrentOrders uid={currentUser.uid} />
       </Tab.Pane>
     )
   },
@@ -15,16 +17,22 @@ const panes = [
     menuItem: "Completed Orders",
     render: () => (
       <Tab.Pane attached={false}>
-        <CompletedOrders />
+        <CompletedOrders uid={currentUser.uid} />
       </Tab.Pane>
     )
   }
 ];
 
 const Orders = () => {
+  const { currentUser } = useContext(AuthContext);
+
+  if (!currentUser) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <Segment style={{ height: "90vh" }}>
-      <Tab panes={panes} />
+      <Tab panes={panes(currentUser)} />
     </Segment>
   );
 };

@@ -31,20 +31,21 @@ export class CurrentOrders extends Component {
       value: "",
       checked: [],
       error: null,
-      message: null
+      message: null,
+      uid: props.uid
     };
   }
 
   componentDidMount() {
     let documents = [];
-    db.collection("orders")
+    db.collection("users")
+      .doc(this.state.uid)
+      .collection("orders")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           documents.push({ ...doc.data(), id: doc.id });
-          console.log(doc.id, " => ", doc.data());
         });
-        console.log(documents);
       })
       .then(() => {
         let unfinished = [];
@@ -53,7 +54,7 @@ export class CurrentOrders extends Component {
             unfinished.push(element);
           }
         });
-        this.setState({ data: unfinished }, console.log(unfinished));
+        this.setState({ data: unfinished });
       });
   }
 
@@ -111,7 +112,9 @@ export class CurrentOrders extends Component {
       this.setState({ error: "Please Check an Order" });
     } else {
       checked.map(element => {
-        db.collection("orders")
+        db.collection("users")
+          .doc(this.state.uid)
+          .collection("orders")
           .doc(element)
           .delete()
           .then(() => {
@@ -133,11 +136,15 @@ export class CurrentOrders extends Component {
     } else {
       checked.map(checkedElement => {
         const checkedGoods = data.filter(data => data.id == checkedElement);
+        console.log(checkedGoods[0]);
         const item = checkedGoods.map(element => element.items);
+        console.log(item);
         item[0].map(element => {
           let itemsToRemove = [];
           console.log(element);
-          db.collection("finishedgoods")
+          db.collection("users")
+            .doc(this.state.uid)
+            .collection("finishedgoods")
             .where("name", "==", element.name)
             .get()
             .then(querySnapshot => {
@@ -147,14 +154,20 @@ export class CurrentOrders extends Component {
             })
             .then(() => {
               console.log(itemsToRemove);
+              console.log(itemsToRemove[0]);
+              console.log(itemsToRemove);
               if (itemsToRemove[0].quantity > element.quantity) {
                 let newQty = itemsToRemove[0].quantity - element.quantity;
-                db.collection("finishedgoods")
+                db.collection("users")
+                  .doc(this.state.uid)
+                  .collection("finishedgoods")
                   .doc(itemsToRemove[0].id)
                   .update({ quantity: newQty });
                 console.log("First");
               } else if (itemsToRemove[0].quantity === element.quantity) {
-                db.collection("finishedgoods")
+                db.collection("users")
+                  .doc(this.state.uid)
+                  .collection("finishedgoods")
                   .doc(itemsToRemove[0].id)
                   .delete()
                   .then(() => {
@@ -172,12 +185,16 @@ export class CurrentOrders extends Component {
                   this.setState({ error: error });
                   return;
                 } else {
-                  db.collection("finishedgoods")
+                  db.collection("users")
+                    .doc(this.state.uid)
+                    .collection("finishedgoods")
                     .doc(itemsToRemove[1].id)
                     .delete();
                   itemsToRemove[1].quantity =
                     itemsToRemove[1].quantity - remainingItems;
-                  db.collection("items")
+                  db.collection("users")
+                    .doc(this.state.uid)
+                    .collection("items")
                     .doc(itemsToRemove[1].id)
                     .update({ quantity: itemsToRemove[1].quantity });
                   console.log("Third");
@@ -189,7 +206,9 @@ export class CurrentOrders extends Component {
         console.log(this.state);
         if (error == null) {
           console.log("Error");
-          db.collection("orders")
+          db.collection("users")
+            .doc(this.state.uid)
+            .collection("orders")
             .doc(checkedElement)
             .update({ finished: "1" })
             .then(() => {
@@ -215,10 +234,13 @@ export class CurrentOrders extends Component {
 
           currentdate = getFormattedDate(currentdate);
 
-          db.collection("sales").add({
-            ...checkedGoods,
-            currentdate
-          });
+          db.collection("users")
+            .doc(this.state.uid)
+            .collection("sales")
+            .add({
+              ...checkedGoods,
+              currentdate
+            });
         }
       });
     }
@@ -250,6 +272,8 @@ export class CurrentOrders extends Component {
         </div>
       );
     };
+
+    console.log(this.state.checked.map(element => element));
 
     return (
       <div>

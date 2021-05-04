@@ -40,13 +40,16 @@ export class Expense extends Component {
       modalOpen: false,
       receiptInformation: "",
       error: null,
-      message: ""
+      message: "",
+      uid: props.uid
     };
   }
 
   componentDidMount() {
     let documents = [];
-    db.collection("receipts")
+    db.collection("users")
+      .doc(this.state.uid)
+      .collection("receipts")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -82,8 +85,10 @@ export class Expense extends Component {
   calculateExpenseMonth = () => {
     const { data } = this.state;
 
+  
     let totalExpenseMonth = 0;
     let totalExpenseYear = 0;
+    let expenseMonthPercentage = 0;
     var currentdate = new Date();
     var cur_month = currentdate.getMonth() + 1;
     var cur_year = currentdate.getFullYear();
@@ -99,7 +104,7 @@ export class Expense extends Component {
       }
     });
 
-    let expenseMonthPercentage = (totalExpenseMonth / totalExpenseYear) * 100;
+    expenseMonthPercentage = (totalExpenseMonth / totalExpenseYear) * 100;
 
     this.setState({
       totalExpenseMonth: totalExpenseMonth,
@@ -142,7 +147,9 @@ export class Expense extends Component {
       this.setState({ error: "Please Check a Receipt" });
     } else {
       checked.map(element => {
-        db.collection("receipts")
+        db.collection("users")
+          .doc(this.state.uid)
+          .collection("receipts")
           .doc(element)
           .delete()
           .then(() => {

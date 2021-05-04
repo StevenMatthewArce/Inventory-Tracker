@@ -13,10 +13,13 @@ import {
 import { DateInput } from "semantic-ui-calendar-react";
 import { db } from "../Firebase";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../App/Auth";
 
 //TODO: Add logic to not submit unless required fields have been added
 
 export class AddOrder extends Component {
+  static contextType = AuthContext;
+
   constructor(props) {
     super(props);
 
@@ -38,7 +41,11 @@ export class AddOrder extends Component {
 
   componentDidMount() {
     let documents = [];
-    db.collection("recipes")
+    const { currentUser } = this.context;
+
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("recipes")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -155,7 +162,7 @@ export class AddOrder extends Component {
 
   submit = e => {
     e.preventDefault();
-
+    const { currentUser } = this.context;
     let {
       name,
       dateReceived,
@@ -169,7 +176,9 @@ export class AddOrder extends Component {
     } = this.state;
     let finished = "0";
 
-    db.collection("orders")
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("orders")
       .add({
         name,
         dateReceived,

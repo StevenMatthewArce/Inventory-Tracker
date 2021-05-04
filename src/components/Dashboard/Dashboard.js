@@ -1,14 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../App/Auth";
 import { Tab, Segment } from "semantic-ui-react";
-import Sales from "../Budget/Sales";
+import { db } from "../Firebase";
 
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
+
+  console.log(currentUser);
+  const [data, setData] = useState(null);
+
   if (!currentUser) {
     return <Redirect to="/" />;
   }
+
+  console.log(currentUser);
 
   return (
     <div>

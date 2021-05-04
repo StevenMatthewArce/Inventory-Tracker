@@ -1,21 +1,35 @@
 import React, { useState } from "react";
 import { Redirect, Link } from "react-router-dom";
-import { auth as firebaseConfig } from "../Firebase/index";
+import { auth } from "../Firebase/index";
 import { Segment, Grid, Header, Icon, Form, Button } from "semantic-ui-react";
+import { db } from "../Firebase";
 
 const SignUp = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const handleSubmit = e => {
     e.preventDefault();
     const { email, password } = e.target.elements;
+    let userDetail;
     try {
-      firebaseConfig.createUserWithEmailAndPassword(
-        email.value,
-        password.value
-      );
+      auth
+        .createUserWithEmailAndPassword(email.value, password.value)
+        .then(user => {
+          const displayName = user.user.email.split("@")[0];
+          const { email, uid } = user.user;
+          userDetail = {
+            email: email,
+            uid: uid,
+            displayName: displayName,
+            alertValue: 5
+          };
+          db.collection("users")
+            .doc(uid)
+            .set(userDetail)
+            .then(() => console.log("created userprofile"));
+        });
       setCurrentUser(true);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
   if (currentUser) {

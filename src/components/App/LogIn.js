@@ -9,7 +9,9 @@ const LogIn = () => {
     e.preventDefault();
     const { email, password } = e.target.elements;
     try {
-      auth.signInWithEmailAndPassword(email.value, password.value);
+      auth
+        .signInWithEmailAndPassword(email.value, password.value)
+        .then(user => console.log(user));
     } catch (error) {
       alert(error);
     }

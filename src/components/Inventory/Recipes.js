@@ -28,7 +28,8 @@ export class Recipes extends Component {
       value: "",
       checked: [],
       error: null,
-      message: null
+      message: null,
+      uid: props.uid
     };
   }
 
@@ -51,15 +52,18 @@ export class Recipes extends Component {
   };
 
   componentDidMount() {
-    db.collection("recipes").onSnapshot(snap => {
-      let documents = [];
-      snap.forEach(doc => {
-        documents.push({ ...doc.data(), id: doc.id });
+    db.collection("users")
+      .doc(this.state.uid)
+      .collection("recipes")
+      .onSnapshot(snap => {
+        let documents = [];
+        snap.forEach(doc => {
+          documents.push({ ...doc.data(), id: doc.id });
+        });
+        this.setState({
+          data: documents
+        });
       });
-      this.setState({
-        data: documents
-      });
-    });
   }
 
   handleResultSelect = (e, { result }) => this.setState({ value: result.name });
@@ -97,15 +101,19 @@ export class Recipes extends Component {
       this.setState({ error: "Please Check a Recipe" });
     } else {
       checked.map(element => {
-        db.collection("recipes")
+        db.collection("users")
+          .doc(this.state.uid)
+          .collection("recipes")
           .doc(element)
           .delete()
           .then(() => {
-            console.log("Document successfully deleted!");
-            this.setState({ message: "Sucessfully removed Recipe" });
+            this.setState({
+              message: "Sucessfully removed Recipe",
+              error: null
+            });
+            setTimeout(() => this.setState({ message: null }), 500);
           })
           .catch(error => {
-            console.error("Error removing document: ", error);
             this.setState({ error: "Error removing doucment" });
           });
       });
@@ -235,7 +243,7 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {items.items.map(element => element.name).join(", ")}
+                      {/* {items.items.map(element => element.name).join(", ")} */}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       {items.qtyProduced}

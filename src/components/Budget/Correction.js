@@ -51,7 +51,8 @@ class Correction extends Component {
       message: null,
       error: null,
       redirect: false,
-      imgUrl: ""
+      imgUrl: "",
+      uid: props.uid
     };
     this.addItem = this.addItem.bind(this);
     this.removeItem = this.removeItem.bind(this);
@@ -79,7 +80,9 @@ class Correction extends Component {
 
     items.forEach(element => {
       let { name, cost, quantity, dateRestocked } = element;
-      db.collection("items")
+      db.collection("users")
+        .doc(this.state.uid)
+        .collection("items")
         .add({ name, cost, quantity, dateRestocked })
         .then(() => {
           this.setState({ message: "Items has been submitted. " });
@@ -89,14 +92,17 @@ class Correction extends Component {
         });
     });
 
-    db.collection("receipts").add({
-      store,
-      totalCost,
-      description,
-      date,
-      type,
-      imageAsUrl
-    });
+    db.collection("users")
+      .doc(this.state.uid)
+      .collection("receipts")
+      .add({
+        store,
+        totalCost,
+        description,
+        date,
+        type,
+        imageAsUrl
+      });
     setTimeout(() => {
       this.setState({ redirect: true });
     }, 3000);
