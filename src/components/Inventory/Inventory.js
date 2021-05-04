@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Tab, Segment } from "semantic-ui-react";
 import { RawMaterials, FinishedGoods, Recipes } from "../Inventory";
 import { AuthContext } from "../App/Auth";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 const panes = currentUser => [
   {

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Ocr from "./Ocr";
 import Correction from "./Correction";
+import { AuthContext } from "../App/Auth";
 
 const AddReceipt = () => {
   const [items, setItems] = useState(null);
@@ -9,6 +10,8 @@ const AddReceipt = () => {
   const [totalCost, setTotalCost] = useState(null);
   const [description, setDescription] = useState(null);
   const [imageAsFile, setImageAsFile] = useState("");
+  const { currentUser } = useContext(AuthContext);
+  const uid = currentUser.uid;
 
   const handleNextStep = () => {
     setStep(step + 1);
@@ -28,7 +31,9 @@ const AddReceipt = () => {
 
   switch (step) {
     case 1:
-      return <Ocr nextStep={handleNextStep} getChildOnSubmit={onSubmit} />;
+      return (
+        <Ocr nextStep={handleNextStep} getChildOnSubmit={onSubmit} uid={uid} />
+      );
     case 2:
       return (
         <Correction
@@ -38,6 +43,7 @@ const AddReceipt = () => {
           store={store}
           totalCost={totalCost}
           description={description}
+          uid={uid}
         />
       );
     default:

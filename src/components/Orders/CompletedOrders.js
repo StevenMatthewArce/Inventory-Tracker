@@ -27,13 +27,16 @@ export class CompletedOrders extends Component {
       value: "",
       checked: [],
       error: null,
-      message: null
+      message: null,
+      uid: props.uid
     };
   }
 
   componentDidMount() {
     let documents = [];
-    db.collection("orders")
+    db.collection("users")
+      .doc(this.state.uid)
+      .collection("orders")
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -106,7 +109,9 @@ export class CompletedOrders extends Component {
       this.setState({ error: "Please Check an Order" });
     } else {
       checked.map(element => {
-        db.collection("orders")
+        db.collection("users")
+          .doc(this.state.uid)
+          .collection("orders")
           .doc(element)
           .delete()
           .then(() => {
