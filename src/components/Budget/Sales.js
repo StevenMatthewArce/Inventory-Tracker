@@ -92,11 +92,21 @@ export class Sales extends Component {
 
     let saleMonthPercentage = (totalSaleMonth / totalSaleYear) * 100;
 
-    this.setState({
-      totalSaleMonth: totalSaleMonth,
-      totalSaleYear: totalSaleYear,
-      saleMonthPercentage: saleMonthPercentage
-    });
+    this.setState(
+      {
+        totalSaleMonth: totalSaleMonth,
+        totalSaleYear: totalSaleYear,
+        saleMonthPercentage: saleMonthPercentage
+      },
+      () => {
+        db.collection("users")
+          .doc(this.state.uid)
+          .update({
+            totalSaleYear: this.state.totalSaleYear,
+            totalSaleMonth: this.state.totalSaleMonth
+          });
+      }
+    );
   };
 
   calculateMostPopularItem = () => {
@@ -229,7 +239,7 @@ export class Sales extends Component {
                   color={this.state.profitMonth > 0 ? "green" : "red"}
                   percent={this.state.profitPercentage}
                   value={"$" + this.state.profitMonth}
-                  label="Total Profit This Year"
+                  label="Total Profit This Month"
                 />
 
                 <Statistic
@@ -237,7 +247,7 @@ export class Sales extends Component {
                   size="mini"
                   color="grey"
                   value={"$" + this.state.profitYear}
-                  label="Total Sales"
+                  label="Total Profit This Year"
                 />
               </Grid.Row>
 

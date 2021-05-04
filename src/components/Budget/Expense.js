@@ -33,9 +33,11 @@ export class Expense extends Component {
       direction: null,
       totalExpenseMonth: null,
       totalExpenseYear: null,
-      totalSalesYear: null,
+      totalSaleYear: null,
+      totalSaleMonth: null,
       expenseMonthPercentage: null,
       expenseYearPercentage: null,
+      expenseScalePercentage: null,
       checked: [],
       modalOpen: false,
       receiptInformation: "",
@@ -58,9 +60,22 @@ export class Expense extends Component {
         });
       })
       .then(() => this.setState({ data: documents }))
-      .then(() => this.calculateExpenseMonth());
+      .then(() => this.calculateExpenseMonth())
+      .then(() => {});
 
-    this.calculateExpenseYear();
+    db.collection("users")
+      .doc(this.state.uid)
+      .get()
+      .then(querySnapshot => {
+        let { totalSaleMonth, totalSaleYear } = querySnapshot.data();
+        this.setState(
+          {
+            totalSaleMonth: totalSaleMonth,
+            totalSaleYear: totalSaleYear
+          },
+          this.caculateSaleExpense()
+        );
+      });
   }
 
   //TODO: Add sorting alg
@@ -119,18 +134,16 @@ export class Expense extends Component {
     );
   };
 
-  calculateExpenseYear = () => {
-    //TODO: Add code to calculate monthly expenses
+  caculateSaleExpense = () => {
+    const {
+      totalSaleMonth,
+      totalSaleYear,
+      totalExpenseMonth,
+      totalExpenseYear
+    } = this.state;
 
-    //! This is only for testing
-    let totalSalesYear = "90000";
-    this.setState({
-      totalSalesYear: totalSalesYear
-    });
-
-    let expenseYearPercentage =
-      (this.state.totalExpenseYear / totalSalesYear) * 100;
-    this.setState({ expenseYearPercentage: expenseYearPercentage });
+    let expenseScalePercentage = (totalExpenseYear / totalSaleYear) * 100;
+    this.setState({ expenseScalePercentage: expenseScalePercentage });
   };
 
   toggleCheck = (e, { id }) => {
@@ -199,7 +212,7 @@ export class Expense extends Component {
                 <Statistic
                   size="mini"
                   color="orange"
-                  value={this.state.totalExpenseMonth}
+                  value={"$" + this.state.totalExpenseMonth}
                   label="Total Expense This Month"
                 />
 
@@ -207,7 +220,7 @@ export class Expense extends Component {
                   floated="right"
                   size="mini"
                   color="grey"
-                  value={this.state.totalExpenseYear}
+                  value={"$" + this.state.totalExpenseYear}
                   label="Total Expense This Year"
                 />
               </Grid.Row>
@@ -223,8 +236,12 @@ export class Expense extends Component {
               <Grid.Row verticalAlign="top">
                 <Statistic
                   size="mini"
-                  color="olive"
-                  value={this.state.totalExpenseYear}
+                  color={
+                    this.state.totalExpenseYear > this.state.totalSaleYear
+                      ? "red"
+                      : "green"
+                  }
+                  value={"$" + this.state.totalExpenseYear}
                   label="Total Expense This Year"
                 />
 
@@ -232,15 +249,19 @@ export class Expense extends Component {
                   floated="right"
                   size="mini"
                   color="grey"
-                  value={this.state.totalSalesYear}
+                  value={"$" + this.state.totalSaleYear}
                   label="Total Sales"
                 />
               </Grid.Row>
 
               <Grid.Row verticalAlign="bottom">
                 <Progress
-                  color="olive"
-                  percent={this.state.expenseYearPercentage}
+                  color={
+                    this.state.totalExpenseYear > this.state.totalSaleYear
+                      ? "red"
+                      : "green"
+                  }
+                  percent={this.state.expenseScalePercentage}
                 />
               </Grid.Row>
             </Grid.Column>

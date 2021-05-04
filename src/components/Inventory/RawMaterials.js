@@ -48,7 +48,7 @@ const RawMaterials = props => {
       });
   }, []);
 
-  //!This will be for setting alert Value
+ 
   useEffect(() => {
     db.collection("users")
       .doc(uid)
