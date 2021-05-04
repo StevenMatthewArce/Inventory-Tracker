@@ -27,11 +27,17 @@ export class Sales extends Component {
       checked: [],
       error: null,
       message: null,
-      totalSaleMonth: null,
-      totalSaleYear: null,
-      saleMonthPercentage: null,
-      mostPopularItem: null,
-      uid: props.uid
+      totalSaleMonth: 0,
+      totalSaleYear: 0,
+      saleMonthPercentage: 0,
+      mostPopularItem: "",
+      uid: props.uid,
+      totalExpenseMonth: props.totalExpenseMonth,
+      totalExpenseYear: props.totalExpenseYear,
+      expenseMonthPercentage: props.expenseMonthPercentage,
+      totalProfitMonth: 0,
+      totalProfitYear: 0,
+      profitPercentage: 0
     };
   }
 
@@ -57,7 +63,8 @@ export class Sales extends Component {
         this.setState({ data: data });
       })
       .then(() => this.calculateSaleMonth())
-      .then(() => this.calculateMostPopularItem());
+      .then(() => this.calculateMostPopularItem())
+      .then(() => this.calculateNetProfit());
   }
 
   calculateSaleMonth = () => {
@@ -71,10 +78,10 @@ export class Sales extends Component {
 
     data.filter(element => {
       let parts = element.soldDate.split(/[/ :]/);
-      console.log(parts);
+      // console.log(parts);
       let month = parts[0];
       let year = parts[2];
-      console.log(element);
+      // console.log(element);
       if (cur_month == month && year == cur_year) {
         totalSaleMonth += parseFloat(element.orderCost);
       }
@@ -111,27 +118,50 @@ export class Sales extends Component {
       .pop();
 
     this.setState(
-      { mostPopularItem: mostPopItem },
-      console.log(this.state.mostPopularItem)
+      { mostPopularItem: mostPopItem }
+      // console.log(this.state.mostPopularItem)
     );
+  };
+
+  calculateNetProfit = () => {
+    const {
+      totalSaleMonth,
+      totalSaleYear,
+      totalExpenseMonth,
+      totalExpenseYear
+    } = this.state;
+
+    let profitMonth = totalSaleMonth - totalExpenseMonth;
+    let profitYear = totalSaleYear - totalExpenseYear;
+    let profitPercentage = (profitMonth / profitYear) * 100;
+
+    if (profitMonth <= 0) {
+      console.log("here");
+      profitPercentage = 0;
+    }
+    this.setState({
+      profitMonth: profitMonth,
+      profitYear: profitYear,
+      profitPercentage: profitPercentage
+    });
   };
 
   toggleCheck = (e, { id }) => {
     let { checked } = this.state;
 
     if (checked.includes(id)) {
-      console.log("it already in arry");
+      // console.log("it already in arry");
       const updatedArray = checked.filter(s => s !== id);
       this.setState(
-        { checked: updatedArray, error: null, message: null },
-        console.log(this.state.checked)
+        { checked: updatedArray, error: null, message: null }
+        // console.log(this.state.checked)
       );
     } else {
-      console.log(" not in arry");
+      // console.log(" not in arry");
       checked.push(id);
       this.setState(
-        { checked: checked, error: null, message: null },
-        console.log(this.state.checked)
+        { checked: checked, error: null, message: null }
+        // console.log(this.state.checked)
       );
     }
   };
@@ -162,7 +192,7 @@ export class Sales extends Component {
 
   render() {
     const { data } = this.state;
-    console.log(this.state.data);
+
     return (
       <Segment style={{ height: "100vh" }}>
         <div>
@@ -193,7 +223,31 @@ export class Sales extends Component {
               </Grid.Row>
             </Grid.Column>
             <Grid.Column>
-              <Grid.Row>
+              <Grid.Row verticalAlign="top">
+                <Statistic
+                  size="mini"
+                  color={this.state.profitMonth > 0 ? "green" : "red"}
+                  percent={this.state.profitPercentage}
+                  value={"$" + this.state.profitMonth}
+                  label="Total Profit This Year"
+                />
+
+                <Statistic
+                  floated="right"
+                  size="mini"
+                  color="grey"
+                  value={"$" + this.state.profitYear}
+                  label="Total Sales"
+                />
+              </Grid.Row>
+
+              <Grid.Row verticalAlign="bottom">
+                <Progress
+                  color={this.state.profitPercentage > 0 ? "green" : "red"}
+                  percent={this.state.profitPercentage}
+                />
+              </Grid.Row>
+              {/* <Grid.Row>
                 <div style={{ textAlign: "center" }}>
                   <Statistic
                     size="large"
@@ -202,7 +256,7 @@ export class Sales extends Component {
                     label="Most Popular Item SOld"
                   />
                 </div>
-              </Grid.Row>
+              </Grid.Row> */}
             </Grid.Column>
           </Grid>
         </div>

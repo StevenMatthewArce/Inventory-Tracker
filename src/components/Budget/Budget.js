@@ -4,12 +4,12 @@ import { Expense, Sales } from "../Budget";
 import { AuthContext } from "../App/Auth";
 import { Redirect } from "react-router-dom";
 
-const panes = currentUser => [
+const panes = (currentUser, salesInfo, handleExpenseData, handleSaleData) => [
   {
     menuItem: "Expense",
     render: () => (
       <Tab.Pane attached={false}>
-        <Expense uid={currentUser.uid} />
+        <Expense uid={currentUser.uid} handleExpenseData={handleExpenseData} />
       </Tab.Pane>
     )
   },
@@ -17,7 +17,13 @@ const panes = currentUser => [
     menuItem: "Sales",
     render: () => (
       <Tab.Pane attached={false}>
-        <Sales uid={currentUser.uid} />
+        <Sales
+          uid={currentUser.uid}
+          totalExpenseMonth={salesInfo.totalExpenseMonth}
+          totalExpenseYear={salesInfo.totalExpenseYear}
+          expenseMonthPercentage={salesInfo.expenseMonthPercentage}
+          handleSaleData={handleSaleData}
+        />
       </Tab.Pane>
     )
   }
@@ -25,22 +31,45 @@ const panes = currentUser => [
 
 const Budget = () => {
   const { currentUser } = useContext(AuthContext);
-  // const [totalSaleMonth, setTotalSaleMonth] = useState(0);
-  // const [totalSaleYear, setTotalSaleYear] = useState(0);
-  // const [saleMonthPercentage, setSaleMonthPercentage] = useState(0);
-  // const [mostPopularItem, setMostPopularItem] = useState(null);
+  const [totalSaleMonth, setTotalSaleMonth] = useState(0);
+  const [totalSaleYear, setTotalSaleYear] = useState(0);
+  const [saleMonthPercentage, setSaleMonthPercentage] = useState(0);
+  const [mostPopularItem, setMostPopularItem] = useState(null);
+  const [totalExpenseMonth, setTotalExpenseMonth] = useState(0);
+  const [totalExpenseYear, setTotalExpenseYear] = useState(0);
+  const [expenseMonthPercentage, setExpenseMonthPercentage] = useState(0);
 
-  // const handleSaleData = (
-  //   totalSaleMonth,
-  //   totalSaleYear,
-  //   saleMonthPercentage,
-  //   mostPopularItem
-  // ) => {
-  //   setTotalSaleMonth(totalSaleMonth);
-  //   setTotalSaleYear(totalSaleYear);
-  //   setSaleMonthPercentage(saleMonthPercentage);
-  //   setMostPopularItem(mostPopularItem);
-  // };
+  const handleSaleData = (
+    totalSaleMonth,
+    totalSaleYear,
+    saleMonthPercentage,
+    mostPopularItem
+  ) => {
+    setTotalSaleMonth(totalSaleMonth);
+    setTotalSaleYear(totalSaleYear);
+    setSaleMonthPercentage(saleMonthPercentage);
+    setMostPopularItem(mostPopularItem);
+  };
+
+  const handleExpenseData = (
+    totalExpenseMonth,
+    totalExpenseYear,
+    expenseMonthPercentage
+  ) => {
+    setTotalExpenseMonth(totalExpenseMonth);
+    setTotalExpenseYear(totalExpenseYear);
+    setExpenseMonthPercentage(expenseMonthPercentage);
+  };
+
+  const salesInfo = {
+    totalSaleMonth: totalSaleMonth,
+    totalSaleYear: totalSaleYear,
+    saleMonthPercentage: saleMonthPercentage,
+    mostPopularItem: mostPopularItem,
+    totalExpenseMonth: totalExpenseMonth,
+    totalExpenseYear: totalExpenseYear,
+    expenseMonthPercentage: expenseMonthPercentage
+  };
 
   if (!currentUser) {
     return <Redirect to="/" />;
@@ -48,7 +77,9 @@ const Budget = () => {
 
   return (
     <Segment style={{ height: "90vh" }}>
-      <Tab panes={panes(currentUser)} />
+      <Tab
+        panes={panes(currentUser, salesInfo, handleExpenseData, handleSaleData)}
+      />
     </Segment>
   );
 };
