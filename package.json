@@ -12,6 +12,8 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "cloudmersive-convert-api-client": "^2.6.5",
+    "cloudmersive-ocr-api-client": "^1.3.3",
     "electron": "^11.2.3",
     "eslint-plugin-react-hooks": "^4.2.0",
     "firebase": "^8.4.1",

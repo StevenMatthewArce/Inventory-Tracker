@@ -13,8 +13,8 @@ import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
 import { Link } from "react-router-dom";
 import "./style.css";
-import  fruitVegs from "./WordList.json"
-
+import  WordList from "./WordList.json"
+// import CloudmersiveOcrApiClient from "cloudmersive-ocr-api-client"
 
 
 //TODO: Add OCR Recognition for Store Name
@@ -47,6 +47,23 @@ export class Ocr extends Component {
     this.onDrop = this.onDrop.bind(this);
     this.runOcr = this.runOcr.bind(this);
     this.debug = this.debug.bind(this);
+  }
+
+
+  componentDidMount(){
+    const script = document.createElement("script");
+    script.src = "https://cdn.cloudmersive.com/jsclient/cloudmersive-document-convert-client.js";
+    script.async = true;
+    script.onload = () => this.scriptLoaded();
+  
+    document.body.appendChild(script);
+   
+    console.log(window)
+
+  }
+
+  scriptLoaded() {
+    console.log(window)
   }
 
   updateItems = () => {
@@ -163,13 +180,15 @@ export class Ocr extends Component {
   };
 
   runOcr = () => {
-    console.log("runOcr");
+      console.log("run OCR")
+
     if (this.state.imageUploadedStatus === "1") {
       this.setState({ status: "0" });
       this.state.uploadedImageUrl.forEach(image =>
         Tesseract.recognize(image, "eng")
           .then(({ data: { text } }) => {
-            this.setState({ ocrText: text.split(/\n/), status: "1" });
+            // let lowerCaseOCR= text.split(/\n/).map(element=>element.toLowerCase())
+            this.setState({ ocrText:text.split(/\n/) , status: "1" });
             console.log(this.state.ocrText)
             console.log("OCR Finished");
           })
@@ -190,33 +209,68 @@ export class Ocr extends Component {
   };
 
   analyzeText = () => {
-    const text = this.state.ocrText;
+    const {ocrText} = this.state;
     //TODO: Change compare to dictionary so it matches more words
-    const compare = fruitVegs;
-    var filteredText = [];
+    const wl = WordList.fruitsVegs  
+    var x = [
+        "net",
+        "subtotal",
+        "cash",
+        "change",
+        "@",
+        "special"
+    ] 
+    // look for date and total
+    
+    const regex =  RegExp('(' + x.join('|') + ')', 'g');
+    
+    
+    var lowerCaseOCR = ocrText.map(element =>element.toLowerCase())
+    
+    
+    let filteredOCR = []
+    lowerCaseOCR.map(element=>filteredOCR .push(element.replace(regex, "").trim()))
+    
+    let foundItems = []
+    const wlregex = RegExp('(' + wl.join('|') + ')', 'g');
+    filteredOCR.map(element=> {if(wlregex.test(element)){foundItems.push(element)}})
+    
+    var name = []
+    var cost = []
+    var quantity = []
+    
+    foundItems.map(element=>{
+         let split = element.split("$")
+         name.push(split[0])
+        cost.push(split[1])
+        quantity.push("1")    
+        })
     var receiptDate = [];
-    for (var i = 0; i < compare.length; i++) {
-      filteredText.push(text.filter(word => word.includes(compare[i])));
-      receiptDate = text.filter(word => word.includes("DATE"));
-    }
-
-    var splitArray = [];
-    for (var i = 0; i < filteredText.length; i++) {
-      splitArray.push(filteredText[i].toString().split("$"));
-    }
-    var name = [];
-    var cost = [];
-    var quantity = [];
-    for (var i = 0; i < splitArray.length; i++) {
-      name.push(splitArray[i][0]);
-      cost.push(splitArray[i][1]);
-      quantity.push("1");
-    }
+    receiptDate = ocrText.filter(word => word.includes("DATE"));
     this.updateName(name);
     this.updateCost(cost);
     this.updateQuantity(quantity);
     this.updateDateRestocked(receiptDate);
-    console.log("Analyze Text");
+    // for (var i = 0; i < compare.length; i++) {
+    //   filteredText.push(text.filter(word => word.includes(compare[i])));
+    //   
+    // }
+
+    // var splitArray = [];
+    // for (var i = 0; i < filteredText.length; i++) {
+    //   splitArray.push(filteredText[i].toString().split("$"));
+    // }
+    // var name = [];
+    // var cost = [];
+    // var quantity = [];
+    // for (var i = 0; i < splitArray.length; i++) {
+    //   name.push(splitArray[i][0]);
+    //   cost.push(splitArray[i][1]);
+    //   quantity.push("1");
+    // }
+
+    // 
+    // console.log("Analyze Text");
   };
 
   handleChange = (e, { name, value }) => {
