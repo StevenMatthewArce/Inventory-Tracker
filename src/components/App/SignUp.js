@@ -20,7 +20,10 @@ const SignUp = () => {
             email: email,
             uid: uid,
             displayName: displayName,
-            alertValue: 5
+            alertValue: 5,
+            mostPopularItem: "No Items Sold",
+           totalSaleMonth: 0,
+          totalExpenseMonth:0
           };
           db.collection("users")
             .doc(uid)

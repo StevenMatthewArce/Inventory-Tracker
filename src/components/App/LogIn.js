@@ -28,7 +28,7 @@ const LogIn = () => {
     <div
       style={{
         height: "90vh",
-        backgroundColor: "#2185d0",
+        backgroundColor: "#f1f1f1",
         margin: 0,
         padding: 0
       }}
@@ -41,7 +41,8 @@ const LogIn = () => {
           marginRight: "20%",
           left: "50%",
           transform: `translate(-50%, -50%)`,
-          textAlign: "center"
+          textAlign: "center",
+          color: "#74706d"
         }}
       >
         <Grid>
@@ -49,14 +50,12 @@ const LogIn = () => {
             <div>
               <Header
                 as="h1"
-                color="blue"
                 style={{ marginTop: 100, padding: 0, fontSize: 50 }}
               >
                 Welcome Back
               </Header>
               <Header
-                as="h3"
-                color="blue"
+                as="h3"              
                 style={{ margin: 0, padding: 0, fontSize: 30 }}
               >
                 to inventory tracker

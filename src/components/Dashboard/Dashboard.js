@@ -42,9 +42,12 @@ const Dashboard = () => {
           totalSaleMonth,
           totalExpenseMonth
         } = querySnapshot.data();
-        setMostPopularItem(mostPopularItem);
-        setTotalSaleMonth(totalSaleMonth);
-        setTotalExpenseMonth(totalExpenseMonth);
+       
+          setMostPopularItem(mostPopularItem);
+          setTotalSaleMonth(totalSaleMonth);
+          setTotalExpenseMonth(totalExpenseMonth);
+        
+       
       });
   }, [1]);
 

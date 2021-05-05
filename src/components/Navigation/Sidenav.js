@@ -32,7 +32,8 @@ const Sidenav = props => {
         <Icon name="sticky note" />
         Budget
       </Menu.Item>
-      <Menu.Item onClick={() => auth.signOut()} to="/">
+      //!! Signing out from dashboard gives you an error
+      <Menu.Item onClick={() => auth.signOut()}>
         <Icon name="sign out" />
         Sign Out
       </Menu.Item>
