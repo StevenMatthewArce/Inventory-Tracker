@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { AuthContext } from "../App/Auth";
 import { Segment, Grid, Header, Divider, StepGroup } from "semantic-ui-react";
 import { db } from "../Firebase";
-import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis } from "victory";
+import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictoryArea, VictoryLabel } from "victory";
 
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
@@ -16,8 +16,11 @@ const Dashboard = () => {
   const [sales, setSales] = useState([])
   const [itemsSold, setItemsSold] = useState(0)
   const [customers, setCustomers] = useState(0)
+  const [salesData, setSalesData] = useState([])
+  const [expenses, setExpenses] = useState([])
+  const [expenseData, setExpenseData] = useState([])
+  const [profitData, setProfitData] = useState([])
 
-  
   if (!currentUser) {
     return <Redirect to="/" />;
   }
@@ -56,9 +59,6 @@ const Dashboard = () => {
         querySnapshot.forEach(doc => {
           docs.push({ id: doc.id, ...doc.data() });
         });
-
-       
-
         let currentOrders = [];
         let lateOrders = [];
         docs.map(element => {
@@ -107,6 +107,129 @@ const Dashboard = () => {
       })
   },[1])
 
+
+useEffect(()=>{
+
+  let monthArr = new Array(12).fill(0);
+  for (let k = 0; k < monthArr.length; k++) {
+      let totalSalesMonth = 0;
+      var currentdate = new Date();
+      var cur_month = k + 1;
+      var cur_year = currentdate.getFullYear();
+  
+      sales.map(element => {
+          let parts = element.currentdate.split(/[/ :]/);
+          let month = parts[0];
+          let year = parts[2];
+          if (cur_month == month && year == cur_year) {
+            totalSalesMonth += parseFloat(element[0].orderCost)
+          }
+        });
+   
+    monthArr[k] = totalSalesMonth;
+  }
+    
+  
+  var graphData = [];
+  for (let k in monthArr) {
+    let months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "June",
+      "July",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    //let m = +k+ +1;
+    graphData.push({ x: months[k], y: monthArr[k] });
+  }
+
+  setSalesData(graphData)
+
+},[sales])
+
+
+useEffect(()=>{
+  let docs = [];
+  let month = cur_month.toString()
+  if((month-10)<0){
+    month = "0"+month
+}
+  db.collection("users")
+    .doc(currentUser.uid)
+    .collection("receipts")
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        docs.push({ id: doc.id, ...doc.data() });
+      })
+      setExpenses(docs)
+    })
+
+
+},[1])
+
+
+useEffect(()=>{
+  let monthArr = new Array(12).fill(0);
+  for (let k = 0; k < monthArr.length; k++) {
+      let totalExpenseMonth = 0;
+      var currentdate = new Date();
+      var cur_month = k + 1;
+      var cur_year = currentdate.getFullYear();
+  
+      expenses.map(element => {
+          let parts = element.date.split(/[/ :]/);
+          let month = parts[0];
+          let year = parts[2];
+          if (cur_month == month && year == cur_year) {
+            totalExpenseMonth += parseFloat(element.totalCost)
+          }
+        });
+   
+    monthArr[k] = totalExpenseMonth;
+  }
+  
+  var graphData = [];
+  for (let k in monthArr) {
+    let months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "June",
+      "July",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    //let m = +k+ +1;
+    graphData.push({ x: months[k], y: monthArr[k] });
+  }
+  setExpenseData(graphData)
+},[expenses])
+
+
+useEffect(()=>{
+  let profitData = []
+  salesData.forEach((element,index) =>{
+      let y = (element.y - expenseData[index].y)
+      profitData[index] = {x: element.x, y:y}
+  })
+
+  setProfitData(profitData)
+
+
+},[expenseData, salesData])
 
 
   const data = [
@@ -192,7 +315,7 @@ const Dashboard = () => {
                       }}
                       size="large"
                       content={mostPopularItem}
-                      subheader="Most Popular Item Sold"
+                      subheader="Most Popular Product Sold"
                     />
                   </Segment>
                 </Grid.Column>
@@ -226,21 +349,19 @@ const Dashboard = () => {
                         <VictoryAxis label="Months" />
                         <VictoryAxis
                           dependentAxis
-                          // tickFormat specifies how ticks should be displayed
                           tickFormat={x => `$${x}`}
                         />
-                        <VictoryLine
-                          data={data}
-                          //interpolation="natural"
-                          labels={({ datum }) => datum.y}
+                        <VictoryArea
+                          data={salesData}
+                          interpolation="step"
+                          labels={({ datum }) => "$" + datum.y}
                           theme={VictoryTheme.material}
                           style={{
                             data: {
-                              stroke: "#02B875"
+                              fill:  "#76c80d"
                             }
                           }}
                         />
-                        {/* height={1} width={4} */}
                       </VictoryChart>
                     </Segment>
                   </Grid.Column>
@@ -254,21 +375,20 @@ const Dashboard = () => {
                         <VictoryAxis label="Months" />
                         <VictoryAxis
                           dependentAxis
-                          // tickFormat specifies how ticks should be displayed
                           tickFormat={x => `$${x}`}
                         />
-                        <VictoryLine
-                          data={data}
-                          //interpolation="natural"
-                          labels={({ datum }) => datum.y}
+                        <VictoryArea
+                          data={expenseData}
+                          interpolation="step"
+                          labels={({ datum }) => "$"+datum.y}
                           theme={VictoryTheme.material}
                           style={{
                             data: {
-                              stroke: "#02B875"
+                              fill:  "#fe5e39"
                             }
                           }}
                         />
-                        {/* height={1} width={4} */}
+
                       </VictoryChart>
                     </Segment>
                   </Grid.Column>
@@ -279,24 +399,28 @@ const Dashboard = () => {
                         content="Profit"
                       />
                       <VictoryChart>
-                        <VictoryAxis label="Months" />
+                        <VictoryAxis label="Months" axisLabelComponent={<VictoryLabel renderInPortal dy={100}/>} />
                         <VictoryAxis
                           dependentAxis
+                          axisLabelComponent={<VictoryLabel transform={40}/>}
                           // tickFormat specifies how ticks should be displayed
                           tickFormat={x => `$${x}`}
+                          
                         />
-                        <VictoryLine
-                          data={data}
-                          //interpolation="natural"
-                          labels={({ datum }) => datum.y}
+                        <VictoryArea
+                        domain={{x: [0, 11], y: [-500, 500]}}
+                        domainPadding={{x: [10, -10], y: -100}}
+                          interpolation="step"
+                         data={profitData}
+                          labels={({ datum }) => "$" + datum.y}
+                          labelComponent={<VictoryLabel renderInPortal dy={-30}/>}
                           theme={VictoryTheme.material}
                           style={{
                             data: {
-                              stroke: "#02B875"
+                              fill: "#fe5e39"
                             }
                           }}
                         />
-                        {/* height={1} width={4} */}
                       </VictoryChart>
                     </Segment>
                   </Grid.Column>
@@ -334,10 +458,10 @@ const Dashboard = () => {
                         </Grid.Row>
                       </Grid.Column>
                       <Grid.Column>
-                      <Header  style={{textAlign:"center", color:"#74706d"}} content={element.name}/>
+                      <Header  style={{textAlign:"center",   color:"#fe5e39"}} content={element.name}/>
                       </Grid.Column>
                       <Grid.Column>
-                      <Header centered as="h5" style={{color:"#74706d"}}content={element.items[0].name + ((element.items.length> 1) ? ", ..." : "")}/>
+                      <Header centered as="h5" style={{  color:"#fe5e39"}}content={element.items[0].name + ((element.items.length> 1) ? ", ..." : "")}/>
                       </Grid.Column>
                       </Grid>
                   </Segment>;

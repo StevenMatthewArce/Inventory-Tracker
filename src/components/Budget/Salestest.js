@@ -45,9 +45,6 @@ export default class Sales extends Component {
         if (cur_month == month && year == cur_year) {
           totalExpenseMonth += parseFloat(element.totalCost);
         }
-        // if (year == cur_year) {
-        //   totalExpenseYear += parseFloat(element.totalCost);
-        // }
       });
       monthArr[k] = totalExpenseMonth;
     }
