@@ -102,7 +102,8 @@ class Correction extends Component {
         description,
         date,
         type,
-        imageAsUrl
+        imageAsUrl,
+        items
       });
     setTimeout(() => {
       this.setState({ redirect: true });
@@ -179,7 +180,7 @@ class Correction extends Component {
 
     return (
       <Segment style={{ height: "90vh", backgroundColor: "#f1f1f1" }}>
-        {console.log(this.props)}
+        {console.log(this.state)}
         <div>
           <Button labelPosition="left" icon style={{backgroundColor:"#666364", color:"#ffffff"}} onClick={this.back}>
             Back

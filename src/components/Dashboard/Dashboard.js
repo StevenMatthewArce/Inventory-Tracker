@@ -25,6 +25,7 @@ const Dashboard = () => {
     return <Redirect to="/" />;
   }
 
+  console.log(currentUser)
 
   const currentdate = new Date();
   const cur_month = currentdate.getMonth() + 1;
