@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { AuthContext } from "./Auth";
-import { Segment, Grid, Header, Icon, Form, Button } from "semantic-ui-react";
+import { Segment, Grid, Header, Icon, Form, Button, Divider } from "semantic-ui-react";
 import { auth } from "../Firebase/index";
 
 const LogIn = () => {
@@ -27,10 +27,11 @@ const LogIn = () => {
   return (
     <div
       style={{
-        height: "90vh",
+        height: "100vh",
         backgroundColor: "#f1f1f1",
         margin: 0,
-        padding: 0
+        padding: 0,
+        color:"#36393e"
       }}
     >
       <Segment
@@ -42,25 +43,31 @@ const LogIn = () => {
           left: "50%",
           transform: `translate(-50%, -50%)`,
           textAlign: "center",
-          color: "#74706d"
+         
         }}
       >
-        <Grid>
-          <Grid.Column width={6}>
-            <div>
+        <Grid verticalAlign='middle'>
+          <Grid.Column width={6} >
+     
               <Header
-                as="h1"
-                style={{ marginTop: 100, padding: 0, fontSize: 50 }}
-              >
-                Welcome Back
-              </Header>
-              <Header
-                as="h3"              
-                style={{ margin: 0, padding: 0, fontSize: 30 }}
-              >
-                to inventory tracker
-              </Header>
-            </div>
+              as="h1"
+                style={{ margin: 0, padding: 0, fontSize: 50, }}     
+                content="Welcome to GYST"
+                />
+                <Divider/>
+                <br />
+              <Icon name="check circle outline" />
+              <b>Inventory Tracker</b>
+              <br />
+              <br />
+              <Icon name="check circle outline" />
+              <b>Order Organizer</b>
+              <br />
+              <br />
+              <Icon name="check circle outline" />
+              <b>Budget Helper</b>
+
+           
           </Grid.Column>
 
           <Grid.Column width={10}>
@@ -80,12 +87,12 @@ const LogIn = () => {
                 <label>Password</label>
                 <input name="password" type="password" placeholder="*****" />
               </Form.Field>
-              <Button primary type="submit">
+              <Button style={{backgroundColor:"#3db39c", color:"white"}} type="submit">
                 Login
               </Button>
             </Form>
             <Button
-              secondary
+              style={{backgroundColor:"#666364", color:"#ffffff"}}
               floated="right"
               size="tiny"
               as={Link}

@@ -3,6 +3,8 @@ import { Icon, Menu, Sidebar } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { auth } from "../Firebase/index";
 
+ //!! Signing out from dashboard gives you an error
+
 const Sidenav = props => {
   return (
     <Sidebar
@@ -32,7 +34,6 @@ const Sidenav = props => {
         <Icon name="sticky note" />
         Budget
       </Menu.Item>
-      //!! Signing out from dashboard gives you an error
       <Menu.Item onClick={() => auth.signOut()}>
         <Icon name="sign out" />
         Sign Out

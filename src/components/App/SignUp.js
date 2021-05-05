@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { auth } from "../Firebase/index";
-import { Segment, Grid, Header, Icon, Form, Button } from "semantic-ui-react";
+import { Segment, Grid, Header, Icon, Form, Button, Divider } from "semantic-ui-react";
 import { db } from "../Firebase";
 
 const SignUp = () => {
@@ -41,10 +41,11 @@ const SignUp = () => {
   return (
     <div
       style={{
-        height: "90vh",
-        backgroundColor: "#2185d0",
+        height: "100vh",
+        backgroundColor: "#f1f1f1",
         margin: 0,
-        padding: 0
+        padding: 0,
+        color:"#36393e"
       }}
     >
       <Segment
@@ -58,19 +59,15 @@ const SignUp = () => {
           textAlign: "center"
         }}
       >
-        <Grid>
+        <Grid verticalAlign='middle'>
           <Grid.Column width={6}>
             <div>
               <Header
                 as="h1"
-                color="blue"
                 style={{ margin: 0, padding: 0, fontSize: 50 }}
-              >
-                Welcome
-              </Header>
-              <Header as="h3" color="blue" style={{ margin: 0, padding: 0 }}>
-                to inventory tracker
-              </Header>
+                content= "Welcome to GYST"
+                />
+              <Divider/>
               <br />
               <Icon name="check circle outline" />
               <b>Inventory Tracker</b>
@@ -102,11 +99,11 @@ const SignUp = () => {
                 <label>Password</label>
                 <input name="password" type="password" placeholder="*****" />
               </Form.Field>
-              <Button primary type="submit">
+              <Button style={{backgroundColor:"#3db39c", color:"white"}} type="submit">
                 Sign Up
               </Button>
             </Form>
-            <Button secondary floated="right" size="tiny" as={Link} to="/">
+            <Button style={{backgroundColor:"#666364", color:"#ffffff"}} floated="right" size="tiny" as={Link} to="/">
               Login
             </Button>
           </Grid.Column>
