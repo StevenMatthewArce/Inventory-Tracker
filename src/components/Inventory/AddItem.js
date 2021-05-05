@@ -132,9 +132,9 @@ const AddItem = props => {
   const fileInputRef = React.createRef();
 
   return (
-    <Segment style={{ height: "90vh" }}>
+    <Segment style={{ height: "90vh",  backgroundColor: "#f1f1f1" }}>
       <div>
-        <Button labelPosition="left" icon secondary as={Link} to="/inventory">
+        <Button labelPosition="left" icon  style={{backgroundColor:"#666364", color:"#ffffff"}} as={Link} to="/inventory">
           Back
           <Icon name="left arrow"></Icon>
         </Button>
@@ -144,7 +144,7 @@ const AddItem = props => {
         <Grid>
           <Grid.Column width={9}>
             <Grid.Row>
-              <Header as="h1" textAlign="left">
+              <Header as="h1" style={{color:"#36393e"}} textAlign="left">
                 Add an Item
               </Header>
               <Grid.Row>Please add your new item.</Grid.Row>
@@ -152,7 +152,7 @@ const AddItem = props => {
           </Grid.Column>
           <Grid.Column width={7} textAlign="right">
             <Button
-              primary
+           style={{backgroundColor:"#77c90e", color:"#ffffff"}}
               disabled={isInvalid}
               type="submit"
               onClick={handleSubmit}
@@ -232,7 +232,7 @@ const AddItem = props => {
             </Form.Group>
             <Form.Field>
               <Button
-                primary
+               style={{backgroundColor:"#3db39c", color:"white"}}
                 content="Upload Image"
                 labelPosition="left"
                 icon="cloud upload"

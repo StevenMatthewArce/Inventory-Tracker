@@ -8,7 +8,7 @@ const panes = currentUser => [
   {
     menuItem: "Raw Materials",
     render: () => (
-      <Tab.Pane attached={false}>
+      <Tab.Pane >
         <RawMaterials uid={currentUser.uid} />
       </Tab.Pane>
     )
@@ -16,7 +16,7 @@ const panes = currentUser => [
   {
     menuItem: "Finished Goods",
     render: () => (
-      <Tab.Pane attached={false}>
+      <Tab.Pane >
         <FinishedGoods uid={currentUser.uid} />
       </Tab.Pane>
     )
@@ -24,7 +24,7 @@ const panes = currentUser => [
   {
     menuItem: "Recipes",
     render: () => (
-      <Tab.Pane attached={false}>
+      <Tab.Pane>
         <Recipes uid={currentUser.uid} />
       </Tab.Pane>
     )
@@ -38,8 +38,8 @@ const Inventory = () => {
     return <Redirect to="/" />;
   }
   return (
-    <Segment style={{ height: "90vh" }}>
-      <Tab panes={panes(currentUser)} />
+    <Segment style={{ height: "90vh", backgroundColor: "#f1f1f1" }}>
+      <Tab style= {{color:"#36393e"}}panes={panes(currentUser)} />
     </Segment>
   );
 };

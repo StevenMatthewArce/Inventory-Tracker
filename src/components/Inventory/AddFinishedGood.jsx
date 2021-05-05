@@ -149,9 +149,9 @@ const AddFinishedGood = () => {
       });
   }
   return (
-    <Segment style={{ height: "90vh" }}>
+    <Segment style={{ height: "90vh",  backgroundColor: "#f1f1f1" }}>
     <div>
-      <Button labelPosition="left" icon secondary as={Link} to="/inventory">
+      <Button labelPosition="left" icon sstyle={{backgroundColor:"#666364", color:"#ffffff"}} as={Link} to="/inventory">
         Back
         <Icon name="left arrow"></Icon>
       </Button>
@@ -161,20 +161,21 @@ const AddFinishedGood = () => {
       <Grid>
         <Grid.Column width={9}>
           <Grid.Row>
-            <Header as="h1" textAlign="left">
+            <Header as="h1"style={{color:"#36393e"}}  textAlign="left">
               Add a Finished Good
             </Header>
             <Grid.Row>Please select a recipe and add your total amount of finished goods.</Grid.Row>
           </Grid.Row>
         </Grid.Column>
         <Grid.Column width={7} textAlign="right">
-        <Button labelPosition="right" icon primary onClick={handleSubmit}>
+        <Button labelPosition="right" icon   style={{backgroundColor:"#77c90e", color:"#ffffff"}} onClick={handleSubmit}>
           Submit
           <Icon name="send" />
         </Button>
         </Grid.Column>
         <Grid.Row>
         <Card
+          style={{textAlign:"center"}}
           centered
           header= {selected[0].name}
           meta = {(selected[0].items != undefined) ? ("Ingredients: " + selected[0].items.map(element => element.name)) : ("") }

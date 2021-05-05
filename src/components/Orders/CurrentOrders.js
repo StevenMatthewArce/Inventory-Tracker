@@ -293,14 +293,14 @@ export class CurrentOrders extends Component {
           <br />
           <Grid columns="equal">
             <Grid.Column width={8}>
-              <Header as="h1">Current Orders</Header>
+              <Header as="h1"style={{color:"#36393e"}}>Current Orders</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
               <Button.Group>
                 <Button
                   icon
                   labelPosition="left"
-                  negative
+                  style={{backgroundColor:"#36393e", color:"#ffffff"}}
                   size="small"
                   onClick={this.removeItem}
                 >
@@ -308,7 +308,8 @@ export class CurrentOrders extends Component {
                   Remove
                 </Button>
                 <Dropdown
-                  className="ui small icon black left labeled button"
+                  className="ui small icon left labeled button"
+                  style={{backgroundColor:"#77c90e", color:"#ffffff"}}
                   text="Add"
                   labeled
                   button
@@ -356,35 +357,35 @@ export class CurrentOrders extends Component {
           <Table sortable celled structured definition>
             <Table.Header>
               <Table.Row textAlign="center">
-                <Table.HeaderCell />
-                <Table.HeaderCell
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}/>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}
                   width={1}
                   sorted={column === "DateReceived" ? direction : null}
                   onClick={this.handleSort("DateReceived")}
                 >
                   Date Received
                 </Table.HeaderCell>
-                <Table.HeaderCell
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}
                   width={1}
                   sorted={column === "DateNeedBy" ? direction : null}
                   onClick={this.handleSort("DateNeedBy")}
                 >
                   Date Needed By
                 </Table.HeaderCell>
-                <Table.HeaderCell
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}
                   width={2}
                   sorted={column === "Customer" ? direction : null}
                   onClick={this.handleSort("Customer")}
                 >
                   Customer
                 </Table.HeaderCell>
-                <Table.HeaderCell width={4}>Items</Table.HeaderCell>
-                <Table.HeaderCell width={4}>Comments</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} width={4}>Items</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} width={4}>Comments</Table.HeaderCell>
 
-                <Table.HeaderCell width={1}>Labor Rate</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Labor (hrs)</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Mark Up</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Total Cost</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} width={1}>Labor Rate</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} width={1}>Labor (hrs)</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}} width={1}>Mark Up</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}} width={1}>Total Cost</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {

@@ -151,7 +151,7 @@ const RawMaterials = props => {
       <br />
       <Grid columns="equal">
         <Grid.Column width={8}>
-          <Header as="h1">Raw Materials</Header>
+          <Header as="h1" style={{color:"#36393e"}}>Raw Materials</Header>
         </Grid.Column>
         <Grid.Column textAlign="right">
           <Grid.Row>
@@ -159,7 +159,7 @@ const RawMaterials = props => {
               <Button
                 icon
                 labelPosition="left"
-                negative
+                style={{backgroundColor:"#36393e", color:"#ffffff"}}
                 size="small"
                 onClick={removeItem}
               >
@@ -167,7 +167,8 @@ const RawMaterials = props => {
                 Remove
               </Button>
               <Dropdown
-                className="ui small icon black left labeled button"
+                className="ui small icon left labeled button"
+                style={{backgroundColor:"#77c90e", color:"#ffffff"}}
                 text="Add"
                 labeled
                 button
@@ -213,15 +214,15 @@ const RawMaterials = props => {
       <br />
       <div>
         <Table id="table" celled selectable structured definition>
-          <Table.Header>
+          <Table.Header style={{backgroundColor:"#ffae3b", color: "white"}}>
             <Table.Row textAlign="center">
-              <Table.HeaderCell />
-              <Table.HeaderCell width={6}>Material Name</Table.HeaderCell>
-              <Table.HeaderCell width={6}>Description</Table.HeaderCell>
+              <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} />
+              <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} width={6}>Material Name</Table.HeaderCell>
+              <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} width={6}>Description</Table.HeaderCell>
 
-              <Table.HeaderCell width={1}>Quantity</Table.HeaderCell>
-              <Table.HeaderCell width={1}>Unit Cost</Table.HeaderCell>
-              <Table.HeaderCell width={2}>Date Restocked</Table.HeaderCell>
+              <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}} width={1}>Quantity</Table.HeaderCell>
+              <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}} width={1}>Unit Cost</Table.HeaderCell>
+              <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}  width={2}>Date Restocked</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -243,10 +244,12 @@ const RawMaterials = props => {
                 return Date.parse(a) - Date.parse(b);
               });
 
+             
             return (
               <Table.Body>
-                <Table.Row
-                  negative={totalQty >= alertValue ? false : true}
+                <Table.Row         
+                   negative={totalQty >= alertValue ? false : true}
+
                   key={value}
                   onClick={() => handleToggle(index)}
                 >

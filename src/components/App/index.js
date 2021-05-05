@@ -31,7 +31,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <div style={{background:"#f1f1f1"}}>
         <Header onToggleMenu={this.toggleMenu} />
         <AuthProvider>
           <Router>

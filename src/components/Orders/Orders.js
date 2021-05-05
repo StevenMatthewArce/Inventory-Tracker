@@ -8,7 +8,7 @@ const panes = currentUser => [
   {
     menuItem: "Current Orders",
     render: () => (
-      <Tab.Pane attached={false}>
+      <Tab.Pane >
         <CurrentOrders uid={currentUser.uid} />
       </Tab.Pane>
     )
@@ -16,7 +16,7 @@ const panes = currentUser => [
   {
     menuItem: "Completed Orders",
     render: () => (
-      <Tab.Pane attached={false}>
+      <Tab.Pane >
         <CompletedOrders uid={currentUser.uid} />
       </Tab.Pane>
     )
@@ -31,8 +31,8 @@ const Orders = () => {
   }
 
   return (
-    <Segment style={{ height: "90vh" }}>
-      <Tab panes={panes(currentUser)} />
+    <Segment style={{ height: "90vh",  backgroundColor: "#f1f1f1"  }}>
+      <Tab  style= {{color:"#36393e"}} panes={panes(currentUser)} />
     </Segment>
   );
 };
