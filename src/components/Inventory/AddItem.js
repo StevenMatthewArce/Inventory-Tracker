@@ -197,7 +197,7 @@ const AddItem = props => {
                 name="cost"
                 value={cost}
                 onChange={handleCostChange}
-                label="Cost"
+                label="Unit Cost"
                 required
               />
               <Form.Input

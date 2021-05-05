@@ -72,7 +72,6 @@ export class Recipes extends Component {
     const { data } = this.state;
     const { name } = data;
 
-    console.log(data);
     this.setState({ isLoading: true, value });
 
     setTimeout(() => {
@@ -121,14 +120,13 @@ export class Recipes extends Component {
   };
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
-    console.log(this.state);
     const resRender = ({ name, receipeCost, items }) => {
       return (
         <div key="name">
           <Grid>
             <Grid.Column width={5}>Recipe Name: {name}</Grid.Column>
             <Grid.Column width={5}>
-              Ingredients: {items.map(element => element.name).join(", ")}{" "}
+              Ingredients: {items.map(element => element.name).join(", ")}
             </Grid.Column>
             <Grid.Column width={2}>Cost: ${receipeCost}</Grid.Column>
           </Grid>
@@ -245,7 +243,7 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {/* {items.items.map(element => element.name).join(", ")} */}
+                      {items.items.map(element => element.name).join(", ")}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       {items.qtyProduced}

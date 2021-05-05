@@ -174,19 +174,9 @@ const AddFinishedGood = () => {
         </Button>
         </Grid.Column>
         <Grid.Row>
-        <Card
-           style={{textAlign:"center"}}
-          header= {selected[0].name}
-          meta = {(selected[0].items != undefined) ? ("Ingredients: " + selected[0].items.map(element => element.name)) : ("") }
-          description= {selected[0].description}
-          extra={
-            (selected[0].items != undefined) ?
-              (<p>
-                  <Icon name="dollar sign" />
-                  {selected[0].receipeCost}               
-            </p>) : ("Select a Recipe") 
-          }
-        />
+        <Grid.Column>
+          
+        </Grid.Column>
         </Grid.Row>
       </Grid>
     </div>

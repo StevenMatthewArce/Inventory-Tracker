@@ -15,6 +15,9 @@ const SignUp = () => {
         .createUserWithEmailAndPassword(email.value, password.value)
         .then(user => {
           const displayName = user.user.email.split("@")[0];
+
+          user.user.updateProfile({displayName: displayName})
+
           const { email, uid } = user.user;
           userDetail = {
             email: email,
@@ -22,8 +25,8 @@ const SignUp = () => {
             displayName: displayName,
             alertValue: 5,
             mostPopularItem: "No Items Sold",
-           totalSaleMonth: 0,
-          totalExpenseMonth:0
+            totalSaleMonth: 0,
+            totalExpenseMonth:0
           };
           db.collection("users")
             .doc(uid)
