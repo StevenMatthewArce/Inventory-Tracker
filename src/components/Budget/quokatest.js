@@ -233,8 +233,69 @@ const WordList ={
       "valencia oranges",
       "winter squash",
       "yams",
-      "banana"
-    ]
+      "banana",
+      "flour", 
+"white sugar",
+"brown sugar ",
+"confectioners sugar ",
+"baking soda",
+"baking powder",
+"salt",
+"cream of tartar",
+"cocoa powder",
+"vanilla extract",
+"vegetable oil",
+"olive oil",
+"butter ",
+"cream cheese",
+"eggs",
+"milk ",
+"sour cream",
+"sprinkles",
+"chocolate chips",
+"peanut butter chips",
+"white chocolate chips",
+"chocolate peppermint chips",
+"rolled oats",
+"corn starch",
+"nuts ",
+"marshmallows",
+"marshmallow creme ",
+"peanut butter",
+"corn syrup",
+"shortening",
+"molasses ",
+"candies",
+"orange zest",
+"lemon zest",
+"coarse ground sugar granules ",
+"maple extract ",
+"almond extract",
+"butter extract ",
+"peppermint extract",
+"lemon extract",
+"canned pumpkin ",
+"heavy whipping cream",
+"half and half",
+"buttermilk ",
+"shredded coconut ",
+"candied fruit ",
+"sugared fruit",
+"hershey kisses",
+"cookie butter",
+"honey",
+"gelatin",
+"evaporated milk",
+"sweetened condensed milk",
+"apple pie spice",
+"cinnamon",
+"allspice",
+"nutmeg",
+"cloves",
+"pumpkin pie spice",
+"ginger",
+"cinnamon",
+"sugar",
   }
 
 const wl = WordList.fruitsVegs
@@ -263,7 +324,27 @@ lowerCaseOCR.map(element=>filteredOCR .push(element.replace(regex, "").trim()))
 
 let foundItems = []
 const wlregex = RegExp('(' + wl.join('|') + ')', 'g');
-filteredOCR.map(element=> {if(wlregex.test(element)){foundItems.push(element)}})
+const dateregex = RegExp('date','ig')
+const totalregex = RegExp('total', 'ig')
+let total = ""
+let date = ""
+filteredOCR.map(element=> 
+    {
+        if(wlregex.test(element))
+        {
+            foundItems.push(element)
+        }
+        if(totalregex.test(element)){
+            total = element.replace(/[^0-9.]/g, '');
+        }
+        if(dateregex.test(element)){
+            date = element.replace(/[^0-9/]/g,'').toString();
+        }
+})
+
+console.log(total)
+console.log(date)
+
 
 var name = []
 var cost = []
@@ -276,7 +357,10 @@ foundItems.map(element=>{
     quantity.push("1")    
     })
 
-console.log(name, cost, quantity)
+
+
+    console.log(typeof date)
+// console.log(name, cost, quantity)
 
 
 // filteredOCR .map((element, index)=>{

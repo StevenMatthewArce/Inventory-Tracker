@@ -42,7 +42,7 @@ export class Ocr extends Component {
       errorMessage: null,
       store: "",
       totalCost: "",
-      description: ""
+      description: "",
     };
     this.onDrop = this.onDrop.bind(this);
     this.runOcr = this.runOcr.bind(this);
@@ -98,7 +98,7 @@ export class Ocr extends Component {
     this.setState({ quantity: input });
   };
 
-  updateDateRestocked = input => {
+  updateDateRestocked = input => { 
     let inputString = input.toString();
     let extractedDate = inputString.match(
       /(\d{1,4}([.\-/])\d{1,2}([.\-/])\d{1,4})/g
@@ -233,8 +233,23 @@ export class Ocr extends Component {
     
     let foundItems = []
     const wlregex = RegExp('(' + wl.join('|') + ')', 'g');
-    filteredOCR.map(element=> {if(wlregex.test(element)){foundItems.push(element)}})
-    
+    const dateregex = RegExp('date','ig')
+    const totalregex = RegExp('total', 'ig')
+    let total = ""
+    let date = ""
+    filteredOCR.map(element=> 
+        {
+            if(wlregex.test(element))
+            {
+                foundItems.push(element)
+            }
+            if(totalregex.test(element)){
+                total = element.replace(/[^0-9.]/g, '');
+            }
+            if(dateregex.test(element)){
+                date = element.replace(/[^0-9/]/g,'')
+            }
+    })
     var name = []
     var cost = []
     var quantity = []
@@ -245,12 +260,10 @@ export class Ocr extends Component {
         cost.push(split[1])
         quantity.push("1")    
         })
-    var receiptDate = [];
-    receiptDate = ocrText.filter(word => word.includes("DATE"));
-    this.updateName(name);
-    this.updateCost(cost);
-    this.updateQuantity(quantity);
-    this.updateDateRestocked(receiptDate);
+
+   
+  this.setState({name: name, cost:cost, quantity:quantity,totalCost:total, dateRestocked:[date]})
+
     // for (var i = 0; i < compare.length; i++) {
     //   filteredText.push(text.filter(word => word.includes(compare[i])));
     //   
