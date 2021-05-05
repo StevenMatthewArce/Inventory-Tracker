@@ -286,11 +286,11 @@ class AddRecipe extends React.Component {
             onChange={this.handleChange}
           />
            <Button
-            style ={{height:37.8, top:25 }}
+            style={{ height: 37.8, top: 25, backgroundColor:"#36393e", color:"#ffffff" }}
             labelPosition="left"
             size = "tiny"
             icon
-            negative
+            
             onClick={() => this.removeItem(items.id)}
             >  Remove
             <Icon name="minus"></Icon>

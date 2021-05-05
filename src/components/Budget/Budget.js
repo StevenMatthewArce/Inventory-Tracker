@@ -8,7 +8,7 @@ const panes = (currentUser, salesInfo, handleExpenseData, handleSaleData) => [
   {
     menuItem: "Expense",
     render: () => (
-      <Tab.Pane attached={false}>
+      <Tab.Pane>
         <Expense uid={currentUser.uid} handleExpenseData={handleExpenseData} />
       </Tab.Pane>
     )
@@ -16,7 +16,7 @@ const panes = (currentUser, salesInfo, handleExpenseData, handleSaleData) => [
   {
     menuItem: "Sales",
     render: () => (
-      <Tab.Pane attached={false}>
+      <Tab.Pane >
         <Sales
           uid={currentUser.uid}
           totalExpenseMonth={salesInfo.totalExpenseMonth}
@@ -76,8 +76,8 @@ const Budget = () => {
   }
 
   return (
-    <Segment style={{ height: "90vh" }}>
-      <Tab
+    <Segment style={{ height: "90vh", backgroundColor: "#f1f1f1" }}>
+      <Tab style= {{color:"#36393e"}}
         panes={panes(currentUser, salesInfo, handleExpenseData, handleSaleData)}
       />
     </Segment>
