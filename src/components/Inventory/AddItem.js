@@ -152,7 +152,7 @@ const AddItem = props => {
           </Grid.Column>
           <Grid.Column width={7} textAlign="right">
             <Button
-           style={{backgroundColor:"#77c90e", color:"#ffffff"}}
+              style={{backgroundColor:"#77c90e", color:"#ffffff"}}
               disabled={isInvalid}
               type="submit"
               onClick={handleSubmit}

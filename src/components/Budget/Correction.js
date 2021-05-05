@@ -9,7 +9,8 @@ import {
   Header,
   Divider,
   Grid,
-  Card
+  Card,
+  Segment
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import { db, storage } from "../Firebase";
@@ -177,10 +178,10 @@ class Correction extends Component {
     }
 
     return (
-      <div style={{ height: "100vh" }}>
+      <Segment style={{ height: "90vh", backgroundColor: "#f1f1f1" }}>
         {console.log(this.props)}
         <div>
-          <Button labelPosition="left" icon secondary onClick={this.back}>
+          <Button labelPosition="left" icon style={{backgroundColor:"#666364", color:"#ffffff"}} onClick={this.back}>
             Back
             <Icon name="left arrow"></Icon>
           </Button>
@@ -191,21 +192,14 @@ class Correction extends Component {
             <Grid.Row>
               <Grid.Column width={9}>
                 <Grid.Row>
-                  <Header as="h1" textAlign="left">
-                    Verification
-                  </Header>
-                  <Grid.Row>
-                    Please check the scanned items or manually add items.
-                    <br></br>
-                    Hit submit once complete.
-                  </Grid.Row>
+                  <Header as="h1" style={{color:"#36393e"}}  content="Verification" subheader="Please check the scanned items or manually add items." textAlign="left"/>
                 </Grid.Row>
               </Grid.Column>
               <Grid.Column width={7} textAlign="right">
                 <Button
                   labelPosition="left"
                   icon
-                  positive
+                  style={{backgroundColor:"#3db39c", color:"white"}}
                   onClick={this.addItem}
                 >
                   Add
@@ -214,7 +208,7 @@ class Correction extends Component {
                 <Button
                   labelPosition="right"
                   icon
-                  primary
+                  style={{backgroundColor:"#77c90e", color:"#ffffff"}}
                   onClick={this.submit}
                 >
                   Submit
@@ -224,6 +218,7 @@ class Correction extends Component {
             </Grid.Row>
             <Grid.Row>
               <Card
+                style={{textAlign:"center"}}
                 centered
                 header={this.state.store}
                 meta={date}
@@ -293,7 +288,7 @@ class Correction extends Component {
                     <Button
                       labelPosition="left"
                       icon
-                      negative
+                      style={{ height: 37.8, top:0, backgroundColor:"#36393e", color:"#ffffff" }}
                       onClick={() => this.removeItem(items.id)}
                     >
                       Remove
@@ -309,7 +304,7 @@ class Correction extends Component {
           )}
           {this.state.error && <Message negative>{this.state.error}</Message>}
         </div>
-      </div>
+      </Segment>
     );
   }
 }

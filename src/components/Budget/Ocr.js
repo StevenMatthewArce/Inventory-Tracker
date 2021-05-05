@@ -12,6 +12,10 @@ import {
 import ImageUploader from "react-images-upload";
 import Tesseract from "tesseract.js";
 import { Link } from "react-router-dom";
+import "./style.css";
+import  fruitVegs from "./WordList.json"
+
+
 
 //TODO: Add OCR Recognition for Store Name
 //TODO: Add OCR Recognition for Total
@@ -166,6 +170,7 @@ export class Ocr extends Component {
         Tesseract.recognize(image, "eng")
           .then(({ data: { text } }) => {
             this.setState({ ocrText: text.split(/\n/), status: "1" });
+            console.log(this.state.ocrText)
             console.log("OCR Finished");
           })
           .then(() => {
@@ -187,7 +192,7 @@ export class Ocr extends Component {
   analyzeText = () => {
     const text = this.state.ocrText;
     //TODO: Change compare to dictionary so it matches more words
-    const compare = ["BANANA", "BRUSSEL", "POTATOES"];
+    const compare = fruitVegs;
     var filteredText = [];
     var receiptDate = [];
     for (var i = 0; i < compare.length; i++) {
@@ -237,10 +242,11 @@ export class Ocr extends Component {
   };
 
   render() {
+   
     return (
-      <Segment style={{ height: "90vh" }}>
+      <Segment style={{ height: "90vh", backgroundColor: "#f1f1f1" }}>
         <div>
-          <Button labelPosition="left" icon secondary as={Link} to="/budget">
+          <Button labelPosition="left" icon style={{backgroundColor:"#666364", color:"#ffffff"}} as={Link} to="/budget">
             Back
             <Icon name="left arrow"></Icon>
           </Button>
@@ -250,26 +256,21 @@ export class Ocr extends Component {
           <Grid>
             <Grid.Column width={9}>
               <Grid.Row>
-                <Header as="h1" textAlign="left">
-                  Receipt Upload
-                </Header>
-                <Grid.Row>
-                  Please upload your receipt or click next to manually add items
-                </Grid.Row>
+                <Header as="h1" style={{color:"#36393e"}} content="Receipt Upload" subheader= "Please upload your receipt or click next to manually add items"textAlign="left"/>
               </Grid.Row>
             </Grid.Column>
             <Grid.Column width={7} textAlign="right">
               {this.state.status != null ? (
-                <Button icon loading labelPosition="left" primary>
+                <Button icon loading labelPosition="left" style={{backgroundColor:"#3db39c", color:"white"}}>
                   Run OCR <Icon name="eye" />
                 </Button>
               ) : (
-                <Button icon labelPosition="left" primary onClick={this.runOcr}>
+                <Button icon labelPosition="left"  style={{backgroundColor:"#3db39c", color:"white"}} onClick={this.runOcr}>
                   Run OCR <Icon name="eye" />
                 </Button>
               )}
               <Button
-                primary
+                style={{backgroundColor:"#77c90e", color:"#ffffff"}}
                 icon
                 labelPosition="right"
                 onClick={this.saveAndContinue}
@@ -285,7 +286,7 @@ export class Ocr extends Component {
           <Grid.Column width={10}>
             <ImageUploader
               withIcon={true}
-              buttonClassName="ui icon primary center button"
+              buttonClassName="chooseFileButton"
               buttonText="Upload Receipt"
               onChange={this.onDrop}
               withPreview={true}

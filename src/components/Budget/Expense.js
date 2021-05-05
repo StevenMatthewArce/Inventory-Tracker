@@ -421,7 +421,7 @@ export class Expense extends Component {
               labelPosition="right"
               icon="checkmark"
               onClick={this.closeModal}
-              positive
+              style={{backgroundColor:"#3db39c", color:"white"}}
             />
           </Modal.Actions>
         </Modal>

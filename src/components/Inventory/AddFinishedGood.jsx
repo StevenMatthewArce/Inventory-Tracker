@@ -175,8 +175,7 @@ const AddFinishedGood = () => {
         </Grid.Column>
         <Grid.Row>
         <Card
-          style={{textAlign:"center"}}
-          centered
+           style={{textAlign:"center"}}
           header= {selected[0].name}
           meta = {(selected[0].items != undefined) ? ("Ingredients: " + selected[0].items.map(element => element.name)) : ("") }
           description= {selected[0].description}
