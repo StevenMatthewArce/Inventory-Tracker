@@ -31,9 +31,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <div style={{background:"#f1f1f1"}}>
+      <div style={{background:"#f1f1f1", overflow:"hidden"}}>
         <Header onToggleMenu={this.toggleMenu} />
-        <AuthProvider>
+        <div style={{overflow: "auto",paddingRight: "20px"}}>
+        <AuthProvider >
           <Router>
             <Grid columns={1}>
               <Grid.Column>
@@ -66,6 +67,7 @@ class App extends React.Component {
             </Grid>
           </Router>
         </AuthProvider>
+        </div>
       </div>
     );
   }
