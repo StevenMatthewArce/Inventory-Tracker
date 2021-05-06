@@ -135,14 +135,15 @@ export class AddOrder extends Component {
   updateTotalLabor = () => {
     let { totalLabor, items } = this.state;
 
+    console.log(items)
     if (items.length > 1) {
       totalLabor = items.reduce(
-        (a, b) => parseFloat(a.timeSpent) + parseFloat(b.timeSpent)
+        (a, b) => (parseFloat(a.timeSpent) * parseFloat(a.quantity))+ (parseFloat(b.timeSpent)*parseFloat(b.quantity))
       );
     } else if (items.length == 0) {
       totalLabor = 0;
     } else {
-      totalLabor = parseFloat(items[0].timeSpent);
+      totalLabor = parseFloat(items[0].timeSpent)*parseFloat(items[0].quantity);
     }
 
     return totalLabor;
