@@ -18,6 +18,7 @@ import {
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
+import "./style.css"
 
 //TODO: Add Expense Chart-Bar at the top
 //TODO: Add Filters
@@ -49,6 +50,7 @@ export class Expense extends Component {
 
   componentDidMount() {
     let documents = [];
+    let newArry = []
     db.collection("users")
       .doc(this.state.uid)
       .collection("receipts")
@@ -58,10 +60,24 @@ export class Expense extends Component {
           documents.push({ ...doc.data(), id: doc.id });
           // console.log(doc.id, " => ", doc.data());
         });
+      }).then(()=>{
+        let docs =[]
+        db.collection("users")
+        .doc(this.state.uid)
+        .collection("items")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            docs.push({  ...doc.data(), id: doc.id });
+            // console.log(doc.id, " => ", doc.data());
+          })
+          const reformatedData = docs.map(({cost:totalCost, dateRestocked:date, name: name, id: id}) =>{ return{id:id, totalCost: totalCost, date: date, name:name, description: name, type:"Item", store:"N/A", imageAsUrl: "" }})
+          
+          newArry = [...documents, ...reformatedData]
+          this.setState({data: newArry}, this.calculateExpenseMonth(newArry))
+        })
       })
-      .then(() => this.setState({ data: documents }))
-      .then(() => this.calculateExpenseMonth())
-      .then(() => {});
+      
 
     db.collection("users")
       .doc(this.state.uid)
@@ -97,8 +113,9 @@ export class Expense extends Component {
     });
   };
 
-  calculateExpenseMonth = () => {
-    const { data } = this.state;
+  calculateExpenseMonth = (newArry) => {
+    const data = newArry
+
 
     let totalExpenseMonth = 0;
     let totalExpenseYear = 0;
@@ -172,11 +189,14 @@ export class Expense extends Component {
   };
 
   removeItem = () => {
-    let { checked } = this.state;
-    if (checked.length < 1) {
-      this.setState({ error: "Please Check a Receipt" });
+    let { checked, data } = this.state;
+    if (checked.length != 1) {
+      this.setState({ error: "Please Check One Box" });
     } else {
-      checked.map(element => {
+      let type = data.filter(element=> element.id == checked)
+      if(type[0].type == "Receipt")
+      {
+        checked.map(element => {
         db.collection("users")
           .doc(this.state.uid)
           .collection("receipts")
@@ -190,6 +210,23 @@ export class Expense extends Component {
             this.setState({ error: "Error removing doucment" });
           });
       });
+      }else{
+        checked.map(element => {
+          db.collection("users")
+            .doc(this.state.uid)
+            .collection("items")
+            .doc(element)
+            .delete()
+            .then(() => {
+              console.log("Document successfully deleted!");
+            })
+            .catch(error => {
+              console.error("Error removing document: ", error);
+              this.setState({ error: "Error removing doucment" });
+            });
+        });
+      }
+      
     }
   };
 
@@ -213,7 +250,7 @@ export class Expense extends Component {
   };
   render() {
     const { data, column, direction } = this.state;
-    // console.log(this.state.checked);
+    // console.log(this.state);
     return (
       <div>
         <div>
@@ -339,11 +376,11 @@ export class Expense extends Component {
           </Grid>
         </div>
 
-        <Divider />
-
-        <div>
+        <Divider  />
+ 
+        <div className="container">
           <Table sortable celled definition structured>
-            <Table.Header>
+            <Table.Header className="sticky-column">
               <Table.Row textAlign="center">
                 <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}collapsing />
                 <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}

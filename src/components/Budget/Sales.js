@@ -130,11 +130,14 @@ export class Sales extends Component {
     this.setState(
       { mostPopularItem: mostPopItem },
       () => {
+        if(mostPopItem != undefined){
         db.collection("users")
           .doc(this.state.uid)
           .update({
             mostPopularItem: this.state.mostPopularItem
           });
+        }
+      
       }
 
       // console.log(this.state.mostPopularItem)

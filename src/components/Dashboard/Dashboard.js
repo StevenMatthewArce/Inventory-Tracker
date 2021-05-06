@@ -415,7 +415,7 @@ useEffect(()=>{
                         domainPadding={{x: [10, -10], y: -100}}
                           interpolation="step"
                          data={profitData}
-                          labels={({ datum }) => "$" + datum.y}
+                          // labels={({ datum }) => "$" + datum.y}
                           labelComponent={<VictoryLabel renderInPortal dy={-30}/>}
                           theme={VictoryTheme.material}
                           style={{
