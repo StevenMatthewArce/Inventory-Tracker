@@ -5,6 +5,7 @@ import { Segment, Grid, Header, Divider, StepGroup } from "semantic-ui-react";
 import { db } from "../Firebase";
 import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictoryArea, VictoryLabel } from "victory";
 
+
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
   // const [data, setData] = useState(null);
@@ -48,6 +49,8 @@ const Dashboard = () => {
        
       });
   }, [1]);
+
+
 
   useEffect(() => {
     let docs = [];

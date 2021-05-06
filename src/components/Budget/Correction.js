@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { v4 as uuidv4 } from 'uuid';
 import { Redirect } from "react-router-dom";
 import {
   Form,
@@ -114,8 +114,9 @@ class Correction extends Component {
     console.log("start of upload");
     const { imageAsFile } = this.state;
 
+    const name = uuidv4()
     const uploadTask = storage
-      .ref(`/images/${imageAsFile.name}`)
+      .ref(`/images/${name}`)
       .put(imageAsFile);
 
     //initiates the firebase side uploading
@@ -133,7 +134,7 @@ class Correction extends Component {
         () => {
           storage
             .ref("images")
-            .child(imageAsFile.name)
+            .child(name)
             .getDownloadURL()
             .then(fireBaseUrl => {
               this.setState({ imgUrl: fireBaseUrl });
@@ -258,7 +259,7 @@ class Correction extends Component {
                       icon="dollar sign"
                       iconPosition="left"
                       width={4}
-                      label="Cost"
+                      label=" Unit Cost"
                       name="cost"
                       id={items.id}
                       value={items.cost}
