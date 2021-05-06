@@ -72,7 +72,6 @@ export class Recipes extends Component {
     const { data } = this.state;
     const { name } = data;
 
-    console.log(data);
     this.setState({ isLoading: true, value });
 
     setTimeout(() => {
@@ -121,14 +120,13 @@ export class Recipes extends Component {
   };
   render() {
     const { data, column, direction, isLoading, value, results } = this.state;
-    console.log(this.state);
     const resRender = ({ name, receipeCost, items }) => {
       return (
         <div key="name">
           <Grid>
             <Grid.Column width={5}>Recipe Name: {name}</Grid.Column>
             <Grid.Column width={5}>
-              Ingredients: {items.map(element => element.name).join(", ")}{" "}
+              Ingredients: {items.map(element => element.name).join(", ")}
             </Grid.Column>
             <Grid.Column width={2}>Cost: ${receipeCost}</Grid.Column>
           </Grid>
@@ -153,14 +151,14 @@ export class Recipes extends Component {
           <br />
           <Grid columns="equal">
             <Grid.Column width={8}>
-              <Header as="h1">Recipes</Header>
+              <Header style={{color:"#36393e"}} as="h1">Recipes</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
               <Button.Group>
                 <Button
                   icon
                   labelPosition="left"
-                  negative
+                  style={{backgroundColor:"#36393e", color:"#ffffff"}}
                   size="small"
                   onClick={this.removeItem}
                 >
@@ -168,7 +166,8 @@ export class Recipes extends Component {
                   Remove
                 </Button>
                 <Dropdown
-                  className="ui small icon black left labeled button"
+                 style={{backgroundColor:"#77c90e", color:"#ffffff"}}
+                 className="ui small icon left labeled button"
                   text="Add"
                   labeled
                   button
@@ -210,8 +209,8 @@ export class Recipes extends Component {
           <Table sortable celled definition structured>
             <Table.Header>
               <Table.Row textAlign="center">
-                <Table.HeaderCell />
-                <Table.HeaderCell
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}  />
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} 
                   width={2}
                   sorted={column === "name" ? direction : null}
                   onClick={this.handleSort("name")}
@@ -219,16 +218,17 @@ export class Recipes extends Component {
                   Recipe Name
                 </Table.HeaderCell>
                 <Table.HeaderCell
+                style={{backgroundColor:"#ffae3b", color: "white"}} 
                   width={5}
                   sorted={column === "description" ? direction : null}
                   onClick={this.handleSort("description")}
                 >
                   Description
                 </Table.HeaderCell>
-                <Table.HeaderCell width={5}>Ingredients</Table.HeaderCell>
-                <Table.HeaderCell width={2}>Qty Produced</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Labor (hrs)</Table.HeaderCell>
-                <Table.HeaderCell width={1}>Unit Cost</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}  width={5}>Ingredients</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}  width={2}>Qty Produced</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}  width={1}>Labor (hrs)</Table.HeaderCell>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}  width={1}>Unit Cost</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {data.map(items => {
@@ -243,7 +243,7 @@ export class Recipes extends Component {
                       {items.description}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
-                      {/* {items.items.map(element => element.name).join(", ")} */}
+                      {items.items.map(element => element.name).join(", ")}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       {items.qtyProduced}

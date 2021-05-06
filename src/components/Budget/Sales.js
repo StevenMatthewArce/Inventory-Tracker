@@ -130,11 +130,14 @@ export class Sales extends Component {
     this.setState(
       { mostPopularItem: mostPopItem },
       () => {
+        if(mostPopItem != undefined){
         db.collection("users")
           .doc(this.state.uid)
           .update({
             mostPopularItem: this.state.mostPopularItem
           });
+        }
+      
       }
 
       // console.log(this.state.mostPopularItem)
@@ -212,59 +215,60 @@ export class Sales extends Component {
     const { data } = this.state;
 
     return (
-      <Segment style={{ height: "100vh" }}>
+      <div>
         <div>
           <Grid centered columns={2}>
             <Grid.Column>
               <Grid.Row verticalAlign="top">
-                <Statistic
-                  size="mini"
-                  color="orange"
-                  value={"$" + this.state.totalSaleMonth}
-                  label="Total Sale This Month"
-                />
-
-                <Statistic
+                <Header
                   floated="right"
-                  size="mini"
-                  color="grey"
-                  value={"$" + this.state.totalSaleYear}
-                  label="Total Sale This Year"
+                  size="medium"
+                  style={{color:"#77c90e"}}
+                  textAlign="center"
+                   content={"$" + this.state.totalSaleMonth}
+                  subheader="Total Sale This Month"
                 />
-              </Grid.Row>
 
-              <Grid.Row verticalAlign="bottom">
-                <Progress
-                  color="orange"
+                <Header
+                  floated="left"
+                  size="medium"
+                  style={{color:"#77c90e"}}
+                  textAlign="center"
+                  content={"$" + this.state.totalSaleMonth}
+                  subheader="Total Sale This Year"
+                />
+                <Progress              
+                  color="green"
+                  style={{ top: 50}}
                   percent={this.state.saleMonthPercentage}
                 />
               </Grid.Row>
             </Grid.Column>
             <Grid.Column>
               <Grid.Row verticalAlign="top">
-                <Statistic
-                  size="mini"
+                <Header
+                floated="left"
+                  size="medium"
                   color={this.state.profitMonth > 0 ? "green" : "red"}
                   percent={this.state.profitPercentage}
-                  value={"$" + this.state.profitMonth}
-                  label="Total Profit This Month"
+                  content={"$" + this.state.profitMonth}
+                  subheader="Total Profit This Month"
                 />
 
-                <Statistic
+                <Header
                   floated="right"
-                  size="mini"
-                  color="grey"
-                  value={"$" + this.state.profitYear}
-                  label="Total Profit This Year"
+                  size="medium"
+                  color={this.state.profitYear > 0 ? "green" : "red"}
+                  content={"$" + this.state.profitYear}
+                  subheader="Total Profit This Year"
                 />
-              </Grid.Row>
-
-              <Grid.Row verticalAlign="bottom">
                 <Progress
                   color={this.state.profitPercentage > 0 ? "green" : "red"}
                   percent={this.state.profitPercentage}
+                  style={{ top: 50}}
                 />
               </Grid.Row>
+
               {/* <Grid.Row>
                 <div style={{ textAlign: "center" }}>
                   <Statistic
@@ -278,6 +282,7 @@ export class Sales extends Component {
             </Grid.Column>
           </Grid>
         </div>
+        <br/>
         <div>
           {this.state.error && (
             <Message icon="frown" negative>
@@ -288,15 +293,15 @@ export class Sales extends Component {
         <br />
         <div>
           <Grid columns="equal">
-            <Grid.Column width={8}>
-              <Header as="h1">Sales Tracking</Header>
+            <Grid.Column width={6}>
+              <Header as="h1" style={{color:"#36393e"}}>Sales Tracking</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
               <Button.Group>
                 <Button
                   icon
                   labelPosition="left"
-                  negative
+                  style={{backgroundColor:"#36393e", color:"#ffffff"}}
                   size="small"
                   onClick={this.removeItem}
                 >
@@ -314,15 +319,15 @@ export class Sales extends Component {
           <Table sortable celled definition structured>
             <Table.Header>
               <Table.Row textAlign="center">
-                <Table.HeaderCell collapsing />
-                <Table.HeaderCell width={2}>Date</Table.HeaderCell>
-                <Table.HeaderCell width={3}>Customer</Table.HeaderCell>
-                <Table.HeaderCell width={3}>Comments</Table.HeaderCell>
-                <Table.HeaderCell width={6}>Items</Table.HeaderCell>
-                <Table.HeaderCell width={2}>Labor Rate</Table.HeaderCell>
-                <Table.HeaderCell width={2}>Total Labor</Table.HeaderCell>
-                <Table.HeaderCell width={2}>Mark Up</Table.HeaderCell>
-                <Table.HeaderCell width={2}>Total Cost</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}collapsing />
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={2}>Date</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={3}>Customer</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={3}>Comments</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={6}>Items</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={2}>Labor Rate</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={2}>Total Labor</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={2}>Mark Up</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}idth={2}>Total Cost</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 
@@ -357,7 +362,7 @@ export class Sales extends Component {
             })}
           </Table>
         </div>
-      </Segment>
+      </div>
     );
   }
 }

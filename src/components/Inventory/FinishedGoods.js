@@ -124,7 +124,7 @@ export class FinishedGoods extends Component {
     const resRender = ({ name, receipeCost, quantity, timeSpent, items }) => {
       return (
         <div key="name">
-          <Grid>
+          <Grid >
             <Grid.Column width={5}>Recipe Name: {name}</Grid.Column>
             <Grid.Column width={5}>
               Ingredients: {items.map(element => element.name).join(", ")}{" "}
@@ -155,14 +155,14 @@ export class FinishedGoods extends Component {
           <br />
           <Grid columns="equal">
             <Grid.Column width={8}>
-              <Header as="h1">Finished Goods</Header>
+              <Header as="h1" style={{color:"#36393e"}}>Finished Goods</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
               <Button.Group>
                 <Button
                   icon
                   labelPosition="left"
-                  negative
+                  style={{backgroundColor:"#36393e", color:"#ffffff"}}
                   size="small"
                   onClick={this.removeItem}
                 >
@@ -170,7 +170,8 @@ export class FinishedGoods extends Component {
                   Remove
                 </Button>
                 <Dropdown
-                  className="ui small icon black left labeled button"
+                 style={{backgroundColor:"#77c90e", color:"#ffffff"}}
+                  className="ui small icon left labeled button"
                   text="Add"
                   labeled
                   button
@@ -212,8 +213,9 @@ export class FinishedGoods extends Component {
           <Table sortable celled structured definition>
             <Table.Header>
               <Table.Row textAlign="center">
-                <Table.HeaderCell />
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} />
                 <Table.HeaderCell
+                style={{backgroundColor:"#ffae3b", color: "white"}}
                   rowSpan="2"
                   width={6}
                   sorted={column === "name" ? direction : null}
@@ -222,6 +224,7 @@ export class FinishedGoods extends Component {
                   Item Name
                 </Table.HeaderCell>
                 <Table.HeaderCell
+                style={{backgroundColor:"#ffae3b", color: "white"}}
                   rowSpan="1"
                   width={6}
                   sorted={column === "description" ? direction : null}
@@ -229,16 +232,16 @@ export class FinishedGoods extends Component {
                 >
                   Ingredients
                 </Table.HeaderCell>
-                <Table.HeaderCell rowSpan="2" width={1}>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} rowSpan="2" width={1}>
                   Quantity Per Recipe
                 </Table.HeaderCell>
-                <Table.HeaderCell rowSpan="2" width={1}>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} rowSpan="2" width={1}>
                   Total Quantity
                 </Table.HeaderCell>
-                <Table.HeaderCell rowSpan="2" width={1}>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} rowSpan="2" width={1}>
                   Labor Per Recipe
                 </Table.HeaderCell>
-                <Table.HeaderCell rowSpan="2" width={1}>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}}rowSpan="2" width={1}>
                   Total Labor
                 </Table.HeaderCell>
                 {/* <Table.HeaderCell rowSpan="2" width={1}>
@@ -247,7 +250,7 @@ export class FinishedGoods extends Component {
                 <Table.HeaderCell rowSpan="2" width={1}>
                   Mark Up
                 </Table.HeaderCell> */}
-                <Table.HeaderCell rowSpan="2" width={1}>
+                <Table.HeaderCell style={{backgroundColor:"#ffae3b", color: "white"}} rowSpan="2" width={1}>
                   Unit Cost
                 </Table.HeaderCell>
               </Table.Row>

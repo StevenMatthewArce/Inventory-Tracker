@@ -220,9 +220,9 @@ export class AddOrder extends Component {
 
   render() {
     return (
-      <Segment style={{ height: "90vh" }}>
+      <Segment style={{ height: "100vh",  backgroundColor: "#f1f1f1" }}>
         <div>
-          <Button labelPosition="left" icon secondary as={Link} to="/orders">
+          <Button labelPosition="left" icon style={{backgroundColor:"#666364", color:"#ffffff"}} as={Link} to="/orders">
             Back
             <Icon name="left arrow"></Icon>
           </Button>
@@ -232,18 +232,18 @@ export class AddOrder extends Component {
           <Grid>
             <Grid.Column width={9}>
               <Grid.Row>
-                <Header as="h1" textAlign="left">
+                <Header as="h1" style={{color:"#36393e"}} textAlign="left">
                   Add an Order
                 </Header>
                 <Grid.Row>Please add your new orders.</Grid.Row>
               </Grid.Row>
             </Grid.Column>
             <Grid.Column width={7} textAlign="right">
-              <Button labelPosition="left" icon positive onClick={this.addItem}>
+              <Button labelPosition="left" icon  style={{backgroundColor:"#3db39c", color:"white"}}onClick={this.addItem}>
                 Add
                 <Icon name="plus"></Icon>
               </Button>
-              <Button labelPosition="right" icon primary onClick={this.submit}>
+              <Button labelPosition="right" icon  style={{backgroundColor:"#77c90e", color:"#ffffff"}} onClick={this.submit}>
                 Submit
                 <Icon name="send" />
               </Button>
@@ -379,11 +379,10 @@ export class AddOrder extends Component {
                     name="unitCost"
                   />
                   <Button
-                    style={{ height: 37.8, top: 25 }}
+                    style={{ height: 37.8, top: 25, backgroundColor:"#36393e", color:"#ffffff" }}
                     labelPosition="left"
                     size="tiny"
                     icon
-                    negative
                     onClick={() => this.removeItem(items.id)}
                   >
                     Remove

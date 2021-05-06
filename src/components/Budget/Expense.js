@@ -18,6 +18,7 @@ import {
 import { Link } from "react-router-dom";
 import { db } from "../Firebase";
 import _ from "lodash";
+import "./style.css"
 
 //TODO: Add Expense Chart-Bar at the top
 //TODO: Add Filters
@@ -49,6 +50,7 @@ export class Expense extends Component {
 
   componentDidMount() {
     let documents = [];
+    let newArry = []
     db.collection("users")
       .doc(this.state.uid)
       .collection("receipts")
@@ -58,10 +60,24 @@ export class Expense extends Component {
           documents.push({ ...doc.data(), id: doc.id });
           // console.log(doc.id, " => ", doc.data());
         });
+      }).then(()=>{
+        let docs =[]
+        db.collection("users")
+        .doc(this.state.uid)
+        .collection("items")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            docs.push({  ...doc.data(), id: doc.id });
+            // console.log(doc.id, " => ", doc.data());
+          })
+          const reformatedData = docs.map(({cost:totalCost, dateRestocked:date, name: name, id: id}) =>{ return{id:id, totalCost: totalCost, date: date, name:name, description: name, type:"Item", store:"N/A", imageAsUrl: "" }})
+          
+          newArry = [...documents, ...reformatedData]
+          this.setState({data: newArry}, this.calculateExpenseMonth(newArry))
+        })
       })
-      .then(() => this.setState({ data: documents }))
-      .then(() => this.calculateExpenseMonth())
-      .then(() => {});
+      
 
     db.collection("users")
       .doc(this.state.uid)
@@ -97,8 +113,9 @@ export class Expense extends Component {
     });
   };
 
-  calculateExpenseMonth = () => {
-    const { data } = this.state;
+  calculateExpenseMonth = (newArry) => {
+    const data = newArry
+
 
     let totalExpenseMonth = 0;
     let totalExpenseYear = 0;
@@ -172,11 +189,14 @@ export class Expense extends Component {
   };
 
   removeItem = () => {
-    let { checked } = this.state;
-    if (checked.length < 1) {
-      this.setState({ error: "Please Check a Receipt" });
+    let { checked, data } = this.state;
+    if (checked.length != 1) {
+      this.setState({ error: "Please Check One Box" });
     } else {
-      checked.map(element => {
+      let type = data.filter(element=> element.id == checked)
+      if(type[0].type == "Receipt")
+      {
+        checked.map(element => {
         db.collection("users")
           .doc(this.state.uid)
           .collection("receipts")
@@ -190,6 +210,23 @@ export class Expense extends Component {
             this.setState({ error: "Error removing doucment" });
           });
       });
+      }else{
+        checked.map(element => {
+          db.collection("users")
+            .doc(this.state.uid)
+            .collection("items")
+            .doc(element)
+            .delete()
+            .then(() => {
+              console.log("Document successfully deleted!");
+            })
+            .catch(error => {
+              console.error("Error removing document: ", error);
+              this.setState({ error: "Error removing doucment" });
+            });
+        });
+      }
+      
     }
   };
 
@@ -213,71 +250,67 @@ export class Expense extends Component {
   };
   render() {
     const { data, column, direction } = this.state;
-    // console.log(this.state.checked);
+    // console.log(this.state);
     return (
-      <Segment style={{ height: "100vh" }}>
+      <div>
         <div>
           <Grid centered columns={2}>
             <Grid.Column>
               <Grid.Row verticalAlign="top">
-                <Statistic
-                  size="mini"
-                  color="orange"
-                  value={"$" + this.state.totalExpenseMonth}
-                  label="Total Expense This Month"
+                <Header
+                  floated="left"
+                  size="medium"
+                  textAlign="center"
+                  style={{color:"#ff8369"}}
+                  content={"$" + this.state.totalExpenseMonth}
+                 subheader="Total Expense This Month"
                 />
 
-                <Statistic
+                <Header
                   floated="right"
-                  size="mini"
-                  color="grey"
-                  value={"$" + this.state.totalExpenseYear}
-                  label="Total Expense This Year"
+                  size="medium"
+                  style={{color:"#ff8369"}}
+                  textAlign="center"
+                  content={"$" + this.state.totalExpenseYear}
+                  subheader="Total Expense This Year"
                 />
-              </Grid.Row>
-
-              <Grid.Row verticalAlign="bottom">
-                <Progress
+                <Progress              
                   color="orange"
+                  style={{ top: 50}}
                   percent={this.state.expenseMonthPercentage}
                 />
               </Grid.Row>
             </Grid.Column>
             <Grid.Column>
               <Grid.Row verticalAlign="top">
-                <Statistic
-                  size="mini"
-                  color={
-                    this.state.totalExpenseYear > this.state.totalSaleYear
-                      ? "red"
-                      : "green"
-                  }
-                  value={"$" + this.state.totalExpenseYear}
-                  label="Total Expense This Year"
+                <Header
+                   floated="left"
+                   size="medium"
+                   textAlign="center"
+                   style={{color:"#ff8369"}}
+  
+                  content={"$" + this.state.totalExpenseMonth}
+                  subheader="Total Expense This Month"
                 />
 
-                <Statistic
-                  floated="right"
-                  size="mini"
-                  color="grey"
-                  value={"$" + this.state.totalSaleYear}
-                  label="Total Sales"
+                <Header
+                 floated="right"
+                 size="medium"
+                 style={{color:"#77c90e"}}
+                 textAlign="center"
+                  content={"$" + this.state.totalSaleMonth}
+                  subheader="Total Sales This Month"
                 />
-              </Grid.Row>
-
-              <Grid.Row verticalAlign="bottom">
-                <Progress
-                  color={
-                    this.state.totalExpenseYear > this.state.totalSaleYear
-                      ? "red"
-                      : "green"
-                  }
+                 <Progress              
+                  color={this.state.totalExpenseMonth > this.state.totalSaleMonth ? "orange" : "green"}
+                  style={{ top: 50}}
                   percent={this.state.expenseScalePercentage}
                 />
               </Grid.Row>
             </Grid.Column>
           </Grid>
         </div>
+        <br/>
         <div>
           <div>
             {this.state.error && (
@@ -288,23 +321,13 @@ export class Expense extends Component {
           </div>
           <br />
           <Grid columns="equal">
-            <Grid.Column width={8}>
-              <Header as="h1">Expense Tracking</Header>
+            <Grid.Column width={6}>
+              <Header as="h1"style={{color:"#36393e"}} >Expense Tracking</Header>
             </Grid.Column>
             <Grid.Column textAlign="right">
               <Button.Group>
-                <Button
-                  icon
-                  labelPosition="left"
-                  negative
-                  size="small"
-                  onClick={this.removeItem}
-                >
-                  <Icon name="close"></Icon>
-                  Remove
-                </Button>
-                <Button
-                  color={"blue"}
+              <Button
+                  style={{backgroundColor:"#3db39c", color:"white"}}
                   icon
                   labelPosition="left"
                   size="small"
@@ -313,8 +336,20 @@ export class Expense extends Component {
                   <Icon name="image"></Icon>
                   View Receipt
                 </Button>
+                <Button
+                  icon
+                  labelPosition="left"
+                  style={{backgroundColor:"#36393e", color:"#ffffff"}}
+                  size="small"
+                  onClick={this.removeItem}
+                >
+                  <Icon name="close"></Icon>
+                  Remove
+                </Button>
+                
                 <Dropdown
-                  className="ui small icon black left labeled button"
+                  className="ui small icon  left labeled button"
+                  style={{backgroundColor:"#77c90e", color:"#ffffff"}}
                   text="Add"
                   labeled
                   button
@@ -341,30 +376,30 @@ export class Expense extends Component {
           </Grid>
         </div>
 
-        <Divider />
-
-        <div>
+        <Divider  />
+ 
+        <div className="container">
           <Table sortable celled definition structured>
-            <Table.Header>
+            <Table.Header className="sticky-column">
               <Table.Row textAlign="center">
-                <Table.HeaderCell collapsing />
-                <Table.HeaderCell
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}collapsing />
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}
                   width={2}
                   sorted={column === "Date" ? direction : null}
                   onClick={this.handleSort("Date")}
                 >
                   Date
                 </Table.HeaderCell>
-                <Table.HeaderCell
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}
                   width={3}
                   sorted={column === "Type" ? direction : null}
                   onClick={this.handleSort("Type")}
                 >
                   Type
                 </Table.HeaderCell>
-                <Table.HeaderCell width={3}>Store</Table.HeaderCell>
-                <Table.HeaderCell width={6}>Description</Table.HeaderCell>
-                <Table.HeaderCell
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={3}>Store</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}width={6}>Description</Table.HeaderCell>
+                <Table.HeaderCell  style={{backgroundColor:"#ffae3b", color: "white"}}
                   width={2}
                   sorted={column === "Total" ? direction : null}
                   onClick={this.handleSort("Total")}
@@ -423,11 +458,11 @@ export class Expense extends Component {
               labelPosition="right"
               icon="checkmark"
               onClick={this.closeModal}
-              positive
+              style={{backgroundColor:"#3db39c", color:"white"}}
             />
           </Modal.Actions>
         </Modal>
-      </Segment>
+   </div>
     );
   }
 }

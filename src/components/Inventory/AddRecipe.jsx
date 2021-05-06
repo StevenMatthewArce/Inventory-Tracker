@@ -173,9 +173,9 @@ class AddRecipe extends React.Component {
   render() {
     console.log(this.state)
     return (
-      <Segment style={{ height: "90vh" }}>
+      <Segment style={{ height: "100vh", backgroundColor: "#f1f1f1" }}>
         <div>
-          <Button labelPosition='left' icon secondary as={Link} to='/inventory'>
+          <Button labelPosition='left' icon style={{backgroundColor:"#666364", color:"#ffffff"}} as={Link} to='/inventory'>
             Back
               <Icon name='left arrow' />
           </Button>
@@ -189,7 +189,7 @@ class AddRecipe extends React.Component {
               
               <Grid.Row>
                  
-                <Header as='h1' textAlign='left'>
+                <Header as='h1' textAlign='left'  style={{color:"#36393e"}}>
                   Add a Recipe
                   </Header>
                   <Grid.Row>Please select ingredients for your recipe.</Grid.Row>
@@ -199,13 +199,13 @@ class AddRecipe extends React.Component {
             <Button
                   labelPosition="left"
                   icon
-                  positive
+                  style={{backgroundColor:"#3db39c", color:"white"}}
                   onClick={this.addItem}
                 >
                   Add
                   <Icon name="plus"></Icon>
                 </Button>
-              <Button labelPosition='right' icon primary onClick={this.handleSubmit}>
+              <Button labelPosition='right' icon  style={{backgroundColor:"#77c90e", color:"#ffffff"}}onClick={this.handleSubmit}>
                 Submit
                   <Icon name='send' />
               </Button>
@@ -286,11 +286,11 @@ class AddRecipe extends React.Component {
             onChange={this.handleChange}
           />
            <Button
-            style ={{height:37.8, top:25 }}
+            style={{ height: 37.8, top: 25, backgroundColor:"#36393e", color:"#ffffff" }}
             labelPosition="left"
             size = "tiny"
             icon
-            negative
+            
             onClick={() => this.removeItem(items.id)}
             >  Remove
             <Icon name="minus"></Icon>
