@@ -180,7 +180,7 @@ class Correction extends Component {
     }
 
     return (
-      <Segment style={{ height: "90vh", backgroundColor: "#f1f1f1" }}>
+      <Segment style={{ height: "100vh", backgroundColor: "#f1f1f1" }}>
         {console.log(this.state)}
         <div>
           <Button labelPosition="left" icon style={{backgroundColor:"#666364", color:"#ffffff"}} onClick={this.back}>

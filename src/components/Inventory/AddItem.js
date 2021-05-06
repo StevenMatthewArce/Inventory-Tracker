@@ -132,7 +132,7 @@ const AddItem = props => {
   const fileInputRef = React.createRef();
 
   return (
-    <Segment style={{ height: "90vh",  backgroundColor: "#f1f1f1" }}>
+    <Segment style={{ height: "100vh",  backgroundColor: "#f1f1f1" }}>
       <div>
         <Button labelPosition="left" icon  style={{backgroundColor:"#666364", color:"#ffffff"}} as={Link} to="/inventory">
           Back

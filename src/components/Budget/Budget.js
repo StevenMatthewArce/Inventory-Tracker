@@ -76,7 +76,7 @@ const Budget = () => {
   }
 
   return (
-    <Segment style={{ height: "90vh", backgroundColor: "#f1f1f1" }}>
+    <Segment style={{ height: "100vh", backgroundColor: "#f1f1f1" }}>
       <Tab style= {{color:"#36393e"}}
         panes={panes(currentUser, salesInfo, handleExpenseData, handleSaleData)}
       />
