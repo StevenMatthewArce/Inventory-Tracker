@@ -286,7 +286,7 @@ const RawMaterials = props => {
                         {items.description}
                       </Table.Cell>
                       <Table.Cell id={"alert"} textAlign="center">
-                        {items.qty}
+                        {items.quantity}
                       </Table.Cell>
                       <Table.Cell textAlign="center">${items.cost}</Table.Cell>
                       <Table.Cell textAlign="center">

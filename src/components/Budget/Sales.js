@@ -154,8 +154,12 @@ export class Sales extends Component {
 
     let profitMonth = totalSaleMonth - totalExpenseMonth;
     let profitYear = totalSaleYear - totalExpenseYear;
+    profitMonth = profitMonth.toFixed(2)
+    profitYear = profitYear.toFixed(2)
+
     let profitPercentage = (profitMonth / profitYear) * 100;
 
+    
     if (profitMonth <= 0) {
       console.log("here");
       profitPercentage = 0;
@@ -234,7 +238,7 @@ export class Sales extends Component {
                   size="medium"
                   style={{color:"#77c90e"}}
                   textAlign="center"
-                  content={"$" + this.state.totalSaleMonth}
+                  content={"$" + this.state.totalSaleYear}
                   subheader="Total Sale This Year"
                 />
                 <Progress              

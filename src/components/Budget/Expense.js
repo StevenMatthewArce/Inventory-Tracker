@@ -135,7 +135,9 @@ export class Expense extends Component {
       }
     });
 
+    totalExpenseYear = totalExpenseYear.toFixed(2)
     expenseMonthPercentage = (totalExpenseMonth / totalExpenseYear) * 100;
+
 
     this.setState(
       {

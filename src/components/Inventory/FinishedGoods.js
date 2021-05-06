@@ -105,6 +105,7 @@ export class FinishedGoods extends Component {
         db.collection("users")
           .doc(this.state.uid)
           .collection("finishedgoods")
+          .doc(element)
           .delete()
           .then(() => {
             this.setState({
