@@ -39,7 +39,6 @@ Desktop.ini
 .directory
 *~
 
-
 # npm
 node_modules
 package-lock.json
@@ -53,5 +52,7 @@ coverage
 # Benchmarking
 benchmarks/graphs
 backend/.env
-frontend/yarn.lock
-node_modules
+
+# random ones
+.idea
+.vscode
