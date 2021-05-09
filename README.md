@@ -59,7 +59,7 @@ In the project directory, run:
 1. `npm install`
 
 2.  `npm start`
-This starts the program in the development enviorment.
+This starts the program in the development environment.
 
 ---
 ## Known Issues
