@@ -45,7 +45,9 @@
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
     "rebuild": "./node_modules/.bin/electron-rebuild",
-    "deploy": "node ./config/firebase-deploy.js"
+    "deploy": "node ./config/firebase-deploy.js",
+    "package-win": "electron-packager . GYST --overwrite --asar --platform=win32 --arch=ia32  --prune=true --out=buildsep --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"GYST\"",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds"
   },
   "eslintConfig": {
     "extends": [
@@ -64,5 +66,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron-packager": "^15.2.0"
   }
 }

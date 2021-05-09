@@ -55,3 +55,4 @@ benchmarks/graphs
 backend/.env
 frontend/yarn.lock
 node_modules
+buildsep/*

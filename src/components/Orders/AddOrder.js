@@ -7,7 +7,6 @@ import {
   Header,
   Divider,
   Grid,
-  Dropdown,
   Segment
 } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
