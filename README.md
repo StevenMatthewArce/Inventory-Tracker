@@ -37,8 +37,15 @@ This desktop application was created as part of `CSULB CECS 445 Software Design 
 ## Installation 
 
 #### On Windows:
+Due to large file size `.exe` file is unable to be pushed to GitHub. To create `.exe` file do the following:
+Run `npm install --save-dev electron-packager`
+Run `npm run package-win`
+It will take a few minutes to compiple. The `.exe` will be available in `buildsep\GYST-win32-x64`
 
 #### On macOs:
+Due to large file size `.exe` file is unable to be pushed to GitHub. To create `.exe` file do the following:
+Run `npm install --save-dev electron-packager`
+Run `npm run package-mac`
 
 
 #### For Development:
