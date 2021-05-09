@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+<p align="center">
+  <img width="500" height="500" src="./GYST.png">
+</p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#GYST - Get Your Stats Together 
+Inventory, Order, & Expense Tracking for Small Business 
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+##About 
+GYST is a dynamic inventory tracker catered towards small businesses. We used Electron to make the desktop application cross platform and we used React for the interface with libraries such as Semantic UI and Victory for visualization. For the backend, we used Firebase to incorporate authentication and firestore to create a NoSQL based database.
 
-### `yarn start`
+Some key features of our application include image recognition, inventory, order, sales and expense tracking. We used Tesseract to implement image recognition so the user can automatically input their items rather than entering it manually. We also incorporated the fundamentals of react by implementing hooks, lifecycle methods, and using class and functional components.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This desktop application was created as part of CSULB CECS 445 Software Design & Architecture. As part of this class this project won `Best Data Story Award`.
+> Rationale: This was my easiest decision. Team SAAD blew me away with how they captured so many metrics into a cohesive, tight and digestible story. From breaking down their development into strategic phases, combining & complimenting metrics into refined visualizations and incorporating data justifications in their lessons learned via new concepts, such as feature complexity, this was Fortune 500/McKinsey/Bain/BCG professional level data analytics work. I was so engrossed in their charts that I even forgot to provide the team a time check! Simply outstanding.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
+##Features
 
-### `yarn test`
+- [x] Organizing inventory by raw materials & finished goods
+- [x] Automatic inventory alerts when items fall below a threshold
+- [x] Track current and completed orders
+- [x] Automatic alerts when order deadlines approach
+- [x] Automatic calculation of order costs
+- [x] Scan receipts to import raw materials & track expenses 
+- [x] Automatically track sales on completed orders
+- [x] Intuitive dashboard to view major statistics at a glance
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
+##Supported Platforms
 
-### `yarn build`
+* Windows
+* macOS
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
+##Installation 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+####On Windows:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+####On macOs:
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+####For Development:
+This program requires `Node Version 14.16.1 LTS`
+This program requires `.env` file inside of project directory as shown below:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+inventory-tracker
+├── node_modules
+├── public
+├── src
+├── .env
+├── package.json
+└── README.md
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+In the project directory, run:
+1. `npm install`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+2.  `npm start`
+This starts the program in the development enviorment.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+##Known Issues
+<ul>
+<li>Signing out from Dashboard causes an error</li>
+<ul>
+<li>Fix: Click the X in the top right of error and continue normal operation. Application will continue as normal.</li>
+</ul>
+<li>NaN for cost/total-cost of certain items/recipes.</li>
+<li>No feedback if you entered wrong password on login screen.</li>
+<li>Expenses shown in dashboard graph only shown expenses from receipts. </li>
+</ul>
