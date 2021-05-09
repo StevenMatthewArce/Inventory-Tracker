@@ -12,7 +12,7 @@ GYST is a dynamic inventory tracker catered towards small businesses. We used El
 
 Some key features of our application include image recognition, inventory, order, sales and expense tracking. We used Tesseract to implement image recognition so the user can automatically input their items rather than entering it manually. We also incorporated the fundamentals of react by implementing hooks, lifecycle methods, and using class and functional components.
 
-This desktop application was created as part of CSULB CECS 445 Software Design & Architecture. As part of this class this project won `Best Data Story Award`.
+This desktop application was created as part of `CSULB CECS 445 Software Design & Architecture`. As part of this class this project won `Best Data Story Award`.
 > Rationale: This was my easiest decision. Team SAAD blew me away with how they captured so many metrics into a cohesive, tight and digestible story. From breaking down their development into strategic phases, combining & complimenting metrics into refined visualizations and incorporating data justifications in their lessons learned via new concepts, such as feature complexity, this was Fortune 500/McKinsey/Bain/BCG professional level data analytics work. I was so engrossed in their charts that I even forgot to provide the team a time check! Simply outstanding.
 
 ---
